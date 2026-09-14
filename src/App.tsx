@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
 import { HomeScreen } from '@/components/HomeScreen';
@@ -22,6 +22,24 @@ function App() {
   const [profile, setProfile] = useState<ApplicantProfile>(createEmptyProfile());
   const [match, setMatch] = useState<SchemeMatch | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<RankedPartner | null>(null);
+  const navigate = (nextScreen: Screen) => {
+  window.history.pushState({ screen: nextScreen }, '', window.location.href);
+  setScreen(nextScreen);
+};
+useEffect(() => {
+  window.history.replaceState({ screen: 'home' }, '', window.location.href);
+
+  const handlePopState = (event: PopStateEvent) => {
+    const previousScreen = event.state?.screen as Screen | undefined;
+    setScreen(previousScreen ?? 'home');
+  };
+
+  window.addEventListener('popstate', handlePopState);
+
+  return () => {
+    window.removeEventListener('popstate', handlePopState);
+  };
+}, []);
 
   const handleLangChange = (newLang: Language) => {
     setLang(newLang);
@@ -34,7 +52,7 @@ function App() {
     fresh.language = lang;
     if (purpose) fresh.purpose = purpose;
     setProfile(fresh);
-    setScreen('input');
+    navigate('input');
   };
 
   const handleProfileComplete = (completedProfile: ApplicantProfile) => {
@@ -46,14 +64,14 @@ function App() {
       completedProfile.education_status ?? undefined,
     );
     setMatch(result);
-    setScreen('scheme');
+    navigate('scheme');
   };
 
   const handleReset = () => {
     setProfile(createEmptyProfile());
     setMatch(null);
     setSelectedPartner(null);
-    setScreen('home');
+    navigate('home');
   };
 
   const stepperStep = screen === 'scheme' ? 1 : screen === 'emi' ? 2 : screen === 'partner' || screen === 'readiness' ? 3 : 1;
@@ -63,12 +81,12 @@ function App() {
       <Header
         lang={lang}
         onLangChange={handleLangChange}
-        onDashboardClick={() => setScreen('dashboard')}
+        onDashboardClick={() => navigate('dashboard')}
         showDashboard={screen === 'dashboard'}
       />
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 pt-6">
-        {screen === 'dashboard' && <Dashboard lang={lang} onBack={() => setScreen('home')} />}
+        {screen === 'dashboard' && <Dashboard lang={lang} onBack={() => navigate('home')} />}
 
         {screen === 'home' && <HomeScreen lang={lang} onStart={handleStart} />}
 
@@ -77,7 +95,7 @@ function App() {
             lang={lang}
             initialProfile={profile}
             onComplete={handleProfileComplete}
-            onBack={() => setScreen('home')}
+            onBack={() => navigate('home')}
           />
         )}
 
@@ -98,7 +116,7 @@ function App() {
           <SchemeResult
             lang={lang}
             match={match}
-            onProceed={() => match.eligible && setScreen('emi')}
+            onProceed={() => match.eligible && navigate('emi')}
             onReset={handleReset}
           />
         )}
@@ -107,7 +125,7 @@ function App() {
           <EMICalculator
             lang={lang}
             match={match}
-            onProceed={() => setScreen('partner')}
+            onProceed={() => navigate('partner')}
             onReset={handleReset}
           />
         )}
@@ -117,7 +135,7 @@ function App() {
             lang={lang}
             match={match}
             userCity={profile.location.display_name}
-            onProceed={() => setScreen('readiness')}
+            onProceed={() => navigate('readiness')}
             onReset={handleReset}
           />
         )}

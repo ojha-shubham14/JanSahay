@@ -1,6 +1,6 @@
 export type Purpose = 'business_project' | 'education';
 export type EducationStatus = 'pursuing' | 'planning';
-export type Language = 'en' | 'hi' | 'kn';
+export type Language = 'en' | 'hi' | 'kn' | 'ta';
 export type InputMode = 'guided' | 'conversation';
 export type Step = 'home' | 'input' | 'scheme' | 'emi' | 'partner' | 'readiness';
 

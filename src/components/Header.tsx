@@ -13,6 +13,7 @@ const langLabels: { code: Language; label: string }[] = [
   { code: 'en', label: 'English' },
   { code: 'hi', label: 'हिंदी' },
   { code: 'kn', label: 'ಕನ್ನಡ' },
+  { code: 'ta', label: 'தமிழ்' },
 ];
 
 export function Header({ lang, onLangChange, onDashboardClick, showDashboard }: HeaderProps) {
