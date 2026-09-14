@@ -16,7 +16,7 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
 
   if (view === 'flow') {
     return (
-            <div className="animate-fade-in">
+            <div key={lang} className="animate-fade-in">
         <section className="max-w-xs mx-auto pt-6">
           <h3 className="text-lg font-bold text-slate-900 mb-6 text-center">{tr('howItWorks')}</h3>
           <div className="flex flex-col items-center">

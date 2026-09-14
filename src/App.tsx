@@ -133,7 +133,7 @@ useEffect(() => {
           />
         )}
 
-        {screen !== 'home' && screen !== 'input' && screen !== 'dashboard' && (
+        {(screen === 'scheme' || screen === 'emi' || screen === 'partner' || screen === 'readiness') && (
           <Stepper currentStep={stepperStep} lang={lang} />
         )}
 

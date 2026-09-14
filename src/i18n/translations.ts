@@ -8,7 +8,7 @@ export const translations = {
     
 
     // Home
-    heroTitle: 'Find the right government loan scheme for your family',
+    heroTitle: 'Find the right government loan for your needs',
     heroSubtitle: 'Tell us what you need.',
     tellUs: 'Type in your language',
     orDivider: 'or',
@@ -24,8 +24,7 @@ export const translations = {
     step3Desc: 'See an estimated EMI and repayment amount.',
     step4Title: 'Find the right partner',
     step4Desc: 'Find a nearby eligible Channel Partner.',
-    trustDisclaimer: 'JanSahay is an informational and application-assistance platform. Final eligibility and loan sanction are decided by the authorized Channel Partner according to applicable government scheme guidelines.',
-
+    trustDisclaimer: 'JanSahay helps you find and understand government schemes. Final eligibility and approval are decided by the concerned authority.',
     // Input modes
     
     guidedMode: 'Guided Mode',
@@ -216,7 +215,7 @@ export const translations = {
     tagline: 'अपने लिए सही सरकारी ऋण योजना खोजें — आसानी से।',
     
 
-    heroTitle: 'अपने परिवार के लिए सही सरकारी ऋण योजना खोजें',
+    heroTitle: 'अपनी जरूरत के लिए सही सरकारी ऋण खोजें',
     heroSubtitle: 'हमें बताएं कि आपको क्या चाहिए।',
     tellUs: 'अपनी भाषा में लिखें',
     orDivider: 'या',
@@ -232,8 +231,7 @@ export const translations = {
     step3Desc: 'अनुमानित EMI और चुकौती राशि देखें।',
     step4Title: 'सही पार्टनर खोजें',
     step4Desc: 'नजदीकी पात्र चैनल पार्टनर खोजें।',
-    trustDisclaimer: 'JanSahay एक सूचनात्मक और आवेदन-सहायता मंच है। अंतिम पात्रता और ऋण स्वीकृति अधिकृत चैनल पार्टनर द्वारा लागू सरकारी योजना दिशानिर्देशों के अनुसार तय की जाती है।',
-
+    trustDisclaimer: 'JanSahay आपको सरकारी योजनाओं को खोजने और समझने में मदद करता है। अंतिम पात्रता और स्वीकृति संबंधित प्राधिकरण द्वारा तय की जाती है।',
     chooseMode: 'आप कैसे शुरू करना चाहेंगे?',
     guidedMode: 'संकेतित मोड',
     guidedDesc: 'एक-एक करके सरल सवालों के जवाब दें',
@@ -414,7 +412,7 @@ export const translations = {
     tagline: 'ನಿಮಗೆ ಸರಿಯಾದ ಸರ್ಕಾರಿ ಸಾಲ ಯೋಜನೆ ಕಂಡುಕೊಳ್ಳಿ — ಸರಳವಾಗಿ.',
     
 
-    heroTitle: 'ನಿಮ್ಮ ಕುಟುಂಬಕ್ಕೆ ಸರಿಯಾದ ಸರ್ಕಾರಿ ಸಾಲ ಯೋಜನೆ ಕಂಡುಕೊಳ್ಳಿ',
+    heroTitle: 'ನಿಮ್ಮ ಅಗತ್ಯಕ್ಕೆ ಸರಿಯಾದ ಸರ್ಕಾರಿ ಸಾಲ ಕಂಡುಕೊಳ್ಳಿ',
     heroSubtitle: 'ನಿಮಗೆ ಏನು ಬೇಕು ಎಂದು ಹೇಳಿ.',    
     tellUs: 'ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಬರೆಯಿರಿ',
     orDivider: 'ಅಥವಾ',
@@ -430,8 +428,7 @@ export const translations = {
     step3Desc: 'ಅಂದಾಜು EMI ಮತ್ತು ಮರುಪಾವತಿ ಮೊತ್ತ ನೋಡಿ.',
     step4Title: 'ಸರಿಯಾದ ಪಾಲುದಾರ ಕಂಡುಕೊಳ್ಳಿ',
     step4Desc: 'ಹತ್ತಿರದ ಅರ್ಹ ಚಾನೆಲ್ ಪಾಲುದಾರ ಕಂಡುಕೊಳ್ಳಿ.',
-    trustDisclaimer: 'JanSahay ಒಂದು ಮಾಹಿತಿ ಮತ್ತು ಅರ್ಜಿ-ಸಹಾಯ ವೇದಿಕೆಯಾಗಿದೆ. ಅಂತಿಮ ಅರ್ಹತೆ ಮತ್ತು ಸಾಲ ಮಂಜೂರಾತಿ ಅಧಿಕೃತ ಚಾನೆಲ್ ಪಾಲುದಾರರಿಂದ ಲಾಗು ಸರ್ಕಾರಿ ಯೋಜನಾ ಮಾರ್ಗದರ್ಶನಗಳ ಪ್ರಕಾರ ನಿರ್ಧರಿಸಲ್ಪಡುತ್ತದೆ.',
-
+    trustDisclaimer: 'JanSahay ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಕಂಡುಕೊಳ್ಳಲು ಮತ್ತು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ. ಅಂತಿಮ ಅರ್ಹತೆ ಮತ್ತು ಅನುಮೋದನೆಯನ್ನು ಸಂಬಂಧಿತ ಪ್ರಾಧಿಕಾರವು ನಿರ್ಧರಿಸುತ್ತದೆ.',
     chooseMode: 'ನೀವು ಹೇಗೆ ಪ್ರಾರಂಭಿಸಲು ಬಯಸುತ್ತೀರಿ?',
     guidedMode: 'ಮಾರ್ಗದರ್ಶಿತ ಮೋಡ್',
     guidedDesc: 'ಒಂದೊಂದಾಗಿ ಸರಳ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ',
@@ -628,8 +625,7 @@ export const translations = {
     step3Desc: 'மதிப்பிடப்பட்ட EMI மற்றும் திருப்பிச் செலுத்த வேண்டிய தொகையைப் பாருங்கள்.',
     step4Title: 'சரியான கூட்டாளியைக் கண்டறியுங்கள்',
     step4Desc: 'அருகிலுள்ள தகுதியான சேனல் கூட்டாளியைக் கண்டறியுங்கள்.',
-    trustDisclaimer: 'JanSahay ஒரு தகவல் மற்றும் விண்ணப்ப உதவி தளமாகும். இறுதி தகுதி மற்றும் கடன் ஒப்புதல், பொருந்தக்கூடிய அரசு திட்ட வழிகாட்டுதலின்படி அங்கீகரிக்கப்பட்ட சேனல் கூட்டாளியால் தீர்மானிக்கப்படும்.',
-
+    trustDisclaimer: 'JanSahay அரசு திட்டங்களைக் கண்டறியவும் புரிந்துகொள்ளவும் உங்களுக்கு உதவுகிறது. இறுதி தகுதி மற்றும் ஒப்புதல் சம்பந்தப்பட்ட அதிகாரத்தால் தீர்மானிக்கப்படும்.',
     // Input modes
     chooseMode: 'நீங்கள் எப்படி தொடங்க விரும்புகிறீர்கள்?',
     guidedMode: 'வழிகாட்டும் முறை',
