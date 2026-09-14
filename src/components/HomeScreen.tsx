@@ -16,12 +16,16 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
 
   if (view === 'flow') {
     return (
-      <div className="animate-fade-in">
+            <div className="animate-fade-in">
         <section className="max-w-xs mx-auto pt-6">
           <h3 className="text-lg font-bold text-slate-900 mb-6 text-center">{tr('howItWorks')}</h3>
           <div className="flex flex-col items-center">
             {flow.map((title, i) => (
-              <div key={i} className="flex flex-col items-center">
+              <div
+                key={i}
+                className="flex flex-col items-center animate-slide-up [animation-fill-mode:backwards]"
+                style={{ animationDelay: `${i * 200}ms` }}
+              >
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-700 font-bold text-sm">
                   {i + 1}
                 </div>
@@ -32,13 +36,16 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
           </div>
         </section>
 
-                        <div className="mt-8 max-w-md mx-auto">
+        <div
+          className="mt-8 text-center animate-scale-in [animation-fill-mode:backwards]"
+          style={{ animationDelay: `${flow.length * 200}ms` }}
+        >
           <button
             onClick={() => setView('main')}
-            className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-primary-600 text-white font-bold text-lg hover:bg-primary-700 active:scale-[0.98] transition-all duration-200 shadow-md hover:shadow-lg"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-primary-600 text-white font-semibold text-sm hover:bg-primary-700 active:scale-[0.98] transition-all duration-200 shadow-md hover:shadow-lg"
           >
             {tr('next')}
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </div>
