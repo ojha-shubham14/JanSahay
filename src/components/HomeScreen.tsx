@@ -24,7 +24,7 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
               <div
                 key={i}
                 className="flex flex-col items-center animate-slide-up [animation-fill-mode:backwards]"
-                style={{ animationDelay: `${i * 200}ms` }}
+                style={{ animationDelay: `${i * 400}ms` }}
               >
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-700 font-bold text-sm">
                   {i + 1}
@@ -38,7 +38,7 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
 
         <div
           className="mt-8 text-center animate-scale-in [animation-fill-mode:backwards]"
-          style={{ animationDelay: `${flow.length * 200}ms` }}
+          style={{ animationDelay: `${flow.length * 500}ms` }}
         >
           <button
             onClick={() => setView('main')}
