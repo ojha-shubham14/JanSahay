@@ -199,6 +199,14 @@ export const translations = {
     faqWhatIsChannelPartner: 'What is a Channel Partner?',
     faqWhatIsChannelPartnerAnswer:
       'A Channel Partner is an authorized organization that can help process applications under the applicable government scheme. JanSahay helps you identify a suitable nearby partner.',
+    // Contact Us
+      contactTitle: 'Contact Us',
+      contactSubtitle: 'Need help with JanSahay? We are here to help.',
+      contactEmailTitle: 'Email Support',
+      contactEmailText: 'For questions or support related to JanSahay, you can reach us at:',
+      contactHelpTitle: 'Need help using JanSahay?',
+      contactHelpText: 'Use the guided journey to find a suitable scheme, estimate your EMI, and locate an authorized Channel Partner.',
+      contactDisclaimer: 'JanSahay provides information and guidance. Final eligibility, loan approval, interest rate, and repayment terms are decided by the authorized Channel Partner.',
 
     // Common
     rupee: '₹',
@@ -391,6 +399,14 @@ export const translations = {
     faqWhatIsChannelPartnerAnswer:
       'चैनल पार्टनर एक अधिकृत संस्था है जो संबंधित सरकारी योजना के तहत आवेदन प्रक्रिया में सहायता कर सकती है। JanSahay आपको उपयुक्त नजदीकी पार्टनर खोजने में मदद करता है।',
 
+      // Contact Us
+      contactTitle: 'संपर्क करें',
+      contactSubtitle: 'JanSahay के बारे में सहायता चाहिए? हम आपकी मदद के लिए यहां हैं।',
+      contactEmailTitle: 'ईमेल सहायता',
+      contactEmailText: 'JanSahay से जुड़े सवालों या सहायता के लिए आप हमसे यहां संपर्क कर सकते हैं:',
+      contactHelpTitle: 'JanSahay का उपयोग करने में सहायता चाहिए?',
+      contactHelpText: 'उपयुक्त योजना खोजने, EMI का अनुमान लगाने और अधिकृत चैनल पार्टनर खोजने के लिए निर्देशित प्रक्रिया का उपयोग करें।',
+      contactDisclaimer: 'JanSahay जानकारी और मार्गदर्शन प्रदान करता है। अंतिम पात्रता, ऋण स्वीकृति, ब्याज दर और चुकौती की शर्तें अधिकृत चैनल पार्टनर द्वारा तय की जाती हैं।',
     rupee: '₹',
   },
   kn: {
@@ -580,7 +596,14 @@ export const translations = {
     faqWhatIsChannelPartner: 'ಚಾನೆಲ್ ಪಾಲುದಾರ ಎಂದರೇನು?',
     faqWhatIsChannelPartnerAnswer:
       'ಚಾನೆಲ್ ಪಾಲುದಾರರು ಸಂಬಂಧಿತ ಸರ್ಕಾರಿ ಯೋಜನೆಯಡಿ ಅರ್ಜಿ ಪ್ರಕ್ರಿಯೆಗೆ ಸಹಾಯ ಮಾಡಬಹುದಾದ ಅಧಿಕೃತ ಸಂಸ್ಥೆಯಾಗಿರುತ್ತಾರೆ. JanSahay ನಿಮಗೆ ಸೂಕ್ತವಾದ ಹತ್ತಿರದ ಪಾಲುದಾರರನ್ನು ಹುಡುಕಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.',
-
+      // Contact Us
+      contactTitle: 'ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ',
+      contactSubtitle: 'JanSahay ಕುರಿತು ಸಹಾಯ ಬೇಕೇ? ನಾವು ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇವೆ.',
+      contactEmailTitle: 'ಇಮೇಲ್ ಸಹಾಯ',
+      contactEmailText: 'JanSahay ಕುರಿತು ಪ್ರಶ್ನೆಗಳು ಅಥವಾ ಸಹಾಯಕ್ಕಾಗಿ ಇಲ್ಲಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಬಹುದು:',
+      contactHelpTitle: 'JanSahay ಬಳಸಲು ಸಹಾಯ ಬೇಕೇ?',
+      contactHelpText: 'ಸೂಕ್ತ ಯೋಜನೆಯನ್ನು ಹುಡುಕಲು, EMI ಅಂದಾಜು ಮಾಡಲು ಮತ್ತು ಅಧಿಕೃತ ಚಾನೆಲ್ ಪಾಲುದಾರರನ್ನು ಹುಡುಕಲು ಮಾರ್ಗದರ್ಶಿತ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಬಳಸಿ.',
+      contactDisclaimer: 'JanSahay ಮಾಹಿತಿ ಮತ್ತು ಮಾರ್ಗದರ್ಶನವನ್ನು ಒದಗಿಸುತ್ತದೆ. ಅಂತಿಮ ಅರ್ಹತೆ, ಸಾಲ ಮಂಜೂರಾತಿ, ಬಡ್ಡಿ ದರ ಮತ್ತು ಮರುಪಾವತಿ ನಿಯಮಗಳನ್ನು ಅಧಿಕೃತ ಚಾನೆಲ್ ಪಾಲುದಾರರು ನಿರ್ಧರಿಸುತ್ತಾರೆ.',
     rupee: '₹',
   },
     ta: {
@@ -779,6 +802,14 @@ export const translations = {
     faqWhatIsChannelPartner: 'சேனல் கூட்டாளர் என்றால் என்ன?',
     faqWhatIsChannelPartnerAnswer:
       'சேனல் கூட்டாளர் என்பது தொடர்புடைய அரசு திட்டத்தின் கீழ் விண்ணப்ப செயல்முறைக்கு உதவக்கூடிய அங்கீகரிக்கப்பட்ட நிறுவனமாகும். உங்களுக்கு ஏற்ற அருகிலுள்ள கூட்டாளியைக் கண்டறிய JanSahay உதவுகிறது.',
+      // Contact Us
+      contactTitle: 'எங்களை தொடர்பு கொள்ளுங்கள்',
+      contactSubtitle: 'JanSahay குறித்து உதவி தேவையா? நாங்கள் உதவ இங்கே இருக்கிறோம்.',
+      contactEmailTitle: 'மின்னஞ்சல் உதவி',
+      contactEmailText: 'JanSahay தொடர்பான கேள்விகள் அல்லது உதவிக்கு எங்களை இங்கே தொடர்பு கொள்ளலாம்:',
+      contactHelpTitle: 'JanSahay பயன்படுத்த உதவி தேவையா?',
+      contactHelpText: 'பொருத்தமான திட்டத்தைக் கண்டறிய, EMI மதிப்பீடு செய்ய மற்றும் அங்கீகரிக்கப்பட்ட சேனல் கூட்டாளியைக் கண்டறிய வழிகாட்டப்பட்ட செயல்முறையைப் பயன்படுத்துங்கள்.',
+      contactDisclaimer: 'JanSahay தகவல் மற்றும் வழிகாட்டுதலை வழங்குகிறது. இறுதி தகுதி, கடன் ஒப்புதல், வட்டி விகிதம் மற்றும் திருப்பிச் செலுத்தும் விதிமுறைகளை அங்கீகரிக்கப்பட்ட சேனல் கூட்டாளர் தீர்மானிப்பார்.',
     // Common
     rupee: '₹',
   },

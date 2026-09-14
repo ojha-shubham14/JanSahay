@@ -7,6 +7,7 @@ interface HeaderProps {
   onLangChange: (lang: Language) => void;
   onDashboardClick: () => void;
   onFAQClick: () => void;
+  onContactClick: () => void;
   showDashboard: boolean;
 }
 
@@ -22,6 +23,7 @@ export function Header({
   onLangChange,
   onDashboardClick,
   onFAQClick,
+  onContactClick,
   showDashboard,
 }: HeaderProps) {
     const tr = (key: TranslationKey) => t(lang, key);
@@ -61,6 +63,12 @@ export function Header({
             className="text-sm font-medium text-slate-600 hover:text-primary-700 transition-colors hidden sm:block"
           >
             FAQs
+          </button>
+          <button
+            onClick={onContactClick}
+            className="text-sm font-medium text-slate-600 hover:text-primary-700 transition-colors hidden sm:block"
+          >
+            Contact Us
           </button>
           {!showDashboard && (
             <button

@@ -8,6 +8,7 @@ import { SchemeResult } from '@/components/SchemeResult';
 import { EMICalculator } from '@/components/EMICalculator';
 import { PartnerLocator } from '@/components/PartnerLocator';
 import { ReadinessChecklist } from '@/components/ReadinessChecklist';
+import { ContactUs } from '@/components/ContactUs';
 import { FAQ } from '@/components/faq';
 import { Dashboard } from '@/components/Dashboard';
 import type { Language, Purpose, ApplicantProfile, SchemeMatch, RankedPartner } from '@/lib/types';
@@ -92,6 +93,7 @@ useEffect(() => {
         onLangChange={handleLangChange}
         onDashboardClick={() => navigate('dashboard')}
         onFAQClick={() => navigate('faq')}
+        onContactClick={() => navigate('contact')}
         showDashboard={screen === 'dashboard'}
       />
 
@@ -115,6 +117,19 @@ useEffect(() => {
             initialProfile={profile}
             onComplete={handleProfileComplete}
             onBack={() => setScreen('home')}
+          />
+        )}
+        {screen === 'faq' && (
+          <FAQ
+           lang={lang}
+           onBack={() => navigate('home')}
+          />
+        )}
+
+        {screen === 'contact' && (
+          <ContactUs
+            lang={lang}
+            onBack={() => navigate('home')}
           />
         )}
 
