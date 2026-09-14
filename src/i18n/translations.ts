@@ -177,6 +177,29 @@ export const translations = {
     availableCapacity: 'Available partner capacity',
     schemeDistribution: 'Scheme distribution',
 
+  
+    // FAQ
+    faqTitle: 'Frequently Asked Questions',
+    faqSubtitle: 'Find answers to common questions about JanSahay.',
+    faqWhatIs: 'What is JanSahay?',
+    faqWhatIsAnswer:
+      'JanSahay helps you understand and find government loan schemes that may suit your needs. It guides you through your requirements, scheme matching, EMI estimation, and finding an authorized Channel Partner.',
+    faqWhoCanUse: 'Who can use JanSahay?',
+    faqWhoCanUseAnswer:
+      'JanSahay is designed to help people explore suitable government loan schemes. Your final eligibility depends on the applicable scheme rules and is decided by the authorized Channel Partner.',
+    faqHowMatchingWorks: 'How does scheme matching work?',
+    faqHowMatchingWorksAnswer:
+      'JanSahay looks at information such as your purpose, estimated cost, family income, education status, project type, and location to identify a suitable scheme from the available demo scheme data.',
+    faqIsLoanGuaranteed: 'Does JanSahay guarantee a loan?',
+    faqIsLoanGuaranteedAnswer:
+      'No. JanSahay does not guarantee loan approval. It is an informational and application-assistance platform. Final eligibility, loan sanction, interest rate, and repayment terms are decided by the authorized Channel Partner.',
+    faqWhatDocuments: 'What documents may I need?',
+    faqWhatDocumentsAnswer:
+     'Depending on the scheme and your situation, you may need identity proof, income-related documents, SC category certificate, project or business details, or education admission and course documents.',
+    faqWhatIsChannelPartner: 'What is a Channel Partner?',
+    faqWhatIsChannelPartnerAnswer:
+      'A Channel Partner is an authorized organization that can help process applications under the applicable government scheme. JanSahay helps you identify a suitable nearby partner.',
+
     // Common
     rupee: '₹',
   },
@@ -346,6 +369,28 @@ export const translations = {
     availableCapacity: 'उपलब्ध पार्टनर क्षमता',
     schemeDistribution: 'योजना वितरण',
 
+    // FAQ
+    faqTitle: 'अक्सर पूछे जाने वाले सवाल',
+    faqSubtitle: 'JanSahay के बारे में सामान्य सवालों के जवाब यहां देखें।',
+    faqWhatIs: 'JanSahay क्या है?',
+    faqWhatIsAnswer:
+      'JanSahay आपकी जरूरत के अनुसार उपयुक्त सरकारी ऋण योजनाओं को समझने और खोजने में मदद करता है। यह आपकी जरूरत, योजना मिलान, EMI अनुमान और अधिकृत चैनल पार्टनर खोजने में सहायता करता है।',
+    faqWhoCanUse: 'JanSahay का उपयोग कौन कर सकता है?',
+    faqWhoCanUseAnswer:
+      'JanSahay लोगों को उपयुक्त सरकारी ऋण योजनाओं को समझने और खोजने में मदद करने के लिए बनाया गया है। अंतिम पात्रता संबंधित योजना के नियमों के अनुसार अधिकृत चैनल पार्टनर द्वारा तय की जाती है।',
+    faqHowMatchingWorks: 'योजना का मिलान कैसे होता है?',
+    faqHowMatchingWorksAnswer:
+      'JanSahay आपकी ऋण की जरूरत, अनुमानित लागत, परिवार की आय, शिक्षा की स्थिति, प्रोजेक्ट के प्रकार और स्थान जैसी जानकारी के आधार पर उपलब्ध डेमो योजना डेटा में से उपयुक्त योजना खोजता है।',
+    faqIsLoanGuaranteed: 'क्या JanSahay ऋण की गारंटी देता है?',
+    faqIsLoanGuaranteedAnswer:
+      'नहीं। JanSahay ऋण स्वीकृति की गारंटी नहीं देता। यह एक सूचनात्मक और आवेदन-सहायता मंच है। अंतिम पात्रता, ऋण स्वीकृति, ब्याज दर और चुकौती की शर्तें अधिकृत चैनल पार्टनर तय करता है।',
+    faqWhatDocuments: 'मुझे कौन से दस्तावेज चाहिए हो सकते हैं?',
+    faqWhatDocumentsAnswer:
+      'योजना और आपकी स्थिति के अनुसार आपको पहचान प्रमाण, आय संबंधी दस्तावेज, SC प्रमाण पत्र, प्रोजेक्ट या व्यापार विवरण, या शिक्षा प्रवेश और कोर्स से संबंधित दस्तावेजों की आवश्यकता हो सकती है।',
+    faqWhatIsChannelPartner: 'चैनल पार्टनर क्या होता है?',
+    faqWhatIsChannelPartnerAnswer:
+      'चैनल पार्टनर एक अधिकृत संस्था है जो संबंधित सरकारी योजना के तहत आवेदन प्रक्रिया में सहायता कर सकती है। JanSahay आपको उपयुक्त नजदीकी पार्टनर खोजने में मदद करता है।',
+
     rupee: '₹',
   },
   kn: {
@@ -513,6 +558,28 @@ export const translations = {
     partnerWorkload: 'ಪಾಲುದಾರ ಕೆಲಸ',
     availableCapacity: 'ಲಭ್ಯ ಪಾಲುದಾರ ಸಾಮರ್ಥ್ಯ',
     schemeDistribution: 'ಯೋಜನಾ ವಿತರಣೆ',
+
+    // FAQ
+    faqTitle: 'ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು',
+    faqSubtitle: 'JanSahay ಕುರಿತು ಸಾಮಾನ್ಯ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಗಳನ್ನು ಇಲ್ಲಿ ಕಂಡುಕೊಳ್ಳಿ.',
+    faqWhatIs: 'JanSahay ಎಂದರೇನು?',
+    faqWhatIsAnswer:
+      'JanSahay ನಿಮ್ಮ ಅಗತ್ಯಗಳಿಗೆ ಸೂಕ್ತವಾಗಬಹುದಾದ ಸರ್ಕಾರಿ ಸಾಲ ಯೋಜನೆಗಳನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಹುಡುಕಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ. ಇದು ನಿಮ್ಮ ಅಗತ್ಯ, ಯೋಜನಾ ಹೊಂದಾಣಿಕೆ, EMI ಅಂದಾಜು ಮತ್ತು ಅಧಿಕೃತ ಚಾನೆಲ್ ಪಾಲುದಾರರನ್ನು ಹುಡುಕಲು ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ.',
+    faqWhoCanUse: 'JanSahay ಅನ್ನು ಯಾರು ಬಳಸಬಹುದು?',
+    faqWhoCanUseAnswer:
+      'ಸೂಕ್ತ ಸರ್ಕಾರಿ ಸಾಲ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಲು ಬಯಸುವ ಜನರಿಗೆ JanSahay ಸಹಾಯ ಮಾಡುತ್ತದೆ. ಅಂತಿಮ ಅರ್ಹತೆಯನ್ನು ಸಂಬಂಧಿತ ಯೋಜನೆಯ ನಿಯಮಗಳ ಪ್ರಕಾರ ಅಧಿಕೃತ ಚಾನೆಲ್ ಪಾಲುದಾರರು ನಿರ್ಧರಿಸುತ್ತಾರೆ.',
+    faqHowMatchingWorks: 'ಯೋಜನಾ ಹೊಂದಾಣಿಕೆ ಹೇಗೆ ನಡೆಯುತ್ತದೆ?',
+    faqHowMatchingWorksAnswer:
+     'JanSahay ನಿಮ್ಮ ಸಾಲದ ಉದ್ದೇಶ, ಅಂದಾಜು ವೆಚ್ಚ, ಕುಟುಂಬದ ಆದಾಯ, ಶಿಕ್ಷಣದ ಸ್ಥಿತಿ, ಯೋಜನೆಯ ಪ್ರಕಾರ ಮತ್ತು ಸ್ಥಳದಂತಹ ಮಾಹಿತಿಯನ್ನು ಬಳಸಿ ಲಭ್ಯವಿರುವ ಡೆಮೋ ಯೋಜನಾ ಡೇಟಾದಿಂದ ಸೂಕ್ತ ಯೋಜನೆಯನ್ನು ಗುರುತಿಸುತ್ತದೆ.',
+    faqIsLoanGuaranteed: 'JanSahay ಸಾಲವನ್ನು ಖಾತರಿಪಡಿಸುತ್ತದೆಯೇ?',
+    faqIsLoanGuaranteedAnswer:
+      'ಇಲ್ಲ. JanSahay ಸಾಲ ಮಂಜೂರಾತಿಯನ್ನು ಖಾತರಿಪಡಿಸುವುದಿಲ್ಲ. ಇದು ಮಾಹಿತಿ ಮತ್ತು ಅರ್ಜಿ-ಸಹಾಯ ವೇದಿಕೆಯಾಗಿದೆ. ಅಂತಿಮ ಅರ್ಹತೆ, ಸಾಲ ಮಂಜೂರಾತಿ, ಬಡ್ಡಿ ದರ ಮತ್ತು ಮರುಪಾವತಿ ನಿಯಮಗಳನ್ನು ಅಧಿಕೃತ ಚಾನೆಲ್ ಪಾಲುದಾರರು ನಿರ್ಧರಿಸುತ್ತಾರೆ.',
+    faqWhatDocuments: 'ನನಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕಾಗಬಹುದು?',
+    faqWhatDocumentsAnswer:
+      'ಯೋಜನೆ ಮತ್ತು ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಗೆ ಅನುಗುಣವಾಗಿ ಗುರುತಿನ ಪುರಾವೆ, ಆದಾಯ ಸಂಬಂಧಿತ ದಾಖಲೆಗಳು, SC ವರ್ಗ ಪ್ರಮಾಣಪತ್ರ, ಯೋಜನೆ ಅಥವಾ ವ್ಯಾಪಾರ ವಿವರಗಳು, ಅಥವಾ ಶಿಕ್ಷಣ ಪ್ರವೇಶ ಮತ್ತು ಕೋರ್ಸ್ ದಾಖಲೆಗಳು ಬೇಕಾಗಬಹುದು.',
+    faqWhatIsChannelPartner: 'ಚಾನೆಲ್ ಪಾಲುದಾರ ಎಂದರೇನು?',
+    faqWhatIsChannelPartnerAnswer:
+      'ಚಾನೆಲ್ ಪಾಲುದಾರರು ಸಂಬಂಧಿತ ಸರ್ಕಾರಿ ಯೋಜನೆಯಡಿ ಅರ್ಜಿ ಪ್ರಕ್ರಿಯೆಗೆ ಸಹಾಯ ಮಾಡಬಹುದಾದ ಅಧಿಕೃತ ಸಂಸ್ಥೆಯಾಗಿರುತ್ತಾರೆ. JanSahay ನಿಮಗೆ ಸೂಕ್ತವಾದ ಹತ್ತಿರದ ಪಾಲುದಾರರನ್ನು ಹುಡುಕಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.',
 
     rupee: '₹',
   },
@@ -691,6 +758,27 @@ export const translations = {
     availableCapacity: 'கிடைக்கும் கூட்டாளர் திறன்',
     schemeDistribution: 'திட்டப் பகிர்வு',
 
+    // FAQ
+    faqTitle: 'அடிக்கடி கேட்கப்படும் கேள்விகள்',
+    faqSubtitle: 'JanSahay பற்றிய பொதுவான கேள்விகளுக்கான பதில்களை இங்கே காணலாம்.',
+    faqWhatIs: 'JanSahay என்றால் என்ன?',
+    faqWhatIsAnswer:
+      'JanSahay உங்கள் தேவைகளுக்கு ஏற்ற அரசு கடன் திட்டங்களைப் புரிந்துகொண்டு கண்டறிய உதவுகிறது. உங்கள் தேவைகள், திட்டப் பொருத்தம், EMI மதிப்பீடு மற்றும் அங்கீகரிக்கப்பட்ட சேனல் கூட்டாளியைக் கண்டறிவதில் இது வழிகாட்டுகிறது.',
+    faqWhoCanUse: 'JanSahay யாருக்குப் பயன்படும்?',
+    faqWhoCanUseAnswer:
+      'பொருத்தமான அரசு கடன் திட்டங்களைத் தேடும் மக்களுக்கு JanSahay உதவும் வகையில் உருவாக்கப்பட்டுள்ளது. இறுதி தகுதி, சம்பந்தப்பட்ட திட்ட விதிகளின்படி அங்கீகரிக்கப்பட்ட சேனல் கூட்டாளியால் தீர்மானிக்கப்படும்.',
+    faqHowMatchingWorks: 'திட்டப் பொருத்தம் எவ்வாறு செய்யப்படுகிறது?',
+    faqHowMatchingWorksAnswer:
+     'JanSahay உங்கள் கடன் தேவையின் நோக்கம், மதிப்பிடப்பட்ட செலவு, குடும்ப வருமானம், கல்வி நிலை, திட்ட வகை மற்றும் இருப்பிடம் போன்ற தகவல்களைப் பயன்படுத்தி கிடைக்கும் டெமோ திட்டத் தரவிலிருந்து பொருத்தமான திட்டத்தை அடையாளம் காண்கிறது.',
+    faqIsLoanGuaranteed: 'JanSahay கடன் கிடைப்பதை உறுதி செய்கிறதா?',
+    faqIsLoanGuaranteedAnswer:
+      'இல்லை. JanSahay கடன் ஒப்புதலை உறுதி செய்யாது. இது ஒரு தகவல் மற்றும் விண்ணப்ப உதவி தளமாகும். இறுதி தகுதி, கடன் ஒப்புதல், வட்டி விகிதம் மற்றும் திருப்பிச் செலுத்தும் விதிமுறைகளை அங்கீகரிக்கப்பட்ட சேனல் கூட்டாளர் தீர்மானிப்பார்.',
+    faqWhatDocuments: 'என்ன ஆவணங்கள் தேவைப்படலாம்?',
+    faqWhatDocumentsAnswer:
+      'திட்டம் மற்றும் உங்கள் சூழ்நிலையைப் பொறுத்து அடையாளச் சான்று, வருமானம் தொடர்பான ஆவணங்கள், SC வகுப்புச் சான்றிதழ், திட்டம் அல்லது தொழில் விவரங்கள், அல்லது கல்வி சேர்க்கை மற்றும் பாடநெறி ஆவணங்கள் தேவைப்படலாம்.',
+    faqWhatIsChannelPartner: 'சேனல் கூட்டாளர் என்றால் என்ன?',
+    faqWhatIsChannelPartnerAnswer:
+      'சேனல் கூட்டாளர் என்பது தொடர்புடைய அரசு திட்டத்தின் கீழ் விண்ணப்ப செயல்முறைக்கு உதவக்கூடிய அங்கீகரிக்கப்பட்ட நிறுவனமாகும். உங்களுக்கு ஏற்ற அருகிலுள்ள கூட்டாளியைக் கண்டறிய JanSahay உதவுகிறது.',
     // Common
     rupee: '₹',
   },

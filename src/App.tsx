@@ -8,13 +8,22 @@ import { SchemeResult } from '@/components/SchemeResult';
 import { EMICalculator } from '@/components/EMICalculator';
 import { PartnerLocator } from '@/components/PartnerLocator';
 import { ReadinessChecklist } from '@/components/ReadinessChecklist';
+import { FAQ } from '@/components/faq';
 import { Dashboard } from '@/components/Dashboard';
 import type { Language, Purpose, ApplicantProfile, SchemeMatch, RankedPartner } from '@/lib/types';
 import { createEmptyProfile } from '@/lib/types';
 import { recommendScheme } from '@/lib/recommender';
 
-type Screen = 'home' | 'input' | 'scheme' | 'emi' | 'partner' | 'readiness' | 'dashboard';
-
+type Screen =
+  | 'home'
+  | 'input'
+  | 'scheme'
+  | 'emi'
+  | 'partner'
+  | 'readiness'
+  | 'dashboard'
+  | 'faq'
+  | 'contact';
 function App() {
   const [lang, setLang] = useState<Language>('en');
   const [screen, setScreen] = useState<Screen>('home');
@@ -82,6 +91,7 @@ useEffect(() => {
         lang={lang}
         onLangChange={handleLangChange}
         onDashboardClick={() => navigate('dashboard')}
+        onFAQClick={() => navigate('faq')}
         showDashboard={screen === 'dashboard'}
       />
 

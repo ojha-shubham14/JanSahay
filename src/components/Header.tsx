@@ -6,6 +6,7 @@ interface HeaderProps {
   lang: Language;
   onLangChange: (lang: Language) => void;
   onDashboardClick: () => void;
+  onFAQClick: () => void;
   showDashboard: boolean;
 }
 
@@ -16,8 +17,14 @@ const langLabels: { code: Language; label: string }[] = [
   { code: 'ta', label: 'தமிழ்' },
 ];
 
-export function Header({ lang, onLangChange, onDashboardClick, showDashboard }: HeaderProps) {
-  const tr = (key: TranslationKey) => t(lang, key);
+export function Header({
+  lang,
+  onLangChange,
+  onDashboardClick,
+  onFAQClick,
+  showDashboard,
+}: HeaderProps) {
+    const tr = (key: TranslationKey) => t(lang, key);
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60">
@@ -49,6 +56,12 @@ export function Header({ lang, onLangChange, onDashboardClick, showDashboard }: 
               </button>
             ))}
           </div>
+          <button
+            onClick={onFAQClick}
+            className="text-sm font-medium text-slate-600 hover:text-primary-700 transition-colors hidden sm:block"
+          >
+            FAQs
+          </button>
           {!showDashboard && (
             <button
               onClick={onDashboardClick}
