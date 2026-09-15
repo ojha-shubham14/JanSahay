@@ -104,7 +104,13 @@ useEffect(() => {
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 pt-6">
         {screen === 'dashboard' && <Dashboard lang={lang} onBack={() => navigate('home')} />}
 
-        {screen === 'home' && <HomeScreen lang={lang} onStart={handleStart} />}
+        {screen === 'home' && (
+  <HomeScreen
+    lang={lang}
+    onLangChange={handleLangChange}
+    onStart={handleStart}
+  />
+)}
 
         {screen === 'input' && inputMode === 'guided' && (
           <GuidedWizard

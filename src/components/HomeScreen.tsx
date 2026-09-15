@@ -1,20 +1,103 @@
 import { useState } from 'react';
-import { Mic, Store, GraduationCap, ArrowRight, ArrowLeft, Info } from 'lucide-react';
+import {
+  Mic,
+  Store,
+  GraduationCap,
+  ArrowRight,
+  ArrowLeft,
+  Info,
+  Globe2,
+} from 'lucide-react';
 import type { Language, Purpose } from '@/lib/types';
 import { t, type TranslationKey } from '@/i18n/translations';
 
 interface HomeScreenProps {
   lang: Language;
+  onLangChange: (newLang: Language) => void;
   onStart: (mode: 'guided' | 'conversation', purpose?: Purpose) => void;
 }
 
-export function HomeScreen({ lang, onStart }: HomeScreenProps) {
+export function HomeScreen({ lang, onLangChange, onStart }: HomeScreenProps) {
   const tr = (key: TranslationKey) => t(lang, key);
   const [view, setView] = useState<'flow' | 'main'>('flow');
   const [showLoanIntro, setShowLoanIntro] = useState(false);
+  
+  const [showLanguageModal, setShowLanguageModal] = useState(true);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(lang);
 
   const flow = [tr('step1Title'), tr('step2Title'), tr('step3Title'), tr('step4Title')];
+  
+  const languages: { code: Language; native: string; english: string }[] = [
+  { code: 'en', native: 'English', english: 'English' },
+  { code: 'hi', native: 'हिंदी', english: 'Hindi' },
+  { code: 'kn', native: 'ಕನ್ನಡ', english: 'Kannada' },
+  { code: 'ta', native: 'தமிழ்', english: 'Tamil' },
+];
+  if (showLanguageModal) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-[2px] px-4 animate-fade-in">
+      <div className="w-full max-w-lg rounded-3xl bg-white p-6 sm:p-8 shadow-2xl dark:bg-slate-900 animate-popup-attention">
 
+        {/* Globe icon */}
+        <div className="flex justify-center mb-4">
+          <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400">
+            <Globe2 className="w-7 h-7" />
+          </div>
+        </div>
+
+        {/* Heading */}
+        <h2 className="text-xl sm:text-2xl font-bold text-center text-slate-900 dark:text-white">
+          {tr('languagePrompt')}
+        </h2>
+
+        {/* Subtitle */}
+        <p className="text-sm text-center text-slate-500 mt-2 dark:text-slate-400">
+          {tr('languagePromptSubtitle')}
+        </p>
+
+        {/* Language buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+          {languages.map((language) => {
+            const selected = selectedLanguage === language.code;
+
+            return (
+              <button
+                key={language.code}
+                onClick={() => setSelectedLanguage(language.code)}
+                className={`rounded-xl border-2 px-3 py-3 transition-all duration-200 ${
+                  selected
+                    ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm dark:border-primary-400 dark:bg-primary-950/40 dark:text-primary-300'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-primary-300 hover:bg-primary-50/50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-primary-700'
+                }`}
+              >
+                <div className="font-bold text-base">
+                  {language.native}
+                </div>
+
+                <div className="text-xs mt-1 opacity-70">
+                  {language.english}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Continue button */}
+        <button
+          onClick={() => {
+            onLangChange(selectedLanguage);
+            setShowLanguageModal(false);
+          }}
+          className="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-5 py-3.5 text-white font-semibold hover:bg-primary-700 active:scale-[0.98] transition-all duration-200 shadow-md"
+        >
+          {tr('continueLanguage')}
+          <ArrowRight className="w-4 h-4" />
+        </button>
+
+      </div>
+    </div>
+  );
+}
   if (view === 'flow') {
     return (
             <div key={lang} className="animate-fade-in">
