@@ -41,7 +41,7 @@ export function EMICalculator({ lang, match, onProceed, onReset }: EMICalculator
         </div>
         <div>
           <h2 className="text-xl font-bold text-slate-900">{tr('emiCalculator')}</h2>
-          <p className="text-sm text-slate-500">{tr('emiSubtitle')}</p>
+          <p className="text-sm text-slate-500">Adjust the values to estimate your monthly EMI and total repayment.</p>
         </div>
       </div>
 
@@ -54,17 +54,19 @@ export function EMICalculator({ lang, match, onProceed, onReset }: EMICalculator
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">{tr('rateLabel')} (%)</label>
-            <div className="flex items-center gap-3">
+            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+             Interest rate used for estimate (%)
+            </label>            <div className="flex items-center gap-3">
               <input type="range" min={rateMin} max={rateMax} step="0.1" value={interestRate}
                 onChange={(e) => setInterestRate(e.target.value)} className="flex-1 accent-primary-600" />
               <span className="text-sm font-bold text-slate-900 w-14 text-right">{Number(interestRate).toFixed(1)}%</span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">{rateMin}% – {rateMax}% {tr('perAnnum')}</p>
-          </div>
+              <p className="text-xs text-slate-400 mt-1"> Move the slider to see how your EMI changes · {rateMin}% – {rateMax}% {tr('perAnnum')}</p>
+              <p className="text-xs text-slate-500 mt-2">Your actual interest rate will be decided by the authorized Channel Partner.</p>
+            </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">{tr('tenure')}</label>
+            <label className="block text-sm font-semibold text-slate-700 mb-1.5">{tr('repaymentPeriod')}</label>
             <input type="number" value={tenureMonths} onChange={(e) => setTenureMonths(e.target.value)} className="input-field" min="1" />
           </div>
 
