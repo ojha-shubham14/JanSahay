@@ -57,7 +57,9 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   // do not ask the user for it again.
   const purposePreselected = Boolean(initialProfile.purpose);
 
-  const effectiveStepOrder = stepOrder.filter((s) => {
+const isEducationFlow = purpose === 'education';
+
+const effectiveStepOrder = stepOrder.filter((s) => {
   if (s === 'purpose' && purposePreselected) return false;
 
   if (s === 'education_status' && !isEducationFlow) return false;
@@ -73,8 +75,6 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
 });
 
   const getStepIndex = () => effectiveStepOrder.indexOf(step);
-  const isEducationFlow = purpose === 'education';
-
   const nextStep = () => {
   const idx = getStepIndex();
   setError('');
