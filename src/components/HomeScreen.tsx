@@ -208,9 +208,9 @@ export function HomeScreen({ lang, onLangChange, onStart }: HomeScreenProps) {
       {/* Loan introduction popup */}
       {showLoanIntro && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 animate-fade-in">     
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 animate-popup-attention">          
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-              Before you begin
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 animate-popup-attention">
+            <h3 className="text-xl font-bold text-red-600 dark:text-red-400">
+                  Disclaimer
             </h3>
 
             <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
