@@ -11,8 +11,16 @@ interface GuidedWizardProps {
   onBack: () => void;
 }
 
-type WizardStep = 'details' | 'income' | 'purpose' | 'cost' | 'education_status' | 'project_type' | 'location';
-
+type WizardStep =
+  | 'details'
+  | 'income'
+  | 'purpose'
+  | 'cost'
+  | 'education_status'
+  | 'course'
+  | 'institution'
+  | 'project_type'
+  | 'location';
 export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: GuidedWizardProps) {
   const tr = (key: TranslationKey) => t(lang, key);
   const [step, setStep] = useState<WizardStep>('details');
@@ -21,14 +29,35 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   const [income, setIncome] = useState(initialProfile.annual_family_income?.toString() ?? '');
   const [purpose, setPurpose] = useState<Purpose | ''>(initialProfile.purpose ?? '');
   const [cost, setCost] = useState(initialProfile.estimated_cost?.toString() ?? '');
+  
   const [educationStatus, setEducationStatus] = useState<EducationStatus | ''>(initialProfile.education_status ?? '');
+  const [course, setCourse] = useState('');
+  const [institution, setInstitution] = useState('');
   const [projectType, setProjectType] = useState(initialProfile.project_type ?? '');
   const [city, setCity] = useState(initialProfile.location.display_name ?? '');
   const [error, setError] = useState('');
 
-  const stepOrder: WizardStep[] = ['details', 'income', 'purpose', 'cost', 'education_status', 'project_type', 'location'];
+  const stepOrder: WizardStep[] = [
+  'details',
+  'income',
+  'purpose',
+  'cost',
+  'education_status',
+  'course',
+  'institution',
+  'project_type',
+  'location',
+];
 
-  const getStepIndex = () => stepOrder.indexOf(step);
+  // If Business/Education was already selected from the Home page,
+  // do not ask the user for it again.
+  const purposePreselected = Boolean(initialProfile.purpose);
+
+  const effectiveStepOrder = stepOrder.filter(
+    (s) => !(s === 'purpose' && purposePreselected)
+  );
+
+  const getStepIndex = () => effectiveStepOrder.indexOf(step);
   const isEducationFlow = purpose === 'education';
 
   const nextStep = () => {
@@ -39,22 +68,35 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
       setError(tr('personalDetails'));
       return;
     }
+
     if (step === 'income' && (!income || Number(income) <= 0)) {
       setError(tr('questionIncome'));
       return;
     }
+
     if (step === 'purpose' && !purpose) {
       setError(tr('questionPurpose'));
       return;
     }
+
     if (step === 'cost' && (!cost || Number(cost) <= 0)) {
       setError(tr('questionCost'));
       return;
     }
 
-    let next = stepOrder[idx + 1];
-    if (next === 'education_status' && !isEducationFlow) next = 'project_type';
-    if (next === 'project_type' && isEducationFlow) next = 'location';
+    let next = effectiveStepOrder[idx + 1];
+
+    if (next === 'education_status' && !isEducationFlow) {
+      next = 'project_type';
+    }
+
+if (next === 'project_type' && isEducationFlow) {
+  next = 'location';
+}
+
+    if (next === 'project_type' && isEducationFlow) {
+      next = 'location';
+    }
 
     if (next) {
       setStep(next);
@@ -66,13 +108,22 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   const prevStep = () => {
     const idx = getStepIndex();
     setError('');
+
     if (idx === 0) {
       onBack();
       return;
     }
-    let prev = stepOrder[idx - 1];
-    if (prev === 'education_status' && !isEducationFlow) prev = 'purpose';
-    if (prev === 'project_type' && isEducationFlow) prev = 'cost';
+
+    let prev = effectiveStepOrder[idx - 1];
+
+    if (prev === 'education_status' && !isEducationFlow) {
+      prev = 'purpose';
+    }
+
+    if (prev === 'project_type' && isEducationFlow) {
+      prev = 'cost';
+    }
+
     setStep(prev);
   };
 
@@ -89,6 +140,8 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
       estimated_cost: Number(cost),
       requested_loan_amount: null,
       education_status: educationStatus || null,
+      course: course || null,
+      institution: institution || null,
       project_type: projectType || null,
       location: {
         latitude: cityCoordinates[city]?.lat ?? null,
@@ -278,7 +331,52 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
           </div>
         </div>
       )}
+            {/* Course step */}
+      {step === 'course' && (
+        <div className="animate-fade-in">
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            What course are you studying?
+          </h2>
 
+          <p className="text-sm text-slate-500 mb-5">
+            Enter the name of your course or program.
+          </p>
+
+          <input
+            type="text"
+            autoFocus
+            value={course}
+            onChange={(e) => setCourse(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && nextStep()}
+            placeholder="e.g. B.Tech, MBA, B.Sc Nursing"
+            className="input-field"
+          />
+        </div>
+      )}
+
+      {/* Institution step */}
+      {step === 'institution' && (
+        <div className="animate-fade-in">
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            Which college or institution?
+          </h2>
+
+          <p className="text-sm text-slate-500 mb-5">
+            Enter the name of your college or educational institution.
+          </p>
+
+          <input
+            type="text"
+            autoFocus
+            value={institution}
+            onChange={(e) => setInstitution(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && nextStep()}
+            placeholder="e.g. Government Engineering College"
+            className="input-field"
+          />
+        </div>
+      )}
+      
       {/* Project type step */}
       {step === 'project_type' && (
         <div className="animate-fade-in">

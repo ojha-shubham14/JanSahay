@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Navigation, MapPin, Building2, Banknote, Gauge, Check, X, Info, ArrowRight, RotateCcw } from 'lucide-react';
-import type { Language, SchemeMatch, RankedPartner } from '@/lib/types';
+import { Navigation, MapPin, Building2, Banknote, Gauge, Check, X, Info, ArrowRight, RotateCcw, ExternalLink } from 'lucide-react';import type { Language, SchemeMatch, RankedPartner } from '@/lib/types';
 import { t, type TranslationKey } from '@/i18n/translations';
 import { findPartners } from '@/lib/partnerLocator';
 import { cityCoordinates } from '@/data/partners';
@@ -23,14 +22,18 @@ export function PartnerLocator({ lang, match, userCity, onProceed, onReset }: Pa
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
 
-  const handleSearch = () => {
+    // Automatically find partners when the page opens
+  useEffect(() => {
     if (!selectedCity || !match.scheme_id) return;
+
     const coords = cityCoordinates[selectedCity];
     if (!coords) return;
+
     const partners = findPartners(match.scheme_id, coords.lat, coords.lon);
     setResults(partners);
-    setSearched(true);
-  };
+    setSearched(true);},
+    [selectedCity, match.scheme_id]);
+
 
   // Initialize/update map when results change
   useEffect(() => {
@@ -99,35 +102,13 @@ export function PartnerLocator({ lang, match, userCity, onProceed, onReset }: Pa
         </div>
         <div>
           <h2 className="text-xl font-bold text-slate-900">{tr('partnerLocator')}</h2>
-          <p className="text-sm text-slate-500">{tr('partnerSubtitle')}</p>
+          <p className="text-sm text-slate-500">
+            {tr('partnerSubtitle')} — {cityCoordinates[selectedCity]?.label ?? selectedCity}
+          </p>
         </div>
       </div>
 
-      {/* City selector */}
-      <div className="mb-5">
-        <label className="block text-sm font-semibold text-slate-700 mb-2">{tr('selectCity')}</label>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {Object.entries(cityCoordinates).map(([key, city]) => (
-            <button
-              key={key}
-              onClick={() => setSelectedCity(key)}
-              className={`flex items-center gap-2 p-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
-                selectedCity === key
-                  ? 'border-primary-500 bg-primary-50 text-primary-900'
-                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
-              }`}
-            >
-              <MapPin className={`w-4 h-4 ${selectedCity === key ? 'text-primary-600' : 'text-slate-400'}`} />
-              {city.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <button onClick={handleSearch} disabled={!selectedCity} className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed mb-5">
-        <Navigation className="w-5 h-5" />
-        {tr('findPartnersBtn')}
-      </button>
+      
 
       {/* Map */}
       {searched && results && results.length > 0 && (
@@ -175,11 +156,22 @@ export function PartnerLocator({ lang, match, userCity, onProceed, onReset }: Pa
                           <Banknote className="w-3.5 h-3.5" />
                           {tr('demoCapacity')}
                         </span>
-                        <span className="flex items-center gap-1 text-xs text-success-600 font-medium">
+                                                <span className="flex items-center gap-1 text-xs text-success-600 font-medium">
                           <Check className="w-3.5 h-3.5" />
                           {tr('acceptingApps')}
                         </span>
                       </div>
+
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${partner.latitude},${partner.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-primary-600 hover:text-primary-700"
+                      >
+                        <Navigation className="w-4 h-4" />
+                        Get Directions
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
                     </div>
                   </div>
                 ))}

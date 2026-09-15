@@ -78,6 +78,8 @@ export interface ApplicantProfile {
   estimated_cost: number | null;
   requested_loan_amount: number | null;
   education_status: EducationStatus | null;
+  course: string | null;
+  institution: string | null;
   project_type: string | null;
   location: {
     latitude: number | null;
@@ -96,6 +98,8 @@ export function createEmptyProfile(): ApplicantProfile {
     estimated_cost: null,
     requested_loan_amount: null,
     education_status: null,
+    course: null,
+    institution: null,
     project_type: null,
     location: { latitude: null, longitude: null, display_name: null },
     language: 'en',
