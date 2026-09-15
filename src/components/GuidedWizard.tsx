@@ -3,6 +3,7 @@ import { ArrowRight, ArrowLeft, IndianRupee, Briefcase, GraduationCap, MapPin, A
 import type { Language, Purpose, EducationStatus, ApplicantProfile } from '@/lib/types';
 import { t, type TranslationKey } from '@/i18n/translations';
 import { cityCoordinates } from '@/data/partners';
+import { verifyEducation } from '@/lib/educationVerifier';
 
 interface GuidedWizardProps {
   lang: Language;
@@ -19,6 +20,7 @@ type WizardStep =
   | 'education_status'
   | 'course'
   | 'institution'
+  | 'education_verification'
   | 'project_type'
   | 'location';
 export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: GuidedWizardProps) {
@@ -33,6 +35,7 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   const [educationStatus, setEducationStatus] = useState<EducationStatus | ''>(initialProfile.education_status ?? '');
   const [course, setCourse] = useState('');
   const [institution, setInstitution] = useState('');
+  const [educationVerification, setEducationVerification] = useState<ReturnType<typeof verifyEducation> | null>(null);
   const [projectType, setProjectType] = useState(initialProfile.project_type ?? '');
   const [city, setCity] = useState(initialProfile.location.display_name ?? '');
   const [error, setError] = useState('');
@@ -45,6 +48,7 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   'education_status',
   'course',
   'institution',
+  'education_verification',
   'project_type',
   'location',
 ];
@@ -53,79 +57,84 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   // do not ask the user for it again.
   const purposePreselected = Boolean(initialProfile.purpose);
 
-  const effectiveStepOrder = stepOrder.filter(
-    (s) => !(s === 'purpose' && purposePreselected)
-  );
+  const effectiveStepOrder = stepOrder.filter((s) => {
+  if (s === 'purpose' && purposePreselected) return false;
+
+  if (s === 'education_status' && !isEducationFlow) return false;
+
+  if (s === 'course' && !isEducationFlow) return false;
+
+  if (s === 'institution' && !isEducationFlow) return false;
+  if (s === 'education_verification' && !isEducationFlow) return false;
+
+  if (s === 'project_type' && isEducationFlow) return false;
+
+  return true;
+});
 
   const getStepIndex = () => effectiveStepOrder.indexOf(step);
   const isEducationFlow = purpose === 'education';
 
   const nextStep = () => {
-    const idx = getStepIndex();
-    setError('');
+  const idx = getStepIndex();
+  setError('');
 
-    if (step === 'details' && (!name.trim() || !age || Number(age) <= 0)) {
-      setError(tr('personalDetails'));
-      return;
-    }
+  if (step === 'details' && (!name.trim() || !age || Number(age) <= 0)) {
+    setError(tr('personalDetails'));
+    return;
+  }
 
-    if (step === 'income' && (!income || Number(income) <= 0)) {
-      setError(tr('questionIncome'));
-      return;
-    }
+  if (step === 'income' && (!income || Number(income) <= 0)) {
+    setError(tr('questionIncome'));
+    return;
+  }
 
-    if (step === 'purpose' && !purpose) {
-      setError(tr('questionPurpose'));
-      return;
-    }
+  if (step === 'purpose' && !purpose) {
+    setError(tr('questionPurpose'));
+    return;
+  }
 
-    if (step === 'cost' && (!cost || Number(cost) <= 0)) {
-      setError(tr('questionCost'));
-      return;
-    }
+  if (step === 'cost' && (!cost || Number(cost) <= 0)) {
+    setError(tr('questionCost'));
+    return;
+  }
 
-    let next = effectiveStepOrder[idx + 1];
+  if (step === 'course' && !course.trim()) {
+    setError('Please enter your course');
+    return;
+  }
 
-    if (next === 'education_status' && !isEducationFlow) {
-      next = 'project_type';
-    }
+  if (step === 'institution' && !institution.trim()) {
+    setError('Please enter your institution');
+    return;
+  }
 
-if (next === 'project_type' && isEducationFlow) {
-  next = 'location';
+  if (step === 'institution' && isEducationFlow) {
+  const result = verifyEducation(course, institution);
+  setEducationVerification(result);
 }
 
-    if (next === 'project_type' && isEducationFlow) {
-      next = 'location';
-    }
+  const next = effectiveStepOrder[idx + 1];
 
-    if (next) {
-      setStep(next);
-    } else {
-      complete();
-    }
-  };
+  if (next) {
+    setStep(next);
+  } else {
+    complete();
+  }
+};
 
   const prevStep = () => {
-    const idx = getStepIndex();
-    setError('');
+  const idx = getStepIndex();
+  setError('');
 
-    if (idx === 0) {
-      onBack();
-      return;
-    }
+  if (idx === 0) {
+    onBack();
+    return;
+  }
 
-    let prev = effectiveStepOrder[idx - 1];
-
-    if (prev === 'education_status' && !isEducationFlow) {
-      prev = 'purpose';
-    }
-
-    if (prev === 'project_type' && isEducationFlow) {
-      prev = 'cost';
-    }
-
-    setStep(prev);
-  };
+  const prev = effectiveStepOrder[idx - 1];
+  setStep(prev);
+};
 
   const complete = () => {
     if (!name.trim() || !income || !purpose || !cost || !city) {
@@ -155,11 +164,7 @@ if (next === 'project_type' && isEducationFlow) {
 
   const isLastStep = step === 'location';
 
-  const visibleSteps = stepOrder.filter((s) => {
-    if (s === 'education_status' && !isEducationFlow) return false;
-    if (s === 'project_type' && isEducationFlow) return false;
-    return true;
-  });
+  const visibleSteps = effectiveStepOrder;
 
   return (
     <div className="card p-6 sm:p-8 animate-slide-up">
@@ -167,8 +172,8 @@ if (next === 'project_type' && isEducationFlow) {
       <div className="flex items-center gap-1.5 mb-6">
         {visibleSteps.map((s) => {
           const isActive = s === step;
-          const isPast = stepOrder.indexOf(s) < getStepIndex();
-          return (
+            const isPast = effectiveStepOrder.indexOf(s) < getStepIndex();          
+            return (
             <div
               key={s}
               className={`h-1.5 rounded-full transition-all duration-300 ${
@@ -377,6 +382,73 @@ if (next === 'project_type' && isEducationFlow) {
         </div>
       )}
       
+            {/* Education verification step */}
+      {step === 'education_verification' && educationVerification && (
+        <div className="animate-fade-in">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50">
+              <GraduationCap className="w-6 h-6 text-primary-600" />
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">
+                Education recognition check
+              </h2>
+              <p className="text-sm text-slate-500">
+                We checked the course and institution information you provided.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+            <div>
+              <p className="text-xs text-slate-500">Course</p>
+              <p className="font-semibold text-slate-900">{course}</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-slate-500">Institution</p>
+              <p className="font-semibold text-slate-900">{institution}</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-slate-500">Recognition authority</p>
+              <p className="font-semibold text-slate-900">
+                {educationVerification.authority}
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`mt-4 rounded-xl border p-4 ${
+              educationVerification.status === 'verified'
+                ? 'bg-success-50 border-success-200'
+                : educationVerification.status === 'manual_review'
+                  ? 'bg-amber-50 border-amber-200'
+                  : 'bg-error-50 border-error-200'
+            }`}
+          >
+            <p className="font-semibold text-slate-900">
+              {educationVerification.status === 'verified'
+                ? '✓ Recognition found'
+                : educationVerification.status === 'manual_review'
+                  ? '⚠ Manual verification recommended'
+                  : '✕ Institution not found'}
+            </p>
+
+            <p className="text-sm text-slate-600 mt-1">
+              {educationVerification.message}
+            </p>
+          </div>
+
+          <p className="text-xs text-slate-400 mt-4">
+            This check is for guidance only. Final recognition and loan
+            eligibility are determined by the relevant authority and
+            authorized Channel Partner.
+          </p>
+        </div>
+      )}
+
       {/* Project type step */}
       {step === 'project_type' && (
         <div className="animate-fade-in">
