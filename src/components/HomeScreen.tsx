@@ -131,8 +131,7 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
             </h3>
 
             <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-              JanSahay will help you find a suitable government loan scheme based on the information you provide.
-            </p>
+                JanSahay helps you find and understand government schemes. Final eligibility and approval are decided by the concerned authority              </p>
 
             <button
               onClick={() => setShowLoanIntro(false)}
