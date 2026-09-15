@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTheme } from '@/hooks/useThemes';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
 import { HomeScreen } from '@/components/HomeScreen';
@@ -26,6 +27,7 @@ type Screen =
   | 'faq'
   | 'contact';
 function App() {
+  const { mode: themeMode, setMode: setThemeMode } = useTheme();
   const [lang, setLang] = useState<Language>('en');
   const [screen, setScreen] = useState<Screen>('home');
   const [inputMode, setInputMode] = useState<'guided' | 'conversation'>('guided');
@@ -87,7 +89,7 @@ useEffect(() => {
   const stepperStep = screen === 'scheme' ? 1 : screen === 'emi' ? 2 : screen === 'partner' || screen === 'readiness' ? 3 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-primary-50/30">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-primary-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
       <Header
         lang={lang}
         onLangChange={handleLangChange}
@@ -95,6 +97,8 @@ useEffect(() => {
         onFAQClick={() => navigate('faq')}
         onContactClick={() => navigate('contact')}
         showDashboard={screen === 'dashboard'}
+        themeMode={themeMode}
+        onThemeChange={setThemeMode}
       />
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 pt-6">
@@ -176,9 +180,9 @@ useEffect(() => {
         )}
       </main>
 
-      <footer className="border-t border-slate-200/60 bg-white/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-center">
-          <p className="text-xs text-slate-400">
+        <footer className="border-t border-slate-200/60 bg-white/50 dark:border-slate-800 dark:bg-slate-950/50">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-center">
+            <p className="text-xs text-slate-400">
             Interest rate bands and partner NPA data are illustrative for the demo. In production, these would integrate with NSFDC/SCA live data feeds.
           </p>
         </div>
