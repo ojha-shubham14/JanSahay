@@ -11,6 +11,7 @@ interface HomeScreenProps {
 export function HomeScreen({ lang, onStart }: HomeScreenProps) {
   const tr = (key: TranslationKey) => t(lang, key);
   const [view, setView] = useState<'flow' | 'main'>('flow');
+  const [showLoanIntro, setShowLoanIntro] = useState(false);
 
   const flow = [tr('step1Title'), tr('step2Title'), tr('step3Title'), tr('step4Title')];
 
@@ -41,7 +42,11 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
           style={{ animationDelay: `${flow.length * 900}ms` }}
         >
           <button
-            onClick={() => setView('main')}
+            onClick={() => {
+              setView('main');
+              setShowLoanIntro(true);
+            }
+}
             className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-primary-600 text-white font-semibold text-sm hover:bg-primary-700 active:scale-[0.98] transition-all duration-200 shadow-md hover:shadow-lg"
           >
             {tr('next')}
@@ -111,10 +116,33 @@ export function HomeScreen({ lang, onStart }: HomeScreenProps) {
       </div>
 
       {/* Trust disclaimer */}
+            {/* Trust disclaimer */}
       <div className="mt-6 flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200/60 dark:bg-slate-900 dark:border-slate-700/60">
         <Info className="w-5 h-5 text-slate-400 flex-shrink-0 mt-0.5 dark:text-slate-500" />
         <p className="text-sm text-slate-500 leading-relaxed dark:text-slate-400">{tr('trustDisclaimer')}</p>
       </div>
+
+      {/* Loan introduction popup */}
+      {showLoanIntro && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+              Before you begin
+            </h3>
+
+            <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              JanSahay will help you find a suitable government loan scheme based on the information you provide.
+            </p>
+
+            <button
+              onClick={() => setShowLoanIntro(false)}
+              className="mt-6 w-full rounded-xl bg-primary-600 px-4 py-3 font-semibold text-white transition hover:bg-primary-700"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
