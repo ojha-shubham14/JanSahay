@@ -60,3 +60,39 @@
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+/* Loan intro popup animation */
+@keyframes popup-attention {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+
+  35% {
+    opacity: 1;
+    transform: scale(1.02) translateY(0);
+  }
+
+  45% {
+    transform: scale(0.98) rotate(-1deg);
+  }
+
+  55% {
+    transform: scale(1.01) rotate(1deg);
+  }
+
+  65% {
+    transform: scale(0.995) rotate(-0.5deg);
+  }
+
+  75% {
+    transform: scale(1) rotate(0.5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+.animate-popup-attention {
+  animation: popup-attention 2s ease-out both;
+}
