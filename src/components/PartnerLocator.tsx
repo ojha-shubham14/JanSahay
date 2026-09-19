@@ -12,7 +12,11 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
-import type { Language, SchemeMatch, RankedPartner } from '@/lib/types';
+import type {
+  Language,
+  SchemeMatch,
+  RankedPartner,
+} from '@/lib/types';
 import { t, type TranslationKey } from '@/i18n/translations';
 import { findPartners } from '@/lib/partnerLocator';
 import { cityCoordinates } from '@/data/partners';
@@ -24,7 +28,7 @@ interface PartnerLocatorProps {
   userCity: string | null;
   userLatitude: number | null;
   userLongitude: number | null;
-  onProceed: () => void;
+  onProceed: (partner: RankedPartner) => void;
   onReset: () => void;
 }
 
@@ -46,43 +50,49 @@ export function PartnerLocator({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
 
-  // Get user's location and find suitable nearby partners.
+  // Find suitable nearby partners using the user's GPS coordinates.
   useEffect(() => {
-  if (!match.scheme_id) return;
-  if (userLatitude == null || userLongitude == null) return;
+    if (!match.scheme_id) return;
 
-  const partners = findPartners(
+    if (userLatitude == null || userLongitude == null) {
+      return;
+    }
+
+    const nearbyPartners = findPartners(
+      match.scheme_id,
+      userLatitude,
+      userLongitude
+    );
+
+    setResults(nearbyPartners);
+    setSearched(true);
+  }, [
     match.scheme_id,
     userLatitude,
-    userLongitude
-  );
+    userLongitude,
+  ]);
 
-  setResults(partners);
-  setSearched(true);
-}, [
-  match.scheme_id,
-  userLatitude,
-  userLongitude,
-]);
-
-  // Initialize/update the Leaflet map whenever
-  // the partner results or user location changes.
+  // Initialize/update Leaflet map.
   useEffect(() => {
-    if (!results || results.length === 0 || !mapRef.current) {
+    if (
+      !results ||
+      results.length === 0 ||
+      !mapRef.current
+    ) {
       return;
     }
 
     const coords =
-  userLatitude != null && userLongitude != null
-    ? {
-        lat: userLatitude,
-        lon: userLongitude,
-      }
-    : cityCoordinates[selectedCity];
+      userLatitude != null && userLongitude != null
+        ? {
+            lat: userLatitude,
+            lon: userLongitude,
+          }
+        : cityCoordinates[selectedCity];
 
     if (!coords) return;
 
-    // Remove any previous map instance.
+    // Remove previous map instance.
     if (mapInstance.current) {
       mapInstance.current.remove();
       mapInstance.current = null;
@@ -173,7 +183,7 @@ export function PartnerLocator({
         );
     });
 
-    // Fit the map so the user and all partner markers are visible.
+    // Fit map around user + all partners.
     const bounds = L.latLngBounds([
       [coords.lat, coords.lon],
       ...results.map(
@@ -191,7 +201,6 @@ export function PartnerLocator({
 
     mapInstance.current = map;
 
-    // Cleanup when the component/effect is removed.
     return () => {
       map.remove();
 
@@ -206,20 +215,30 @@ export function PartnerLocator({
     userLongitude,
   ]);
 
+  const handleProceed = () => {
+    if (!results || results.length === 0) return;
+
+    // The first result is the highest-ranked nearby eligible partner.
+    const recommendedPartner = results[0];
+
+    onProceed(recommendedPartner);
+  };
+
   return (
-    <div className="card p-6 sm:p-8 animate-slide-up">
+    <div className="portal-section p-5 sm:p-6 animate-slide-up">
+
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary-50">
-          <Navigation className="w-7 h-7 text-primary-600" />
+      <div className="flex items-start gap-3 mb-6">
+        <div className="flex items-center justify-center w-11 h-11 rounded-md bg-primary-50 flex-shrink-0">
+          <Navigation className="w-6 h-6 text-primary-700" />
         </div>
 
         <div>
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">
             {tr('partnerLocator')}
           </h2>
 
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 mt-1">
             {tr('partnerSubtitle')} —{' '}
             {cityCoordinates[selectedCity]?.label ??
               selectedCity}
@@ -231,106 +250,129 @@ export function PartnerLocator({
       {searched &&
         results &&
         results.length > 0 && (
-          <div
-            ref={mapRef}
-            className="w-full h-72 mb-5 rounded-xl border border-slate-200"
-          />
+          <div className="mb-6">
+            <div
+              ref={mapRef}
+              className="w-full h-72 sm:h-80 rounded-md border border-slate-200 overflow-hidden"
+            />
+          </div>
         )}
 
       {/* Results */}
       {searched && (
         <div className="animate-fade-in">
+
           {results && results.length > 0 ? (
             <>
-              <div className="flex items-center gap-2 mb-4">
-                <Check className="w-5 h-5 text-success-600" />
+              {/* Result summary */}
+              <div className="portal-notice mb-4">
+                <div className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-success-600" />
 
-                <p className="text-sm font-semibold text-slate-700">
-                  {results.length}{' '}
-                  {tr('partnersFound')}{' '}
-                  {cityCoordinates[selectedCity]?.label ??
-                    selectedCity}
-                </p>
+                  <p className="text-sm font-semibold text-slate-700">
+                    {results.length}{' '}
+                    {tr('partnersFound')}{' '}
+                    {cityCoordinates[selectedCity]?.label ??
+                      selectedCity}
+                  </p>
+                </div>
               </div>
 
+              {/* Partner list */}
               <div className="space-y-3">
                 {results.map((partner, idx) => (
                   <div
                     key={partner.partner_id}
-                    className="flex items-start gap-4 p-4 rounded-xl border border-slate-200/80 hover:border-primary-300 hover:shadow-sm transition-all duration-200 animate-slide-up"
-                    style={{
-                      animationDelay: `${idx * 80}ms`,
-                    }}
+                    className={`border rounded-md p-4 transition-colors duration-150 ${
+                      idx === 0
+                        ? 'border-primary-300 bg-primary-50/30'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
+                    }`}
                   >
-                    {/* Ranking number */}
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-100 text-primary-700 font-bold flex-shrink-0">
-                      {idx + 1}
-                    </div>
+                    <div className="flex items-start gap-4">
 
-                    <div className="flex-1 min-w-0">
-                      {/* Partner name + distance */}
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug">
-                          {partner.name}
-                        </h3>
-
-                        <span className="text-xs font-semibold text-primary-700 bg-primary-50 px-2 py-1 rounded-full whitespace-nowrap">
-                          {partner.distance_km}{' '}
-                          {tr('kmAway')}
-                        </span>
-                      </div>
-
-                      {/* Partner information */}
-                      <div className="flex flex-wrap items-center gap-3 mt-2">
-                        <span className="flex items-center gap-1 text-xs text-slate-500">
-                          <Building2 className="w-3.5 h-3.5" />
-                          {partner.type}
-                        </span>
-
-                        <span className="flex items-center gap-1 text-xs text-slate-500">
-                          <Gauge className="w-3.5 h-3.5" />
-                          NPA {partner.npa_ratio}%
-                        </span>
-
-                        <span className="flex items-center gap-1 text-xs text-success-600 font-medium">
-                          <Banknote className="w-3.5 h-3.5" />
-                          {tr('demoCapacity')}
-                        </span>
-
-                        <span className="flex items-center gap-1 text-xs text-success-600 font-medium">
-                          <Check className="w-3.5 h-3.5" />
-                          {tr('acceptingApps')}
-                        </span>
-                      </div>
-
-                      {/* Directions */}
-                      <a
-                        href={`https://www.google.com/maps/dir/?api=1&destination=${partner.latitude},${partner.longitude}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-primary-600 hover:text-primary-700"
+                      {/* Ranking number */}
+                      <div
+                        className={`flex items-center justify-center w-9 h-9 rounded-md font-semibold flex-shrink-0 ${
+                          idx === 0
+                            ? 'bg-primary-700 text-white'
+                            : 'bg-slate-100 text-slate-700'
+                        }`}
                       >
-                        <Navigation className="w-4 h-4" />
-                        Get Directions
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                        {idx + 1}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+
+                        {/* Name + distance */}
+                        <div className="flex items-start justify-between gap-3">
+                          <h3 className="font-semibold text-slate-900 text-sm leading-snug">
+                            {partner.name}
+                          </h3>
+
+                          <span className="text-xs font-semibold text-primary-700 bg-primary-50 border border-primary-100 px-2 py-1 rounded-md whitespace-nowrap">
+                            {partner.distance_km}{' '}
+                            {tr('kmAway')}
+                          </span>
+                        </div>
+
+                        {/* Partner information */}
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
+
+                          <span className="flex items-center gap-1 text-xs text-slate-500">
+                            <Building2 className="w-3.5 h-3.5" />
+                            {partner.type}
+                          </span>
+
+                          <span className="flex items-center gap-1 text-xs text-slate-500">
+                            <Gauge className="w-3.5 h-3.5" />
+                            NPA {partner.npa_ratio}%
+                          </span>
+
+                          <span className="flex items-center gap-1 text-xs text-success-700 font-medium">
+                            <Banknote className="w-3.5 h-3.5" />
+                            {tr('demoCapacity')}
+                          </span>
+
+                          <span className="flex items-center gap-1 text-xs text-success-700 font-medium">
+                            <Check className="w-3.5 h-3.5" />
+                            {tr('acceptingApps')}
+                          </span>
+
+                        </div>
+
+                        {/* Directions */}
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${partner.latitude},${partner.longitude}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-primary-700 hover:text-primary-800"
+                        >
+                          <Navigation className="w-4 h-4" />
+                          Get Directions
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Prototype/data note */}
-              <div className="mt-4 flex items-start gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/60">
-                <Info className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+              {/* Data note */}
+              <div className="portal-notice mt-4">
+                <div className="flex items-start gap-2">
+                  <Info className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />
 
-                <p className="text-xs text-slate-500">
-                  {tr('partnerFilterNote')}
-                </p>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {tr('partnerFilterNote')}
+                  </p>
+                </div>
               </div>
             </>
           ) : (
             /* No partners */
-            <div className="flex flex-col items-center text-center py-8">
+            <div className="flex flex-col items-center text-center py-8 border border-slate-200 rounded-md bg-slate-50">
               <div className="flex items-center justify-center w-14 h-14 rounded-full bg-warning-50 mb-3">
                 <X className="w-7 h-7 text-warning-500" />
               </div>
@@ -339,19 +381,21 @@ export function PartnerLocator({
                 {tr('noPartners')}
               </p>
 
-              <p className="text-xs text-slate-500 mt-1 max-w-sm">
+              <p className="text-xs text-slate-500 mt-1 max-w-sm px-4">
                 {tr('noPartnersDesc')}
               </p>
             </div>
           )}
+
         </div>
       )}
 
       {/* Bottom buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mt-6">
+
         {results && results.length > 0 && (
           <button
-            onClick={onProceed}
+            onClick={handleProceed}
             className="btn-primary flex-1"
           >
             {tr('proceedToChecklist')}
@@ -366,6 +410,7 @@ export function PartnerLocator({
           <RotateCcw className="w-4 h-4" />
           {tr('startOver')}
         </button>
+
       </div>
     </div>
   );
