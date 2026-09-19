@@ -92,7 +92,7 @@ export function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 dark:bg-slate-950 dark:border-slate-800">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 dark:bg-slate-950/95 dark:border-slate-800 shadow-sm transition-colors">
 
       <div className="max-w-5xl mx-auto px-3 sm:px-6">
 

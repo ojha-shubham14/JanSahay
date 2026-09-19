@@ -268,7 +268,7 @@ function App() {
       className="
         relative
         min-h-screen
-        overflow-x-hidden
+        overflow-x-clip
         bg-transparent
       "
     >
@@ -374,8 +374,9 @@ function App() {
 
       <div
         className="
-          relative
-          z-40
+          sticky
+          top-0
+          z-50
         "
       >
         <Header
