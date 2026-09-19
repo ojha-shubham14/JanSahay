@@ -120,19 +120,19 @@ export function ReadinessChecklist({ lang, match, profile, selectedPartner, onRe
           <FileText className="w-4 h-4 text-slate-400" />
           <p className="text-sm font-semibold text-slate-600">{tr('summaryTitle')}</p>
         </div>
-        <div className="text-xs text-slate-500 space-y-1">
-          <p>{tr('recommendedScheme')}: <span className="font-medium text-slate-700 dark:text-white">
+        <div className="text-xs text-slate-600 dark:text-slate-600 space-y-1">
+          <p>{tr('recommendedScheme')}: <span className="font-medium text-slate-900">
   {match.scheme_name}
 </span></p>
-          <p>{tr('loanAmount')}: <span className="font-medium text-slate-700 dark:text-white">
+          <p>{tr('loanAmount')}: <span className="font-medium text-slate-900">
   ₹{match.loan_amount?.toLocaleString('en-IN')}
 </span></p>
           {selectedPartner && (
   <p>
     {tr('recommendedPartner')}:{' '}
-    <span className="font-medium text-slate-700 dark:text-white">
-      {selectedPartner.name}
-    </span>
+    <span className="font-medium text-slate-900">
+  {selectedPartner.name}
+</span>
   </p>
 )}
         </div>
