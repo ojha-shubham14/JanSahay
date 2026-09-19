@@ -27,7 +27,9 @@ export function HomeScreen({
 }: HomeScreenProps) {
   const tr = (key: TranslationKey) => t(lang, key);
 
-  const [showLanguageModal, setShowLanguageModal] = useState(true);
+  const [showLanguageModal, setShowLanguageModal] =
+    useState(true);
+
   const [selectedLanguage, setSelectedLanguage] =
     useState<Language>(lang);
 
@@ -127,124 +129,246 @@ export function HomeScreen({
           ===================================================== */}
 
       <section
-  className="relative left-1/2 w-screen -translate-x-1/2 min-h-[calc(100vh-80px)] flex flex-col justify-center text-center pt-6 sm:pt-10 pb-8 bg-cover bg-center bg-no-repeat"
->
-  <div
-    className="absolute inset-0 bg-cover bg-center bg-no-repeat dark:hidden"
-    style={{
-      backgroundImage: "url('/JanSahay/images/backgroundHomepage.png')",
-    }}
-  />
+        className="
+          relative
+          left-1/2
+          w-screen
+          -translate-x-1/2
+          min-h-[calc(100vh-80px)]
+          flex
+          flex-col
+          justify-center
+          text-center
+          pt-6
+          sm:pt-10
+          pb-8
+          overflow-hidden
+          bg-slate-50
+          dark:bg-slate-950
+        "
+      >
 
-  <div
-    className="absolute inset-0 hidden bg-cover bg-center bg-no-repeat dark:block"
-    style={{
-      backgroundImage:
-        "linear-gradient(rgba(2, 6, 23, 0.82), rgba(2, 6, 23, 0.82)), url('/JanSahay/images/backgroundHomepage.png')",
-    }}
-  />
-  <div className="relative z-10 w-full">
+        {/* =================================================
+            LIGHT MODE BACKGROUND
+            ================================================= */}
 
-        <h2 className="relative z-10 text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white max-w-2xl mx-auto leading-tight drop-shadow-sm">
-          {tr('heroTitle')}
-        </h2>
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage:
+              "url('/JanSahay/images/backgroundHomepage.png')",
+          }}
+        />
 
-        <p className="text-slate-700 dark:text-slate-300 mt-4 max-w-xl mx-auto text-base sm:text-lg leading-relaxed drop-shadow-sm">
-          {tr('heroSubtitle')}
-        </p>
+        {/* Light mode readability overlay.
+            Kept deliberately subtle so the artwork remains visible. */}
+        <div
+          className="
+            absolute
+            inset-0
+            bg-gradient-to-b
+            from-white/25
+            via-white/10
+            to-white/30
+            dark:hidden
+          "
+        />
 
-        {/* Primary action */}
-        <div className="mt-8 space-y-4 max-w-xl mx-auto">
+        {/* =================================================
+            DARK MODE BACKGROUND
+            ================================================= */}
 
-          <button
-            onClick={() => onStart('conversation')}
-            className="w-full flex items-center gap-4 p-4 sm:p-5 rounded-md bg-primary-700 text-white hover:bg-primary-800 transition-colors duration-150 shadow-md"
-          >
-            <div className="flex items-center justify-center w-10 h-10 rounded-md bg-white/15 flex-shrink-0">
-              <Mic className="w-5 h-5" />
+        <div
+          className="
+            absolute
+            inset-0
+            hidden
+            dark:block
+            bg-cover
+            bg-center
+            bg-no-repeat
+          "
+          style={{
+            backgroundImage:
+              "url('/JanSahay/images/backgroundHomepage.png')",
+          }}
+        />
+
+        {/* Dark mode readability overlay.
+            Much lighter than the previous 82% overlay. */}
+        <div
+          className="
+            absolute
+            inset-0
+            hidden
+            dark:block
+            bg-gradient-to-b
+            from-slate-950/55
+            via-slate-950/40
+            to-slate-950/65
+          "
+        />
+
+        {/* =================================================
+            HERO CONTENT
+            ================================================= */}
+
+        <div className="relative z-10 w-full px-4 sm:px-6">
+
+          <h2 className="relative z-10 text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white max-w-2xl mx-auto leading-tight drop-shadow-sm">
+            {tr('heroTitle')}
+          </h2>
+
+          <p className="text-slate-700 dark:text-slate-200 mt-4 max-w-xl mx-auto text-base sm:text-lg leading-relaxed drop-shadow-sm">
+            {tr('heroSubtitle')}
+          </p>
+
+          {/* Primary action */}
+          <div className="mt-8 space-y-4 max-w-xl mx-auto">
+
+            <button
+              onClick={() => onStart('conversation')}
+              className="
+                w-full
+                flex
+                items-center
+                gap-4
+                p-4
+                sm:p-5
+                rounded-md
+                bg-primary-700
+                text-white
+                hover:bg-primary-800
+                transition-colors
+                duration-150
+                shadow-md
+              "
+            >
+              <div className="flex items-center justify-center w-10 h-10 rounded-md bg-white/15 flex-shrink-0">
+                <Mic className="w-5 h-5" />
+              </div>
+
+              <div className="flex-1 text-left">
+                <p className="font-bold text-base sm:text-lg">
+                  {tr('tellUs')}
+                </p>
+
+                <p className="text-xs sm:text-sm text-primary-100 mt-0.5">
+                  Speak or type in simple language
+                </p>
+              </div>
+
+              <ArrowRight className="w-5 h-5 flex-shrink-0" />
+            </button>
+
+            {/* OR */}
+            <div className="flex items-center gap-3 py-1">
+              <div className="flex-1 h-px bg-slate-300/80 dark:bg-slate-600" />
+
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                {tr('orDivider')}
+              </span>
+
+              <div className="flex-1 h-px bg-slate-300/80 dark:bg-slate-600" />
             </div>
 
-            <div className="flex-1 text-left">
-              <p className="font-bold text-base sm:text-lg">
-                {tr('tellUs')}
-              </p>
+            {/* Purpose choices */}
+            <div className="grid grid-cols-2 gap-3">
 
-              <p className="text-xs sm:text-sm text-primary-100 mt-0.5">
-                Speak or type in simple language
-              </p>
+              {/* Business */}
+              <button
+                onClick={() =>
+                  onStart('guided', 'business_project')
+                }
+                className="
+                  flex
+                  items-center
+                  gap-3
+                  p-4
+                  sm:p-5
+                  rounded-md
+                  bg-white/90
+                  border
+                  border-slate-300
+                  shadow-sm
+                  hover:border-primary-400
+                  hover:bg-white
+                  transition-colors
+                  duration-150
+                  text-left
+                  dark:bg-slate-900/85
+                  dark:border-slate-700
+                  dark:hover:border-primary-600
+                  dark:hover:bg-slate-900
+                "
+              >
+                <Store className="w-7 h-7 sm:w-8 sm:h-8 text-accent-600 flex-shrink-0" />
+
+                <div className="min-w-0">
+                  <span className="block text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
+                    {tr('businessLoan')}
+                  </span>
+
+                  <span className="hidden sm:block text-xs text-slate-500 mt-1 dark:text-slate-400">
+                    For your business needs
+                  </span>
+                </div>
+              </button>
+
+              {/* Education */}
+              <button
+                onClick={() =>
+                  onStart('guided', 'education')
+                }
+                className="
+                  flex
+                  items-center
+                  gap-3
+                  p-4
+                  sm:p-5
+                  rounded-md
+                  bg-white/90
+                  border
+                  border-slate-300
+                  shadow-sm
+                  hover:border-primary-400
+                  hover:bg-white
+                  transition-colors
+                  duration-150
+                  text-left
+                  dark:bg-slate-900/85
+                  dark:border-slate-700
+                  dark:hover:border-primary-600
+                  dark:hover:bg-slate-900
+                "
+              >
+                <GraduationCap className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600 flex-shrink-0" />
+
+                <div className="min-w-0">
+                  <span className="block text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
+                    {tr('educationLoan')}
+                  </span>
+
+                  <span className="hidden sm:block text-xs text-slate-500 mt-1 dark:text-slate-400">
+                    For higher education
+                  </span>
+                </div>
+              </button>
+
             </div>
+          </div>
 
-            <ArrowRight className="w-5 h-5 flex-shrink-0" />
-          </button>
-
-          {/* OR */}
-          <div className="flex items-center gap-3 py-1">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
-
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
-              {tr('orDivider')}
+          {/* Scroll indicator */}
+          <div className="mt-10 flex flex-col items-center text-slate-500 dark:text-slate-400">
+            <span className="text-xs font-medium">
+              Scroll down to know more
             </span>
 
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
+            <ArrowRight className="w-4 h-4 rotate-90 mt-2 animate-bounce" />
           </div>
 
-          {/* Purpose choices */}
-          <div className="grid grid-cols-2 gap-3">
-
-            {/* Business */}
-            <button
-              onClick={() =>
-                onStart('guided', 'business_project')
-              }
-              className="flex items-center gap-3 p-4 sm:p-5 rounded-md bg-white/95 border border-slate-300 shadow-sm hover:border-primary-400 hover:bg-white transition-colors duration-150 text-left dark:bg-slate-900/95 dark:border-slate-700 dark:hover:border-primary-600"
-            >
-              <Store className="w-7 h-7 sm:w-8 sm:h-8 text-accent-600 flex-shrink-0" />
-
-              <div className="min-w-0">
-                <span className="block text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
-                  {tr('businessLoan')}
-                </span>
-
-                <span className="hidden sm:block text-xs text-slate-500 mt-1 dark:text-slate-400">
-                  For your business needs
-                </span>
-              </div>
-            </button>
-
-            {/* Education */}
-            <button
-              onClick={() =>
-                onStart('guided', 'education')
-              }
-              className="flex items-center gap-3 p-4 sm:p-5 rounded-md bg-white/95 border border-slate-300 shadow-sm hover:border-primary-400 hover:bg-white transition-colors duration-150 text-left dark:bg-slate-900/95 dark:border-slate-700 dark:hover:border-primary-600"
-            >
-              <GraduationCap className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600 flex-shrink-0" />
-
-              <div className="min-w-0">
-                <span className="block text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
-                  {tr('educationLoan')}
-                </span>
-
-                <span className="hidden sm:block text-xs text-slate-500 mt-1 dark:text-slate-400">
-                  For higher education
-                </span>
-              </div>
-            </button>
-
-          </div>
         </div>
-
-        {/* Scroll indicator */}
-        <div className="mt-10 flex flex-col items-center text-slate-400 dark:text-slate-500">
-          <span className="text-xs font-medium">
-            Scroll down to know more
-          </span>
-
-          <ArrowRight className="w-4 h-4 rotate-90 mt-2 animate-bounce" />
-        </div>
-      </div>
       </section>
-
 
       {/* =====================================================
           BELOW-THE-FOLD INFORMATION
@@ -252,9 +376,9 @@ export function HomeScreen({
 
       <section className="mt-4 space-y-5 pb-8">
 
-        {/* ---------------------------------------------------
+        {/* ===================================================
             KEY BENEFITS
-            --------------------------------------------------- */}
+            =================================================== */}
 
         <div className="portal-section bg-primary-50/50 dark:bg-slate-900">
 
@@ -274,7 +398,6 @@ export function HomeScreen({
               </p>
             </div>
 
-
             <div className="text-center">
               <div className="text-primary-600 text-xl mb-1">
                 ◎
@@ -289,7 +412,6 @@ export function HomeScreen({
               </p>
             </div>
 
-
             <div className="text-center">
               <div className="text-primary-600 text-xl mb-1">
                 ✓
@@ -303,7 +425,6 @@ export function HomeScreen({
                 Easy to understand
               </p>
             </div>
-
 
             <div className="text-center">
               <div className="text-primary-600 text-xl mb-1">
@@ -323,10 +444,9 @@ export function HomeScreen({
 
         </div>
 
-
-        {/* ---------------------------------------------------
+        {/* ===================================================
             HOW JANSAHAY HELPS
-            --------------------------------------------------- */}
+            =================================================== */}
 
         <div className="portal-section">
 
@@ -366,7 +486,6 @@ export function HomeScreen({
                 key={item.number}
                 className="flex gap-3"
               >
-
                 <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-bold">
                   {item.number}
                 </div>
@@ -380,7 +499,6 @@ export function HomeScreen({
                     {item.description}
                   </p>
                 </div>
-
               </div>
             ))}
 
@@ -388,10 +506,9 @@ export function HomeScreen({
 
         </div>
 
-
-        {/* ---------------------------------------------------
+        {/* ===================================================
             IMPORTANT INFORMATION
-            --------------------------------------------------- */}
+            =================================================== */}
 
         <div className="portal-notice">
 
