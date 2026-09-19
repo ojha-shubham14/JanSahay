@@ -1,6 +1,16 @@
 import { useState } from 'react';
-import { ArrowRight, ArrowLeft, IndianRupee, Briefcase, GraduationCap, MapPin, AlertCircle, User } from 'lucide-react';
-import type { Language, Purpose, EducationStatus, ApplicantProfile } from '@/lib/types';
+import {
+  ArrowRight,
+  ArrowLeft,
+  IndianRupee,
+  Briefcase,
+  GraduationCap,
+  MapPin,
+  AlertCircle,
+  User,
+  Home,
+  XCircle,
+} from 'lucide-react';import type { Language, Purpose, EducationStatus, ApplicantProfile } from '@/lib/types';
 import { t, type TranslationKey } from '@/i18n/translations';
 import { cityCoordinates } from '@/data/partners';
 import { verifyEducation } from '@/lib/educationVerifier';
@@ -39,7 +49,7 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   const [projectType, setProjectType] = useState(initialProfile.project_type ?? '');
   const [city, setCity] = useState(initialProfile.location.display_name ?? '');
   const [error, setError] = useState('');
-
+  const [showIncomeLimitPopup, setShowIncomeLimitPopup] = useState(false);
   const stepOrder: WizardStep[] = [
   'details',
   'income',
@@ -84,10 +94,19 @@ const effectiveStepOrder = stepOrder.filter((s) => {
     return;
   }
 
-  if (step === 'income' && (!income || Number(income) <= 0)) {
+  if (step === 'income') {
+  const incomeValue = Number(income);
+
+  if (!income || incomeValue <= 0) {
     setError(tr('questionIncome'));
     return;
   }
+
+  if (incomeValue > 500000) {
+    setShowIncomeLimitPopup(true);
+    return;
+  }
+}
 
   if (step === 'purpose' && !purpose) {
     setError(tr('questionPurpose'));
@@ -497,18 +516,66 @@ const effectiveStepOrder = stepOrder.filter((s) => {
           <p className="text-sm text-error-700">{error}</p>
         </div>
       )}
+      {showIncomeLimitPopup && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 animate-fade-in">
+    <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 animate-popup-attention">
+
+      <div className="flex justify-center mb-4">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-error-50">
+          <XCircle className="w-9 h-9 text-error-500" />
+        </div>
+      </div>
+
+      <h3 className="text-xl font-bold text-center text-error-600 dark:text-error-400">
+        Not eligible
+      </h3>
+
+      <p className="mt-3 text-sm leading-6 text-center text-slate-600 dark:text-slate-300">
+        Family income ₹{Number(income).toLocaleString('en-IN')} exceeds the
+        ₹5,00,000 SC eligibility limit.
+      </p>
+
+      <button
+        onClick={() => {
+          setShowIncomeLimitPopup(false);
+          setIncome('');
+        }}
+        className="mt-6 mx-auto flex items-center justify-center gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50 transition dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Try again
+      </button>
+
+    </div>
+  </div>
+)}
 
       {/* Navigation */}
-      <div className="flex items-center gap-3 mt-6">
-        <button onClick={prevStep} className="btn-secondary">
-          <ArrowLeft className="w-5 h-5" />
-          {tr('back')}
-        </button>
-        <button onClick={nextStep} className="btn-primary flex-1">
-          {isLastStep ? tr('seeResults') : tr('next')}
-          <ArrowRight className="w-5 h-5" />
-        </button>
-      </div>
+<div className="flex items-center gap-3 mt-6">
+  <button
+    onClick={prevStep}
+    className="btn-secondary"
+  >
+    <ArrowLeft className="w-5 h-5" />
+    {tr('back')}
+  </button>
+
+  <button
+    onClick={nextStep}
+    className="btn-primary flex-1"
+  >
+    {isLastStep ? tr('seeResults') : tr('next')}
+    <ArrowRight className="w-5 h-5" />
+  </button>
+
+  <button
+    onClick={onBack}
+    className="btn-ghost"
+  >
+    <Home className="w-5 h-5" />
+    Home
+  </button>
+</div>
     </div>
   );
 }

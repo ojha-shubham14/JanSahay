@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ArrowLeft, Home } from 'lucide-react';
 import { useTheme } from '@/hooks/useThemes';
 import { Header } from '@/components/Header';
 import { Stepper } from '@/components/Stepper';
@@ -80,13 +81,30 @@ useEffect(() => {
   };
 
   const handleReset = () => {
-    setProfile(createEmptyProfile());
-    setMatch(null);
-    setSelectedPartner(null);
-    navigate('home');
-  };
+  setProfile(createEmptyProfile());
+  setMatch(null);
+  setSelectedPartner(null);
+  navigate('home');
+};
 
-  const stepperStep = screen === 'scheme' ? 1 : screen === 'emi' ? 2 : screen === 'partner' || screen === 'readiness' ? 3 : 1;
+const isFlowScreen =
+  screen === 'scheme' ||
+  screen === 'emi' ||
+  screen === 'partner' ||
+  screen === 'readiness';
+
+const handlePrevious = () => {
+  window.history.back();
+};
+
+const stepperStep =
+  screen === 'scheme'
+    ? 1
+    : screen === 'emi'
+      ? 2
+      : screen === 'partner' || screen === 'readiness'
+        ? 3
+        : 1;
 
   return (
       <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-primary-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
@@ -102,7 +120,28 @@ useEffect(() => {
       />
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 pt-6">
-        {screen === 'dashboard' && <Dashboard lang={lang} onBack={() => navigate('home')} />}
+
+  {isFlowScreen && (
+    <div className="flex items-center justify-between mb-4">
+      <button
+        onClick={handlePrevious}
+        className="btn-secondary"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </button>
+
+      <button
+        onClick={handleReset}
+        className="btn-ghost"
+      >
+        <Home className="w-4 h-4" />
+        Home
+      </button>
+    </div>
+  )}
+
+  {screen === 'dashboard' && <Dashboard lang={lang} onBack={() => navigate('home')} />}
 
         {screen === 'home' && (
   <HomeScreen
