@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Mic,
   Store,
@@ -31,6 +31,35 @@ export function HomeScreen({
   const [selectedLanguage, setSelectedLanguage] =
     useState<Language>(lang);
 
+  /* =========================================================
+     PARALLAX SCROLL POSITION
+     ========================================================= */
+
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const languages: {
     code: Language;
     native: string;
@@ -41,25 +70,6 @@ export function HomeScreen({
     { code: 'kn', native: 'ಕನ್ನಡ', english: 'Kannada' },
     { code: 'ta', native: 'தமிழ்', english: 'Tamil' },
   ];
-
-  /*
-   * ----------------------------------------------------------
-   * BASE PATH
-   * ----------------------------------------------------------
-   *
-   * This automatically works for:
-   *
-   * Local:
-   *   /images/...
-   *
-   * GitHub Pages:
-   *   /JanSahay/images/...
-   *
-   */
-  const baseUrl = import.meta.env.BASE_URL;
-
-  const desktopBackground = `${baseUrl}images/backgroundHomepage.png`;
-  const mobileBackground = `${baseUrl}images/backgroundHomepageMobile.png`;
 
   /* =========================================================
      LANGUAGE SELECTION
@@ -151,112 +161,78 @@ export function HomeScreen({
           left-1/2
           w-screen
           -translate-x-1/2
-          min-h-[680px]
-          sm:min-h-[calc(100vh-80px)]
+          min-h-[calc(100vh-80px)]
           flex
           flex-col
           justify-center
           text-center
-          pt-8
+          pt-6
           sm:pt-10
-          pb-10
+          pb-8
           overflow-hidden
           isolate
         "
       >
 
-        {/* ===================================================
-            RESPONSIVE BACKGROUND IMAGE
+        {/* =================================================
+            PARALLAX BACKGROUND
+            ================================================= */}
 
-            Mobile:
-              backgroundHomepageMobile.png
+        <div
+          className="
+            absolute
+            inset-0
+            overflow-hidden
+            pointer-events-none
+            z-0
+          "
+        >
 
-            Desktop:
-              backgroundHomepage.png
-            =================================================== */}
-
-        <picture className="absolute inset-0 z-0 block pointer-events-none">
-
-          {/* Mobile background */}
-          <source
-            media="(max-width: 639px)"
-            srcSet={mobileBackground}
-          />
-
-          {/* Desktop background */}
           <img
-            src={desktopBackground}
+            src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
             alt=""
             aria-hidden="true"
             className="
               absolute
-              inset-0
+              left-0
+              top-[-8%]
               w-full
-              h-full
+              h-[116%]
+              max-w-none
               object-cover
               object-center
               select-none
+
+              max-[639px]:left-[-22%]
+              max-[639px]:w-[180%]
             "
+            style={{
+              transform: `translate3d(0, ${-scrollY * 0.12}px, 0)`,
+              willChange: 'transform',
+            }}
           />
 
-        </picture>
+          {/* Light readability layer */}
+          <div className="absolute inset-0 bg-white/10 dark:hidden" />
 
-        {/* ===================================================
-            DARK MODE OVERLAY
+          {/* Dark mode readability layer */}
+          <div className="absolute inset-0 hidden bg-slate-950/55 dark:block" />
 
-            The image stays visible but gets darker enough
-            for text to remain readable.
-            =================================================== */}
+        </div>
 
-        <div
-          className="
-            absolute
-            inset-0
-            z-[1]
-            pointer-events-none
-            hidden
-            dark:block
-            bg-slate-950/65
-          "
-        />
 
-        {/* ===================================================
-            VERY LIGHT READABILITY LAYER
-
-            Only a subtle layer in light mode so that the
-            original artwork remains clearly visible.
-            =================================================== */}
-
-        <div
-          className="
-            absolute
-            inset-0
-            z-[1]
-            pointer-events-none
-            bg-white/10
-            dark:hidden
-          "
-        />
-
-        {/* ===================================================
+        {/* =================================================
             HERO CONTENT
-            =================================================== */}
+            ================================================= */}
 
-        <div
-          className="
-            relative
-            z-10
-            w-full
-            max-w-2xl
-            mx-auto
-            px-4
-            sm:px-6
-          "
-        >
+        <div className="relative z-10 w-full px-4 sm:px-6">
 
-          {/* Heading */}
+          {/* Hero heading */}
+
           <h2
             className="
+              relative
+              z-10
               text-3xl
               sm:text-4xl
               font-bold
@@ -271,7 +247,9 @@ export function HomeScreen({
             {tr('heroTitle')}
           </h2>
 
-          {/* Subtitle */}
+
+          {/* Hero subtitle */}
+
           <p
             className="
               text-slate-700
@@ -287,6 +265,7 @@ export function HomeScreen({
           >
             {tr('heroSubtitle')}
           </p>
+
 
           {/* =================================================
               PRIMARY ACTION
@@ -313,7 +292,6 @@ export function HomeScreen({
               "
             >
 
-              {/* Microphone icon */}
               <div
                 className="
                   flex
@@ -329,7 +307,7 @@ export function HomeScreen({
                 <Mic className="w-5 h-5" />
               </div>
 
-              {/* Text */}
+
               <div className="flex-1 text-left">
 
                 <p className="font-bold text-base sm:text-lg">
@@ -342,9 +320,11 @@ export function HomeScreen({
 
               </div>
 
+
               <ArrowRight className="w-5 h-5 flex-shrink-0" />
 
             </button>
+
 
             {/* =================================================
                 OR
@@ -352,15 +332,16 @@ export function HomeScreen({
 
             <div className="flex items-center gap-3 py-1">
 
-              <div className="flex-1 h-px bg-slate-300/70 dark:bg-slate-700" />
+              <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
 
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
                 {tr('orDivider')}
               </span>
 
-              <div className="flex-1 h-px bg-slate-300/70 dark:bg-slate-700" />
+              <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
 
             </div>
+
 
             {/* =================================================
                 PURPOSE CHOICES
@@ -369,6 +350,7 @@ export function HomeScreen({
             <div className="grid grid-cols-2 gap-3">
 
               {/* Business */}
+
               <button
                 onClick={() =>
                   onStart('guided', 'business_project')
@@ -438,7 +420,9 @@ export function HomeScreen({
 
               </button>
 
+
               {/* Education */}
+
               <button
                 onClick={() =>
                   onStart('guided', 'education')
@@ -512,6 +496,7 @@ export function HomeScreen({
 
           </div>
 
+
           {/* =================================================
               SCROLL INDICATOR
               ================================================= */}
@@ -522,8 +507,8 @@ export function HomeScreen({
               flex
               flex-col
               items-center
-              text-slate-500
-              dark:text-slate-400
+              text-slate-400
+              dark:text-slate-500
             "
           >
 
@@ -562,7 +547,8 @@ export function HomeScreen({
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
 
-            {/* Simple */}
+            {/* Simple & Easy */}
+
             <div className="text-center">
 
               <div className="text-primary-600 text-xl mb-1">
@@ -580,7 +566,8 @@ export function HomeScreen({
             </div>
 
 
-            {/* Languages */}
+            {/* Multiple Languages */}
+
             <div className="text-center">
 
               <div className="text-primary-600 text-xl mb-1">
@@ -598,7 +585,8 @@ export function HomeScreen({
             </div>
 
 
-            {/* Information */}
+            {/* Clear Information */}
+
             <div className="text-center">
 
               <div className="text-primary-600 text-xl mb-1">
@@ -617,6 +605,7 @@ export function HomeScreen({
 
 
             {/* Citizen Friendly */}
+
             <div className="text-center">
 
               <div className="text-primary-600 text-xl mb-1">
@@ -647,6 +636,7 @@ export function HomeScreen({
           <h3 className="portal-section-title mb-5">
             How JanSahay helps you
           </h3>
+
 
           <div className="grid gap-5 sm:grid-cols-4">
 
