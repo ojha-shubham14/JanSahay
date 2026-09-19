@@ -38,23 +38,37 @@ type Screen =
   | 'contact';
 
 function App() {
-  const { mode: themeMode, setMode: setThemeMode } = useTheme();
+  const {
+    mode: themeMode,
+    setMode: setThemeMode,
+  } = useTheme();
 
-  const [lang, setLang] = useState<Language>('en');
-  const [screen, setScreen] = useState<Screen>('home');
+  /* =========================================================
+     GLOBAL STATE
+     ========================================================= */
 
-  const [inputMode, setInputMode] = useState<
-    'guided' | 'conversation'
-  >('guided');
+  const [lang, setLang] =
+    useState<Language>('en');
+
+  const [screen, setScreen] =
+    useState<Screen>('home');
+
+  const [inputMode, setInputMode] =
+    useState<'guided' | 'conversation'>(
+      'guided'
+    );
 
   const [profile, setProfile] =
-    useState<ApplicantProfile>(createEmptyProfile());
+    useState<ApplicantProfile>(
+      createEmptyProfile()
+    );
 
   const [match, setMatch] =
     useState<SchemeMatch | null>(null);
 
   const [selectedPartner, setSelectedPartner] =
     useState<RankedPartner | null>(null);
+
 
   /* =========================================================
      NAVIGATION
@@ -75,6 +89,11 @@ function App() {
     });
   };
 
+
+  /* =========================================================
+     BROWSER BACK BUTTON
+     ========================================================= */
+
   useEffect(() => {
     window.history.replaceState(
       { screen: 'home' },
@@ -82,11 +101,17 @@ function App() {
       window.location.href
     );
 
-    const handlePopState = (event: PopStateEvent) => {
+    const handlePopState = (
+      event: PopStateEvent
+    ) => {
       const previousScreen =
-        event.state?.screen as Screen | undefined;
+        event.state?.screen as
+          | Screen
+          | undefined;
 
-      setScreen(previousScreen ?? 'home');
+      setScreen(
+        previousScreen ?? 'home'
+      );
 
       window.scrollTo({
         top: 0,
@@ -107,11 +132,14 @@ function App() {
     };
   }, []);
 
+
   /* =========================================================
      LANGUAGE
      ========================================================= */
 
-  const handleLangChange = (newLang: Language) => {
+  const handleLangChange = (
+    newLang: Language
+  ) => {
     setLang(newLang);
 
     setProfile((prev) => ({
@@ -120,17 +148,21 @@ function App() {
     }));
   };
 
+
   /* =========================================================
-     START FLOW
+     START JANSAHAY FLOW
      ========================================================= */
 
   const handleStart = (
-    mode: 'guided' | 'conversation',
+    mode:
+      | 'guided'
+      | 'conversation',
     purpose?: Purpose
   ) => {
     setInputMode(mode);
 
-    const fresh = createEmptyProfile();
+    const fresh =
+      createEmptyProfile();
 
     fresh.language = lang;
 
@@ -144,6 +176,7 @@ function App() {
     navigate('input');
   };
 
+
   /* =========================================================
      PROFILE COMPLETE
      ========================================================= */
@@ -151,15 +184,21 @@ function App() {
   const handleProfileComplete = (
     completedProfile: ApplicantProfile
   ) => {
-    setProfile(completedProfile);
-
-    const result = recommendScheme(
-      completedProfile.annual_family_income!,
-      completedProfile.purpose!,
-      completedProfile.estimated_cost!,
-      completedProfile.education_status ??
-        undefined
+    setProfile(
+      completedProfile
     );
+
+    const result =
+      recommendScheme(
+        completedProfile
+          .annual_family_income!,
+        completedProfile.purpose!,
+        completedProfile
+          .estimated_cost!,
+        completedProfile
+          .education_status ??
+          undefined
+      );
 
     setMatch(result);
     setSelectedPartner(null);
@@ -167,20 +206,26 @@ function App() {
     navigate('scheme');
   };
 
+
   /* =========================================================
      RESET
      ========================================================= */
 
   const handleReset = () => {
-    setProfile(createEmptyProfile());
+    setProfile(
+      createEmptyProfile()
+    );
+
     setMatch(null);
+
     setSelectedPartner(null);
 
     navigate('home');
   };
 
+
   /* =========================================================
-     FLOW SCREENS
+     FLOW SCREEN CHECK
      ========================================================= */
 
   const isFlowScreen =
@@ -189,9 +234,15 @@ function App() {
     screen === 'partner' ||
     screen === 'readiness';
 
+
+  /* =========================================================
+     BACK
+     ========================================================= */
+
   const handlePrevious = () => {
     window.history.back();
   };
+
 
   /* =========================================================
      STEPPER
@@ -207,6 +258,11 @@ function App() {
           ? 3
           : 1;
 
+
+  /* =========================================================
+     RENDER
+     ========================================================= */
+
   return (
     <div
       className="
@@ -218,23 +274,16 @@ function App() {
     >
 
       {/* =====================================================
-          GLOBAL BACKGROUND
-          
-          IMPORTANT:
-          This is intentionally NOT limited to screen === home.
+          GLOBAL JANSAHAY BACKGROUND
 
-          It stays behind:
-          - Home
-          - Input
-          - Scheme result
-          - EMI
-          - Partner locator
-          - Readiness
-          - Summary
-          - Downloadable TXT
-          - FAQ
-          - Contact
-          - Dashboard
+          DESKTOP:
+          backgroundHomepage.png
+
+          MOBILE:
+          backgroundHomepageMobile.png
+
+          This background belongs to App.tsx so it remains
+          behind the complete website, not only HomeScreen.
           ===================================================== */}
 
       <div
@@ -248,10 +297,7 @@ function App() {
       >
 
         {/* =================================================
-            ACTUAL IMAGE ELEMENT
-
-            Using <img> instead of CSS background-image
-            gives much more reliable mobile rendering.
+            DESKTOP BACKGROUND
             ================================================= */}
 
         <img
@@ -260,50 +306,83 @@ function App() {
           aria-hidden="true"
           draggable={false}
           className="
+            hidden
+            sm:block
+
             absolute
             inset-0
+
             w-full
             h-full
+
             object-cover
             object-center
+
             select-none
           "
-          style={{
-            minWidth: '100%',
-            minHeight: '100%',
-          }}
         />
 
+
         {/* =================================================
-            VERY LIGHT READABILITY LAYER
+            MOBILE BACKGROUND
+            ================================================= */}
 
-            This is intentionally subtle.
+        <img
+          src={`${import.meta.env.BASE_URL}images/backgroundHomepageMobile.png`}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="
+            block
+            sm:hidden
 
-            Previous:
-            bg-white/10
+            absolute
+            inset-0
 
-            Current:
-            bg-white/5
+            w-full
+            h-full
+
+            object-cover
+            object-center
+
+            select-none
+          "
+        />
+
+
+        {/* =================================================
+            VERY LIGHT OVERLAY
+
+            Only 3% white so the actual background remains
+            clearly visible.
             ================================================= */}
 
         <div
           className="
             absolute
             inset-0
-            bg-white/5
+            bg-white/[0.03]
           "
         />
 
       </div>
 
+
       {/* =====================================================
           HEADER
           ===================================================== */}
 
-      <div className="relative z-40">
+      <div
+        className="
+          relative
+          z-40
+        "
+      >
         <Header
           lang={lang}
-          onLangChange={handleLangChange}
+          onLangChange={
+            handleLangChange
+          }
           onDashboardClick={() =>
             navigate('dashboard')
           }
@@ -317,9 +396,12 @@ function App() {
             screen === 'dashboard'
           }
           themeMode={themeMode}
-          onThemeChange={setThemeMode}
+          onThemeChange={
+            setThemeMode
+          }
         />
       </div>
+
 
       {/* =====================================================
           MAIN CONTENT
@@ -329,12 +411,16 @@ function App() {
         className="
           relative
           z-10
+
           max-w-2xl
           mx-auto
+
           px-4
           sm:px-6
+
           pb-16
           pt-6
+
           bg-transparent
         "
       >
@@ -352,23 +438,47 @@ function App() {
               mb-4
             "
           >
+
             <button
-              onClick={handlePrevious}
-              className="btn-secondary"
+              onClick={
+                handlePrevious
+              }
+              className="
+                btn-secondary
+              "
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft
+                className="
+                  w-4
+                  h-4
+                "
+              />
+
               Back
             </button>
 
+
             <button
-              onClick={handleReset}
-              className="btn-ghost"
+              onClick={
+                handleReset
+              }
+              className="
+                btn-ghost
+              "
             >
-              <Home className="w-4 h-4" />
+              <Home
+                className="
+                  w-4
+                  h-4
+                "
+              />
+
               Home
             </button>
+
           </div>
         )}
+
 
         {/* ===================================================
             DASHBOARD
@@ -383,6 +493,7 @@ function App() {
           />
         )}
 
+
         {/* ===================================================
             HOME
             =================================================== */}
@@ -390,20 +501,28 @@ function App() {
         {screen === 'home' && (
           <HomeScreen
             lang={lang}
-            onLangChange={handleLangChange}
-            onStart={handleStart}
+            onLangChange={
+              handleLangChange
+            }
+            onStart={
+              handleStart
+            }
           />
         )}
 
+
         {/* ===================================================
-            GUIDED INPUT
+            GUIDED WIZARD
             =================================================== */}
 
         {screen === 'input' &&
-          inputMode === 'guided' && (
+          inputMode ===
+            'guided' && (
             <GuidedWizard
               lang={lang}
-              initialProfile={profile}
+              initialProfile={
+                profile
+              }
               onComplete={
                 handleProfileComplete
               }
@@ -413,15 +532,19 @@ function App() {
             />
           )}
 
+
         {/* ===================================================
-            CONVERSATION INPUT
+            CONVERSATION MODE
             =================================================== */}
 
         {screen === 'input' &&
-          inputMode === 'conversation' && (
+          inputMode ===
+            'conversation' && (
             <ConversationMode
               lang={lang}
-              initialProfile={profile}
+              initialProfile={
+                profile
+              }
               onComplete={
                 handleProfileComplete
               }
@@ -430,6 +553,7 @@ function App() {
               }
             />
           )}
+
 
         {/* ===================================================
             FAQ
@@ -444,6 +568,7 @@ function App() {
           />
         )}
 
+
         {/* ===================================================
             CONTACT
             =================================================== */}
@@ -457,6 +582,7 @@ function App() {
           />
         )}
 
+
         {/* ===================================================
             STEPPER
             =================================================== */}
@@ -464,12 +590,16 @@ function App() {
         {(screen === 'scheme' ||
           screen === 'emi' ||
           screen === 'partner' ||
-          screen === 'readiness') && (
+          screen ===
+            'readiness') && (
           <Stepper
-            currentStep={stepperStep}
+            currentStep={
+              stepperStep
+            }
             lang={lang}
           />
         )}
+
 
         {/* ===================================================
             SCHEME RESULT
@@ -484,9 +614,12 @@ function App() {
                 match.eligible &&
                 navigate('emi')
               }
-              onReset={handleReset}
+              onReset={
+                handleReset
+              }
             />
           )}
+
 
         {/* ===================================================
             EMI CALCULATOR
@@ -500,9 +633,12 @@ function App() {
               onProceed={() =>
                 navigate('partner')
               }
-              onReset={handleReset}
+              onReset={
+                handleReset
+              }
             />
           )}
+
 
         {/* ===================================================
             PARTNER LOCATOR
@@ -514,30 +650,41 @@ function App() {
               lang={lang}
               match={match}
               userCity={
-                profile.location.display_name
+                profile.location
+                  .display_name
               }
               userLatitude={
-                profile.location.latitude
+                profile.location
+                  .latitude
               }
               userLongitude={
-                profile.location.longitude
+                profile.location
+                  .longitude
               }
-              onProceed={(partner) => {
+              onProceed={(
+                partner
+              ) => {
                 setSelectedPartner(
                   partner
                 );
 
-                navigate('readiness');
+                navigate(
+                  'readiness'
+                );
               }}
-              onReset={handleReset}
+              onReset={
+                handleReset
+              }
             />
           )}
 
+
         {/* ===================================================
-            READINESS CHECKLIST / SUMMARY
+            READINESS / SUMMARY
             =================================================== */}
 
-        {screen === 'readiness' &&
+        {screen ===
+          'readiness' &&
           match?.eligible && (
             <ReadinessChecklist
               lang={lang}
@@ -546,11 +693,14 @@ function App() {
               selectedPartner={
                 selectedPartner
               }
-              onReset={handleReset}
+              onReset={
+                handleReset
+              }
             />
           )}
 
       </main>
+
 
       {/* =====================================================
           FOOTER
@@ -560,31 +710,48 @@ function App() {
         className="
           relative
           z-10
+
           border-t
           border-slate-200/60
-          bg-white/60
+
+          bg-white/50
           backdrop-blur-sm
+
           dark:border-slate-800
-          dark:bg-slate-950/60
+          dark:bg-slate-950/50
         "
       >
+
         <div
           className="
             max-w-6xl
             mx-auto
+
             px-4
             sm:px-6
+
             py-4
+
             text-center
           "
         >
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Interest rate bands and partner NPA
-            data are illustrative for the demo.
-            In production, these would integrate
-            with NSFDC/SCA live data feeds.
+
+          <p
+            className="
+              text-xs
+              text-slate-500
+            "
+          >
+            Interest rate bands and
+            partner NPA data are
+            illustrative for the demo.
+            In production, these would
+            integrate with NSFDC/SCA
+            live data feeds.
           </p>
+
         </div>
+
       </footer>
 
     </div>
