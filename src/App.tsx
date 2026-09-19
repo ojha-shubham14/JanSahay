@@ -57,6 +57,40 @@ function App() {
     useState<RankedPartner | null>(null);
 
   /* =========================================================
+     BACKGROUND PARALLAX
+     ========================================================= */
+
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (ticking) return;
+
+      window.requestAnimationFrame(() => {
+        setScrollY(window.scrollY);
+        ticking = false;
+      });
+
+      ticking = true;
+    };
+
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const backgroundOffset = Math.min(
+    scrollY * 0.08,
+    180
+  );
+
+  /* =========================================================
      NAVIGATION
      ========================================================= */
 
@@ -71,7 +105,7 @@ function App() {
   };
 
   /* =========================================================
-     BROWSER BACK BUTTON
+     BROWSER BACK
      ========================================================= */
 
   useEffect(() => {
@@ -115,7 +149,7 @@ function App() {
   };
 
   /* =========================================================
-     START JANSAHAY FLOW
+     START
      ========================================================= */
 
   const handleStart = (
@@ -173,7 +207,7 @@ function App() {
   };
 
   /* =========================================================
-     FLOW SCREEN
+     FLOW
      ========================================================= */
 
   const isFlowScreen =
@@ -182,17 +216,9 @@ function App() {
     screen === 'partner' ||
     screen === 'readiness';
 
-  /* =========================================================
-     PREVIOUS
-     ========================================================= */
-
   const handlePrevious = () => {
     window.history.back();
   };
-
-  /* =========================================================
-     STEPPER
-     ========================================================= */
 
   const stepperStep =
     screen === 'scheme'
@@ -213,41 +239,105 @@ function App() {
       className="
         relative
         min-h-screen
+        overflow-x-hidden
 
-        bg-transparent
-
-        dark:bg-transparent
+        bg-slate-50
+        dark:bg-slate-950
       "
     >
+
+      {/* =====================================================
+          GLOBAL BACKGROUND
+
+          IMPORTANT:
+          This is now in App.tsx, outside HomeScreen.
+
+          It covers the COMPLETE viewport and remains present
+          while the user scrolls.
+          ===================================================== */}
+
+      {screen === 'home' && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-0
+            overflow-hidden
+            pointer-events-none
+          "
+        >
+
+          {/* Desktop + mobile background */}
+
+          <img
+            src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+            className="
+              absolute
+              inset-0
+
+              w-full
+              h-full
+
+              object-cover
+              object-center
+
+              max-[639px]:object-[center_center]
+
+              select-none
+            "
+            style={{
+              transform: `translate3d(0, ${-backgroundOffset}px, 0) scale(1.03)`,
+              transformOrigin: 'center center',
+              willChange: 'transform',
+            }}
+          />
+
+          {/* Light overlay */}
+
+          <div
+            className="
+              absolute
+              inset-0
+
+              bg-white/10
+
+              dark:bg-slate-950/45
+            "
+          />
+
+        </div>
+      )}
+
 
       {/* =====================================================
           HEADER
           ===================================================== */}
 
-      <Header
-        lang={lang}
-        onLangChange={handleLangChange}
-        onDashboardClick={() =>
-          navigate('dashboard')
-        }
-        onFAQClick={() =>
-          navigate('faq')
-        }
-        onContactClick={() =>
-          navigate('contact')
-        }
-        showDashboard={screen === 'dashboard'}
-        themeMode={themeMode}
-        onThemeChange={setThemeMode}
-      />
+      <div className="relative z-40">
+        <Header
+          lang={lang}
+          onLangChange={handleLangChange}
+          onDashboardClick={() =>
+            navigate('dashboard')
+          }
+          onFAQClick={() =>
+            navigate('faq')
+          }
+          onContactClick={() =>
+            navigate('contact')
+          }
+          showDashboard={screen === 'dashboard'}
+          themeMode={themeMode}
+          onThemeChange={setThemeMode}
+        />
+      </div>
 
 
       {/* =====================================================
           MAIN CONTENT
-
-          IMPORTANT:
-          bg-transparent allows the fixed JanSahay background
-          from HomeScreen to remain visible.
           ===================================================== */}
 
       <main
@@ -268,17 +358,12 @@ function App() {
         "
       >
 
-        {/* ===================================================
-            FLOW BACK / HOME BUTTONS
-            =================================================== */}
-
         {isFlowScreen && (
           <div
             className="
               flex
               items-center
               justify-between
-
               mb-4
             "
           >
@@ -290,7 +375,6 @@ function App() {
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
-
 
             <button
               onClick={handleReset}
@@ -330,7 +414,7 @@ function App() {
 
 
         {/* ===================================================
-            GUIDED INPUT
+            GUIDED WIZARD
             =================================================== */}
 
         {screen === 'input' &&
@@ -339,15 +423,13 @@ function App() {
               lang={lang}
               initialProfile={profile}
               onComplete={handleProfileComplete}
-              onBack={() =>
-                navigate('home')
-              }
+              onBack={() => navigate('home')}
             />
           )}
 
 
         {/* ===================================================
-            CONVERSATION INPUT
+            CONVERSATION
             =================================================== */}
 
         {screen === 'input' &&
@@ -356,9 +438,7 @@ function App() {
               lang={lang}
               initialProfile={profile}
               onComplete={handleProfileComplete}
-              onBack={() =>
-                setScreen('home')
-              }
+              onBack={() => setScreen('home')}
             />
           )}
 
@@ -370,9 +450,7 @@ function App() {
         {screen === 'faq' && (
           <FAQ
             lang={lang}
-            onBack={() =>
-              navigate('home')
-            }
+            onBack={() => navigate('home')}
           />
         )}
 
@@ -384,9 +462,7 @@ function App() {
         {screen === 'contact' && (
           <ContactUs
             lang={lang}
-            onBack={() =>
-              navigate('home')
-            }
+            onBack={() => navigate('home')}
           />
         )}
 
@@ -407,7 +483,7 @@ function App() {
 
 
         {/* ===================================================
-            SCHEME RESULT
+            SCHEME
             =================================================== */}
 
         {screen === 'scheme' && match && (
@@ -424,7 +500,7 @@ function App() {
 
 
         {/* ===================================================
-            EMI CALCULATOR
+            EMI
             =================================================== */}
 
         {screen === 'emi' &&
@@ -441,7 +517,7 @@ function App() {
 
 
         {/* ===================================================
-            PARTNER LOCATOR
+            PARTNER
             =================================================== */}
 
         {screen === 'partner' &&
@@ -468,7 +544,7 @@ function App() {
 
 
         {/* ===================================================
-            READINESS CHECKLIST
+            READINESS
             =================================================== */}
 
         {screen === 'readiness' &&
@@ -520,8 +596,8 @@ function App() {
         >
 
           <p className="text-xs text-slate-400">
-            Interest rate bands and partner NPA data
-            are illustrative for the demo. In production,
+            Interest rate bands and partner NPA data are
+            illustrative for the demo. In production,
             these would integrate with NSFDC/SCA live
             data feeds.
           </p>

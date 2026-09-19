@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Mic,
   Store,
@@ -27,39 +27,11 @@ export function HomeScreen({
 }: HomeScreenProps) {
   const tr = (key: TranslationKey) => t(lang, key);
 
-  const [showLanguageModal, setShowLanguageModal] = useState(true);
+  const [showLanguageModal, setShowLanguageModal] =
+    useState(true);
+
   const [selectedLanguage, setSelectedLanguage] =
     useState<Language>(lang);
-
-  /* =========================================================
-     SCROLL POSITION
-     Used to create a subtle background parallax movement.
-     ========================================================= */
-
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
-          ticking = false;
-        });
-
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const languages: {
     code: Language;
@@ -88,110 +60,14 @@ export function HomeScreen({
     },
   ];
 
-  /*
-   * Limit the parallax movement.
-   *
-   * This prevents the image from moving so far that
-   * empty space appears at the bottom of the page.
-   */
-  const backgroundOffset = Math.min(scrollY * 0.08, 220);
-
   return (
-    <div
-      className="
-        relative
-        min-h-full
-        overflow-hidden
-        animate-fade-in
-      "
-    >
-
-      {/* =====================================================
-          GLOBAL JANSAHAY BACKGROUND
-          
-          IMPORTANT:
-          This is OUTSIDE the hero section.
-
-          Therefore the background exists throughout the
-          complete HomeScreen while scrolling.
-          ===================================================== */}
-
-      {/* =====================================================
-    GLOBAL JANSAHAY BACKGROUND
-    ===================================================== */}
-
-<div
-  className="
-    fixed
-    inset-0
-    z-0
-    overflow-hidden
-    pointer-events-none
-  "
->
-  <img
-    src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
-    alt=""
-    aria-hidden="true"
-    draggable={false}
-    className="
-      absolute
-      left-0
-      top-[-6%]
-
-      w-full
-      h-[112%]
-
-      max-w-none
-
-      object-cover
-      object-center
-
-      select-none
-
-      max-[639px]:left-[-22%]
-      max-[639px]:w-[180%]
-    "
-    style={{
-      transform: `translate3d(0, ${-Math.min(
-        scrollY * 0.08,
-        220
-      )}px, 0)`,
-      willChange: 'transform',
-    }}
-  />
-
-  {/* Light mode */}
-  <div
-    className="
-      absolute
-      inset-0
-      bg-white/10
-      dark:hidden
-    "
-  />
-
-  {/* Dark mode */}
-  <div
-    className="
-      absolute
-      inset-0
-      hidden
-      bg-slate-950/55
-      dark:block
-    "
-  />
-</div>
-
+    <div className="relative min-h-full animate-fade-in">
 
       {/* =====================================================
           LANGUAGE POPUP
-          
-          IMPORTANT:
-          The popup is now rendered ON TOP of the homepage
-          instead of replacing the homepage.
 
-          Therefore the background remains visible behind it.
+          The global background is now controlled by App.tsx.
+          This popup sits above it and blurs the background.
           ===================================================== */}
 
       {showLanguageModal && (
@@ -199,7 +75,7 @@ export function HomeScreen({
           className="
             fixed
             inset-0
-            z-50
+            z-[100]
 
             flex
             items-center
@@ -207,14 +83,15 @@ export function HomeScreen({
 
             px-4
 
-            bg-slate-950/55
+            bg-slate-950/45
             backdrop-blur-md
           "
         >
+
           <div
             className="
               relative
-              z-10
+              z-[101]
 
               w-full
               max-w-lg
@@ -232,6 +109,8 @@ export function HomeScreen({
               sm:p-8
 
               shadow-2xl
+
+              animate-popup-attention
             "
           >
 
@@ -313,13 +192,13 @@ export function HomeScreen({
             >
 
               {languages.map((language) => {
-
                 const selected =
                   selectedLanguage === language.code;
 
                 return (
                   <button
                     key={language.code}
+                    type="button"
                     onClick={() =>
                       setSelectedLanguage(language.code)
                     }
@@ -373,7 +252,6 @@ export function HomeScreen({
 
                   </button>
                 );
-
               })}
 
             </div>
@@ -382,6 +260,7 @@ export function HomeScreen({
             {/* Continue */}
 
             <button
+              type="button"
               onClick={() => {
                 onLangChange(selectedLanguage);
                 setShowLanguageModal(false);
@@ -413,25 +292,21 @@ export function HomeScreen({
                 shadow-sm
               "
             >
-
               {tr('continueLanguage')}
 
               <ArrowRight className="w-4 h-4" />
-
             </button>
 
           </div>
-
         </div>
       )}
 
 
       {/* =====================================================
-          MAIN CONTENT
+          MAIN JANSAHAY CONTENT
           ===================================================== */}
 
       <div className="relative z-10">
-
 
         {/* ===================================================
             HERO
@@ -440,6 +315,7 @@ export function HomeScreen({
         <section
           className="
             relative
+
             min-h-[calc(100vh-80px)]
 
             flex
@@ -457,8 +333,6 @@ export function HomeScreen({
             sm:px-6
           "
         >
-
-          {/* Hero content */}
 
           <div className="w-full">
 
@@ -526,7 +400,10 @@ export function HomeScreen({
             >
 
               <button
-                onClick={() => onStart('conversation')}
+                type="button"
+                onClick={() =>
+                  onStart('conversation')
+                }
                 className="
                   w-full
 
@@ -577,7 +454,16 @@ export function HomeScreen({
                     {tr('tellUs')}
                   </p>
 
-                  <p className="text-xs sm:text-sm text-primary-100 mt-0.5">
+                  <p
+                    className="
+                      text-xs
+                      sm:text-sm
+
+                      text-primary-100
+
+                      mt-0.5
+                    "
+                  >
                     Speak or type in simple language
                   </p>
 
@@ -661,6 +547,7 @@ export function HomeScreen({
                 {/* Business */}
 
                 <button
+                  type="button"
                   onClick={() =>
                     onStart(
                       'guided',
@@ -677,7 +564,8 @@ export function HomeScreen({
 
                     rounded-md
 
-                    bg-white/95
+                    bg-white/90
+                    backdrop-blur-sm
 
                     border
                     border-slate-300
@@ -692,7 +580,7 @@ export function HomeScreen({
 
                     text-left
 
-                    dark:bg-slate-900/95
+                    dark:bg-slate-900/90
                     dark:border-slate-700
 
                     dark:hover:border-primary-600
@@ -756,6 +644,7 @@ export function HomeScreen({
                 {/* Education */}
 
                 <button
+                  type="button"
                   onClick={() =>
                     onStart(
                       'guided',
@@ -772,7 +661,8 @@ export function HomeScreen({
 
                     rounded-md
 
-                    bg-white/95
+                    bg-white/90
+                    backdrop-blur-sm
 
                     border
                     border-slate-300
@@ -787,7 +677,7 @@ export function HomeScreen({
 
                     text-left
 
-                    dark:bg-slate-900/95
+                    dark:bg-slate-900/90
                     dark:border-slate-700
 
                     dark:hover:border-primary-600
@@ -933,8 +823,6 @@ export function HomeScreen({
               "
             >
 
-              {/* Simple */}
-
               <div className="text-center">
 
                 <div className="text-primary-600 text-xl mb-1">
@@ -946,7 +834,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
                     dark:text-slate-200
                   "
                 >
@@ -957,9 +844,7 @@ export function HomeScreen({
                   className="
                     text-xs
                     text-slate-500
-
                     mt-1
-
                     dark:text-slate-400
                   "
                 >
@@ -968,8 +853,6 @@ export function HomeScreen({
 
               </div>
 
-
-              {/* Languages */}
 
               <div className="text-center">
 
@@ -982,7 +865,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
                     dark:text-slate-200
                   "
                 >
@@ -993,9 +875,7 @@ export function HomeScreen({
                   className="
                     text-xs
                     text-slate-500
-
                     mt-1
-
                     dark:text-slate-400
                   "
                 >
@@ -1004,8 +884,6 @@ export function HomeScreen({
 
               </div>
 
-
-              {/* Clear Information */}
 
               <div className="text-center">
 
@@ -1018,7 +896,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
                     dark:text-slate-200
                   "
                 >
@@ -1029,9 +906,7 @@ export function HomeScreen({
                   className="
                     text-xs
                     text-slate-500
-
                     mt-1
-
                     dark:text-slate-400
                   "
                 >
@@ -1040,8 +915,6 @@ export function HomeScreen({
 
               </div>
 
-
-              {/* Citizen Friendly */}
 
               <div className="text-center">
 
@@ -1054,7 +927,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
                     dark:text-slate-200
                   "
                 >
@@ -1065,9 +937,7 @@ export function HomeScreen({
                   className="
                     text-xs
                     text-slate-500
-
                     mt-1
-
                     dark:text-slate-400
                   "
                 >
@@ -1100,12 +970,10 @@ export function HomeScreen({
               How JanSahay helps you
             </h3>
 
-
             <div
               className="
                 grid
                 gap-5
-
                 sm:grid-cols-4
               "
             >
@@ -1156,7 +1024,6 @@ export function HomeScreen({
                       rounded-full
 
                       bg-primary-600
-
                       text-white
 
                       text-sm
@@ -1184,7 +1051,6 @@ export function HomeScreen({
                     <p
                       className="
                         text-xs
-
                         text-slate-500
 
                         mt-1
@@ -1233,7 +1099,6 @@ export function HomeScreen({
                   text-primary-600
 
                   flex-shrink-0
-
                   mt-0.5
                 "
               />
