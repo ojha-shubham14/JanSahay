@@ -27,9 +27,7 @@ export function HomeScreen({
 }: HomeScreenProps) {
   const tr = (key: TranslationKey) => t(lang, key);
 
-  const [showLanguageModal, setShowLanguageModal] =
-    useState(true);
-
+  const [showLanguageModal, setShowLanguageModal] = useState(true);
   const [selectedLanguage, setSelectedLanguage] =
     useState<Language>(lang);
 
@@ -43,6 +41,25 @@ export function HomeScreen({
     { code: 'kn', native: 'ಕನ್ನಡ', english: 'Kannada' },
     { code: 'ta', native: 'தமிழ்', english: 'Tamil' },
   ];
+
+  /*
+   * ----------------------------------------------------------
+   * BASE PATH
+   * ----------------------------------------------------------
+   *
+   * This automatically works for:
+   *
+   * Local:
+   *   /images/...
+   *
+   * GitHub Pages:
+   *   /JanSahay/images/...
+   *
+   */
+  const baseUrl = import.meta.env.BASE_URL;
+
+  const desktopBackground = `${baseUrl}images/backgroundHomepage.png`;
+  const mobileBackground = `${baseUrl}images/backgroundHomepageMobile.png`;
 
   /* =========================================================
      LANGUAGE SELECTION
@@ -134,96 +151,147 @@ export function HomeScreen({
           left-1/2
           w-screen
           -translate-x-1/2
-          min-h-[calc(100vh-80px)]
+          min-h-[680px]
+          sm:min-h-[calc(100vh-80px)]
           flex
           flex-col
           justify-center
           text-center
-          pt-6
+          pt-8
           sm:pt-10
-          pb-8
+          pb-10
           overflow-hidden
-          bg-slate-50
-          dark:bg-slate-950
+          isolate
         "
       >
 
-        {/* =================================================
-            LIGHT MODE BACKGROUND
-            ================================================= */}
+        {/* ===================================================
+            RESPONSIVE BACKGROUND IMAGE
 
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              "url('/JanSahay/images/backgroundHomepage.png')",
-          }}
-        />
+            Mobile:
+              backgroundHomepageMobile.png
 
-        {/* Light mode readability overlay.
-            Kept deliberately subtle so the artwork remains visible. */}
+            Desktop:
+              backgroundHomepage.png
+            =================================================== */}
+
+        <picture className="absolute inset-0 z-0 block pointer-events-none">
+
+          {/* Mobile background */}
+          <source
+            media="(max-width: 639px)"
+            srcSet={mobileBackground}
+          />
+
+          {/* Desktop background */}
+          <img
+            src={desktopBackground}
+            alt=""
+            aria-hidden="true"
+            className="
+              absolute
+              inset-0
+              w-full
+              h-full
+              object-cover
+              object-center
+              select-none
+            "
+          />
+
+        </picture>
+
+        {/* ===================================================
+            DARK MODE OVERLAY
+
+            The image stays visible but gets darker enough
+            for text to remain readable.
+            =================================================== */}
+
         <div
           className="
             absolute
             inset-0
-            bg-gradient-to-b
-            from-white/25
-            via-white/10
-            to-white/30
+            z-[1]
+            pointer-events-none
+            hidden
+            dark:block
+            bg-slate-950/65
+          "
+        />
+
+        {/* ===================================================
+            VERY LIGHT READABILITY LAYER
+
+            Only a subtle layer in light mode so that the
+            original artwork remains clearly visible.
+            =================================================== */}
+
+        <div
+          className="
+            absolute
+            inset-0
+            z-[1]
+            pointer-events-none
+            bg-white/10
             dark:hidden
           "
         />
 
-        {/* =================================================
-            DARK MODE BACKGROUND
-            ================================================= */}
-
-        <div
-          className="
-            absolute
-            inset-0
-            hidden
-            dark:block
-            bg-cover
-            bg-center
-            bg-no-repeat
-          "
-          style={{
-            backgroundImage:
-              "url('/JanSahay/images/backgroundHomepage.png')",
-          }}
-        />
-
-        {/* Dark mode readability overlay.
-            Much lighter than the previous 82% overlay. */}
-        <div
-          className="
-            absolute
-            inset-0
-            hidden
-            dark:block
-            bg-gradient-to-b
-            from-slate-950/55
-            via-slate-950/40
-            to-slate-950/65
-          "
-        />
-
-        {/* =================================================
+        {/* ===================================================
             HERO CONTENT
-            ================================================= */}
+            =================================================== */}
 
-        <div className="relative z-10 w-full px-4 sm:px-6">
+        <div
+          className="
+            relative
+            z-10
+            w-full
+            max-w-2xl
+            mx-auto
+            px-4
+            sm:px-6
+          "
+        >
 
-          <h2 className="relative z-10 text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white max-w-2xl mx-auto leading-tight drop-shadow-sm">
+          {/* Heading */}
+          <h2
+            className="
+              text-3xl
+              sm:text-4xl
+              font-bold
+              text-slate-900
+              dark:text-white
+              max-w-2xl
+              mx-auto
+              leading-tight
+              drop-shadow-sm
+            "
+          >
             {tr('heroTitle')}
           </h2>
 
-          <p className="text-slate-700 dark:text-slate-200 mt-4 max-w-xl mx-auto text-base sm:text-lg leading-relaxed drop-shadow-sm">
+          {/* Subtitle */}
+          <p
+            className="
+              text-slate-700
+              dark:text-slate-300
+              mt-4
+              max-w-xl
+              mx-auto
+              text-base
+              sm:text-lg
+              leading-relaxed
+              drop-shadow-sm
+            "
+          >
             {tr('heroSubtitle')}
           </p>
 
-          {/* Primary action */}
+          {/* =================================================
+              PRIMARY ACTION
+              ================================================= */}
+
           <div className="mt-8 space-y-4 max-w-xl mx-auto">
 
             <button
@@ -244,11 +312,26 @@ export function HomeScreen({
                 shadow-md
               "
             >
-              <div className="flex items-center justify-center w-10 h-10 rounded-md bg-white/15 flex-shrink-0">
+
+              {/* Microphone icon */}
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  w-10
+                  h-10
+                  rounded-md
+                  bg-white/15
+                  flex-shrink-0
+                "
+              >
                 <Mic className="w-5 h-5" />
               </div>
 
+              {/* Text */}
               <div className="flex-1 text-left">
+
                 <p className="font-bold text-base sm:text-lg">
                   {tr('tellUs')}
                 </p>
@@ -256,23 +339,33 @@ export function HomeScreen({
                 <p className="text-xs sm:text-sm text-primary-100 mt-0.5">
                   Speak or type in simple language
                 </p>
+
               </div>
 
               <ArrowRight className="w-5 h-5 flex-shrink-0" />
+
             </button>
 
-            {/* OR */}
+            {/* =================================================
+                OR
+                ================================================= */}
+
             <div className="flex items-center gap-3 py-1">
-              <div className="flex-1 h-px bg-slate-300/80 dark:bg-slate-600" />
+
+              <div className="flex-1 h-px bg-slate-300/70 dark:bg-slate-700" />
 
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                 {tr('orDivider')}
               </span>
 
-              <div className="flex-1 h-px bg-slate-300/80 dark:bg-slate-600" />
+              <div className="flex-1 h-px bg-slate-300/70 dark:bg-slate-700" />
+
             </div>
 
-            {/* Purpose choices */}
+            {/* =================================================
+                PURPOSE CHOICES
+                ================================================= */}
+
             <div className="grid grid-cols-2 gap-3">
 
               {/* Business */}
@@ -287,7 +380,7 @@ export function HomeScreen({
                   p-4
                   sm:p-5
                   rounded-md
-                  bg-white/90
+                  bg-white/95
                   border
                   border-slate-300
                   shadow-sm
@@ -296,23 +389,53 @@ export function HomeScreen({
                   transition-colors
                   duration-150
                   text-left
-                  dark:bg-slate-900/85
+                  dark:bg-slate-900/95
                   dark:border-slate-700
                   dark:hover:border-primary-600
-                  dark:hover:bg-slate-900
                 "
               >
-                <Store className="w-7 h-7 sm:w-8 sm:h-8 text-accent-600 flex-shrink-0" />
+
+                <Store
+                  className="
+                    w-7
+                    h-7
+                    sm:w-8
+                    sm:h-8
+                    text-accent-600
+                    flex-shrink-0
+                  "
+                />
 
                 <div className="min-w-0">
-                  <span className="block text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
+
+                  <span
+                    className="
+                      block
+                      text-sm
+                      sm:text-base
+                      font-semibold
+                      text-slate-800
+                      dark:text-slate-200
+                    "
+                  >
                     {tr('businessLoan')}
                   </span>
 
-                  <span className="hidden sm:block text-xs text-slate-500 mt-1 dark:text-slate-400">
+                  <span
+                    className="
+                      hidden
+                      sm:block
+                      text-xs
+                      text-slate-500
+                      mt-1
+                      dark:text-slate-400
+                    "
+                  >
                     For your business needs
                   </span>
+
                 </div>
+
               </button>
 
               {/* Education */}
@@ -327,7 +450,7 @@ export function HomeScreen({
                   p-4
                   sm:p-5
                   rounded-md
-                  bg-white/90
+                  bg-white/95
                   border
                   border-slate-300
                   shadow-sm
@@ -336,39 +459,94 @@ export function HomeScreen({
                   transition-colors
                   duration-150
                   text-left
-                  dark:bg-slate-900/85
+                  dark:bg-slate-900/95
                   dark:border-slate-700
                   dark:hover:border-primary-600
-                  dark:hover:bg-slate-900
                 "
               >
-                <GraduationCap className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600 flex-shrink-0" />
+
+                <GraduationCap
+                  className="
+                    w-7
+                    h-7
+                    sm:w-8
+                    sm:h-8
+                    text-primary-600
+                    flex-shrink-0
+                  "
+                />
 
                 <div className="min-w-0">
-                  <span className="block text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200">
+
+                  <span
+                    className="
+                      block
+                      text-sm
+                      sm:text-base
+                      font-semibold
+                      text-slate-800
+                      dark:text-slate-200
+                    "
+                  >
                     {tr('educationLoan')}
                   </span>
 
-                  <span className="hidden sm:block text-xs text-slate-500 mt-1 dark:text-slate-400">
+                  <span
+                    className="
+                      hidden
+                      sm:block
+                      text-xs
+                      text-slate-500
+                      mt-1
+                      dark:text-slate-400
+                    "
+                  >
                     For higher education
                   </span>
+
                 </div>
+
               </button>
 
             </div>
+
           </div>
 
-          {/* Scroll indicator */}
-          <div className="mt-10 flex flex-col items-center text-slate-500 dark:text-slate-400">
+          {/* =================================================
+              SCROLL INDICATOR
+              ================================================= */}
+
+          <div
+            className="
+              mt-10
+              flex
+              flex-col
+              items-center
+              text-slate-500
+              dark:text-slate-400
+            "
+          >
+
             <span className="text-xs font-medium">
               Scroll down to know more
             </span>
 
-            <ArrowRight className="w-4 h-4 rotate-90 mt-2 animate-bounce" />
+            <ArrowRight
+              className="
+                w-4
+                h-4
+                rotate-90
+                mt-2
+                animate-bounce
+              "
+            />
+
           </div>
 
         </div>
+
       </section>
+
 
       {/* =====================================================
           BELOW-THE-FOLD INFORMATION
@@ -384,7 +562,9 @@ export function HomeScreen({
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
 
+            {/* Simple */}
             <div className="text-center">
+
               <div className="text-primary-600 text-xl mb-1">
                 ✓
               </div>
@@ -396,9 +576,13 @@ export function HomeScreen({
               <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
                 Designed for citizens
               </p>
+
             </div>
 
+
+            {/* Languages */}
             <div className="text-center">
+
               <div className="text-primary-600 text-xl mb-1">
                 ◎
               </div>
@@ -410,9 +594,13 @@ export function HomeScreen({
               <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
                 English, Hindi, Kannada & Tamil
               </p>
+
             </div>
 
+
+            {/* Information */}
             <div className="text-center">
+
               <div className="text-primary-600 text-xl mb-1">
                 ✓
               </div>
@@ -424,9 +612,13 @@ export function HomeScreen({
               <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
                 Easy to understand
               </p>
+
             </div>
 
+
+            {/* Citizen Friendly */}
             <div className="text-center">
+
               <div className="text-primary-600 text-xl mb-1">
                 ♙
               </div>
@@ -438,11 +630,13 @@ export function HomeScreen({
               <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
                 Built for easy access
               </p>
+
             </div>
 
           </div>
 
         </div>
+
 
         {/* ===================================================
             HOW JANSAHAY HELPS
@@ -486,11 +680,27 @@ export function HomeScreen({
                 key={item.number}
                 className="flex gap-3"
               >
-                <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-bold">
+
+                <div
+                  className="
+                    flex-shrink-0
+                    flex
+                    items-center
+                    justify-center
+                    w-8
+                    h-8
+                    rounded-full
+                    bg-primary-600
+                    text-white
+                    text-sm
+                    font-bold
+                  "
+                >
                   {item.number}
                 </div>
 
                 <div>
+
                   <p className="font-semibold text-slate-800 text-sm dark:text-slate-200">
                     {item.title}
                   </p>
@@ -498,13 +708,16 @@ export function HomeScreen({
                   <p className="text-xs text-slate-500 mt-1 leading-relaxed dark:text-slate-400">
                     {item.description}
                   </p>
+
                 </div>
+
               </div>
             ))}
 
           </div>
 
         </div>
+
 
         {/* ===================================================
             IMPORTANT INFORMATION
@@ -514,7 +727,15 @@ export function HomeScreen({
 
           <div className="flex gap-3">
 
-            <Info className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+            <Info
+              className="
+                w-5
+                h-5
+                text-primary-600
+                flex-shrink-0
+                mt-0.5
+              "
+            />
 
             <div>
 
