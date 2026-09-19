@@ -206,12 +206,14 @@ const stepperStep =
 
         {screen === 'partner' && match?.eligible && (
           <PartnerLocator
-            lang={lang}
-            match={match}
-            userCity={profile.location.display_name}
-            onProceed={() => navigate('readiness')}
-            onReset={handleReset}
-          />
+  lang={lang}
+  match={match}
+  userCity={profile.location.display_name}
+  userLatitude={profile.location.latitude}
+  userLongitude={profile.location.longitude}
+  onProceed={() => navigate('readiness')}
+  onReset={handleReset}
+/>
         )}
 
         {screen === 'readiness' && match?.eligible && (

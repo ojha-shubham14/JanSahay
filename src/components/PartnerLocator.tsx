@@ -22,6 +22,8 @@ interface PartnerLocatorProps {
   lang: Language;
   match: SchemeMatch;
   userCity: string | null;
+  userLatitude: number | null;
+  userLongitude: number | null;
   onProceed: () => void;
   onReset: () => void;
 }
@@ -30,6 +32,8 @@ export function PartnerLocator({
   lang,
   match,
   userCity,
+  userLatitude,
+  userLongitude,
   onProceed,
   onReset,
 }: PartnerLocatorProps) {
@@ -39,85 +43,27 @@ export function PartnerLocator({
   const [results, setResults] = useState<RankedPartner[] | null>(null);
   const [searched, setSearched] = useState(false);
 
-  // Actual browser GPS location.
-  // If GPS is unavailable or permission is denied,
-  // the selected city's coordinates are used as a fallback.
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lon: number;
-  } | null>(null);
-
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
 
   // Get user's location and find suitable nearby partners.
   useEffect(() => {
-  if (!selectedCity || !match.scheme_id) return;
-
-  // Store the verified scheme ID so TypeScript knows
-  // it is definitely available inside the callbacks.
-  const schemeId = match.scheme_id;
-
-  const fallbackCoords = cityCoordinates[selectedCity];
-
-  if (!fallbackCoords) return;
-
-  let isMounted = true;
-
-    const searchPartners = (lat: number, lon: number) => {
-  if (!isMounted) return;
+  if (!match.scheme_id) return;
+  if (userLatitude == null || userLongitude == null) return;
 
   const partners = findPartners(
-    schemeId,
-    lat,
-    lon
+    match.scheme_id,
+    userLatitude,
+    userLongitude
   );
 
   setResults(partners);
   setSearched(true);
-};
-
-    // Try to get the user's actual GPS location.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          if (!isMounted) return;
-
-          const coords = {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          };
-
-          setUserLocation(coords);
-          searchPartners(coords.lat, coords.lon);
-        },
-        () => {
-          // GPS permission denied or location unavailable.
-          // Fall back to the selected city's coordinates.
-          const coords = {
-            lat: fallbackCoords.lat,
-            lon: fallbackCoords.lon,
-          };
-
-          setUserLocation(coords);
-          searchPartners(coords.lat, coords.lon);
-        }
-      );
-    } else {
-      // Browser does not support geolocation.
-      const coords = {
-        lat: fallbackCoords.lat,
-        lon: fallbackCoords.lon,
-      };
-
-      setUserLocation(coords);
-      searchPartners(coords.lat, coords.lon);
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [selectedCity, match.scheme_id]);
+}, [
+  match.scheme_id,
+  userLatitude,
+  userLongitude,
+]);
 
   // Initialize/update the Leaflet map whenever
   // the partner results or user location changes.
@@ -126,7 +72,13 @@ export function PartnerLocator({
       return;
     }
 
-    const coords = userLocation ?? cityCoordinates[selectedCity];
+    const coords =
+  userLatitude != null && userLongitude != null
+    ? {
+        lat: userLatitude,
+        lon: userLongitude,
+      }
+    : cityCoordinates[selectedCity];
 
     if (!coords) return;
 
@@ -250,7 +202,8 @@ export function PartnerLocator({
   }, [
     results,
     selectedCity,
-    userLocation,
+    userLatitude,
+    userLongitude,
   ]);
 
   return (

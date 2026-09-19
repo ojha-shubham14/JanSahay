@@ -50,6 +50,12 @@ export function GuidedWizard({ lang, initialProfile, onComplete, onBack }: Guide
   const [city, setCity] = useState(initialProfile.location.display_name ?? '');
   const [error, setError] = useState('');
   const [showIncomeLimitPopup, setShowIncomeLimitPopup] = useState(false);
+  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [gpsLocation, setGpsLocation] = useState<{
+  latitude: number;
+  longitude: number;
+} | null>(null);
   const stepOrder: WizardStep[] = [
   'details',
   'income',
@@ -141,7 +147,35 @@ const effectiveStepOrder = stepOrder.filter((s) => {
     complete();
   }
 };
+  const handleUseCurrentLocation = () => {
+  if (!navigator.geolocation) {
+    setError('Location is not supported by your browser. Please select your city manually.');
+    return;
+  }
 
+  setLocationLoading(true);
+  setError('');
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setLocationLoading(false);
+
+      setUseCurrentLocation(true);
+
+      setCity('Current location');
+
+    },
+    () => {
+      setLocationLoading(false);
+      setError('We could not access your location. Please allow location access or select your city manually.');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
+};
   const prevStep = () => {
   const idx = getStepIndex();
   setError('');
@@ -172,10 +206,16 @@ const effectiveStepOrder = stepOrder.filter((s) => {
       institution: institution || null,
       project_type: projectType || null,
       location: {
-        latitude: cityCoordinates[city]?.lat ?? null,
-        longitude: cityCoordinates[city]?.lon ?? null,
-        display_name: city,
-      },
+  latitude: useCurrentLocation
+    ? gpsLocation?.latitude ?? null
+    : cityCoordinates[city]?.lat ?? null,
+
+  longitude: useCurrentLocation
+    ? gpsLocation?.longitude ?? null
+    : cityCoordinates[city]?.lon ?? null,
+
+  display_name: useCurrentLocation ? 'Current location' : city,
+},
       language: lang,
     };
     onComplete(profile);
@@ -486,28 +526,90 @@ const effectiveStepOrder = stepOrder.filter((s) => {
       )}
 
       {/* Location step */}
-      {step === 'location' && (
-        <div className="animate-fade-in">
-          <h2 className="text-xl font-bold text-slate-900 mb-2">{tr('questionLocation')}</h2>
-          <p className="text-sm text-slate-500 mb-5">{tr('locationHint')}</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {Object.entries(cityCoordinates).map(([key, cityData]) => (
-              <button
-                key={key}
-                onClick={() => setCity(key)}
-                className={`flex items-center gap-2 p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
-                  city === key
-                    ? 'border-primary-500 bg-primary-50 text-primary-900'
-                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                }`}
-              >
-                <MapPin className={`w-4 h-4 ${city === key ? 'text-primary-600' : 'text-slate-400'}`} />
-                {cityData.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+{step === 'location' && (
+  <div className="animate-fade-in">
+    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+      Where should we find a nearby partner?
+    </h2>
+
+    <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
+      Use your current location for the most accurate nearby partner results,
+      or select a city manually.
+    </p>
+
+    {/* Use current location */}
+    <button
+      type="button"
+      onClick={handleUseCurrentLocation}
+      disabled={locationLoading}
+      className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-200 mb-5 ${
+        useCurrentLocation
+          ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/30'
+          : 'border-slate-200 dark:border-slate-700 hover:border-primary-300 hover:bg-primary-50/40'
+      }`}
+    >
+      <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/40">
+        <MapPin className="w-6 h-6 text-primary-600" />
+      </div>
+
+      <div className="text-left flex-1">
+        <p className="font-semibold text-slate-900 dark:text-white">
+          {locationLoading
+            ? 'Detecting your location...'
+            : useCurrentLocation
+              ? 'Current location selected'
+              : 'Use my current location'}
+        </p>
+
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Find authorized partners closest to you
+        </p>
+      </div>
+    </button>
+
+    {/* OR */}
+    <div className="flex items-center gap-3 my-5">
+      <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+
+      <span className="text-xs font-medium text-slate-400">
+        OR SELECT CITY
+      </span>
+
+      <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+    </div>
+
+    {/* Manual city selection */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      {Object.entries(cityCoordinates).map(([key, cityData]) => (
+        <button
+          key={key}
+          type="button"
+          onClick={() => {
+            setCity(key);
+            setUseCurrentLocation(false);
+            setGpsLocation(null);
+            setError('');
+          }}
+          className={`flex items-center gap-2 p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+            !useCurrentLocation && city === key
+              ? 'border-primary-500 bg-primary-50 text-primary-900 dark:bg-primary-950/30 dark:text-primary-100'
+              : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 text-slate-600 dark:text-slate-300'
+          }`}
+        >
+          <MapPin
+            className={`w-4 h-4 ${
+              !useCurrentLocation && city === key
+                ? 'text-primary-600'
+                : 'text-slate-400'
+            }`}
+          />
+
+          {cityData.label}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
       {/* Error */}
       {error && (
