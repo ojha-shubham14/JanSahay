@@ -116,56 +116,72 @@ export function HomeScreen({
           complete HomeScreen while scrolling.
           ===================================================== */}
 
-      <div
-        className="
-          absolute
-          inset-0
-          z-0
-          overflow-hidden
-          pointer-events-none
-        "
-      >
+      {/* =====================================================
+    GLOBAL JANSAHAY BACKGROUND
+    ===================================================== */}
 
-        <img
-          src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-          className="
-            absolute
-            left-0
-            top-[-6%]
+<div
+  className="
+    fixed
+    inset-0
+    z-0
+    overflow-hidden
+    pointer-events-none
+  "
+>
+  <img
+    src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
+    alt=""
+    aria-hidden="true"
+    draggable={false}
+    className="
+      absolute
+      left-0
+      top-[-6%]
 
-            w-full
-            h-[112%]
+      w-full
+      h-[112%]
 
-            max-w-none
-            object-cover
-            object-center
+      max-w-none
 
-            select-none
+      object-cover
+      object-center
 
-            max-[639px]:left-[-22%]
-            max-[639px]:w-[180%]
-          "
-          style={{
-            transform: `translate3d(0, ${-backgroundOffset}px, 0)`,
-            willChange: 'transform',
-          }}
-        />
+      select-none
 
-        {/* Very subtle readability layer */}
+      max-[639px]:left-[-22%]
+      max-[639px]:w-[180%]
+    "
+    style={{
+      transform: `translate3d(0, ${-Math.min(
+        scrollY * 0.08,
+        220
+      )}px, 0)`,
+      willChange: 'transform',
+    }}
+  />
 
-        <div
-          className="
-            absolute
-            inset-0
-            bg-white/10
-            dark:bg-slate-950/55
-          "
-        />
+  {/* Light mode */}
+  <div
+    className="
+      absolute
+      inset-0
+      bg-white/10
+      dark:hidden
+    "
+  />
 
-      </div>
+  {/* Dark mode */}
+  <div
+    className="
+      absolute
+      inset-0
+      hidden
+      bg-slate-950/55
+      dark:block
+    "
+  />
+</div>
 
 
       {/* =====================================================
@@ -193,13 +209,8 @@ export function HomeScreen({
 
             bg-slate-950/55
             backdrop-blur-md
-
-            animate-fade-in
           "
         >
-
-          {/* Popup */}
-
           <div
             className="
               relative
@@ -221,8 +232,6 @@ export function HomeScreen({
               sm:p-8
 
               shadow-2xl
-
-              animate-popup-attention
             "
           >
 
