@@ -218,57 +218,83 @@ function App() {
     >
 
       {/* =====================================================
-          GLOBAL JANSAHAY BACKGROUND
+          GLOBAL BACKGROUND
+          
+          IMPORTANT:
+          This is intentionally NOT limited to screen === home.
+
+          It stays behind:
+          - Home
+          - Input
+          - Scheme result
+          - EMI
+          - Partner locator
+          - Readiness
+          - Summary
+          - Downloadable TXT
+          - FAQ
+          - Contact
+          - Dashboard
           ===================================================== */}
 
-      {screen === 'home' && (
+      <div
+        className="
+          fixed
+          inset-0
+          z-0
+          overflow-hidden
+          pointer-events-none
+        "
+      >
+
+        {/* =================================================
+            ACTUAL IMAGE ELEMENT
+
+            Using <img> instead of CSS background-image
+            gives much more reliable mobile rendering.
+            ================================================= */}
+
+        <img
+          src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="
+            absolute
+            inset-0
+            w-full
+            h-full
+            object-cover
+            object-center
+            select-none
+          "
+          style={{
+            minWidth: '100%',
+            minHeight: '100%',
+          }}
+        />
+
+        {/* =================================================
+            VERY LIGHT READABILITY LAYER
+
+            This is intentionally subtle.
+
+            Previous:
+            bg-white/10
+
+            Current:
+            bg-white/5
+            ================================================= */}
+
         <div
           className="
-            fixed
+            absolute
             inset-0
-            z-0
-            overflow-hidden
-            pointer-events-none
+            bg-white/5
           "
-        >
+        />
 
-          {/* =================================================
-              BACKGROUND IMAGE
-              ================================================= */}
-
-          <div
-            className="
-              absolute
-              inset-0
-              bg-cover
-              bg-center
-              bg-no-repeat
-            "
-            style={{
-              backgroundImage: `url(${import.meta.env.BASE_URL}images/backgroundHomepage.png)`,
-            }}
-          />
-
-          {/* =================================================
-              VERY LIGHT OVERLAY
-
-              Previously this was:
-              bg-white/10
-
-              Now we use almost no overlay so the
-              background remains clearly visible on PC.
-              ================================================= */}
-
-          <div
-            className="
-              absolute
-              inset-0
-              bg-white/[0.02]
-            "
-          />
-
-        </div>
-      )}
+      </div>
 
       {/* =====================================================
           HEADER
@@ -281,7 +307,9 @@ function App() {
           onDashboardClick={() =>
             navigate('dashboard')
           }
-          onFAQClick={() => navigate('faq')}
+          onFAQClick={() =>
+            navigate('faq')
+          }
           onContactClick={() =>
             navigate('contact')
           }
@@ -349,7 +377,9 @@ function App() {
         {screen === 'dashboard' && (
           <Dashboard
             lang={lang}
-            onBack={() => navigate('home')}
+            onBack={() =>
+              navigate('home')
+            }
           />
         )}
 
@@ -504,7 +534,7 @@ function App() {
           )}
 
         {/* ===================================================
-            READINESS CHECKLIST
+            READINESS CHECKLIST / SUMMARY
             =================================================== */}
 
         {screen === 'readiness' &&
@@ -532,10 +562,10 @@ function App() {
           z-10
           border-t
           border-slate-200/60
-          bg-white/50
+          bg-white/60
           backdrop-blur-sm
           dark:border-slate-800
-          dark:bg-slate-950/50
+          dark:bg-slate-950/60
         "
       >
         <div
@@ -548,7 +578,7 @@ function App() {
             text-center
           "
         >
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Interest rate bands and partner NPA
             data are illustrative for the demo.
             In production, these would integrate
