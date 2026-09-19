@@ -56,6 +56,10 @@ function App() {
   const [selectedPartner, setSelectedPartner] =
     useState<RankedPartner | null>(null);
 
+  /* =========================================================
+     NAVIGATION
+     ========================================================= */
+
   const navigate = (nextScreen: Screen) => {
     window.history.pushState(
       { screen: nextScreen },
@@ -65,6 +69,10 @@ function App() {
 
     setScreen(nextScreen);
   };
+
+  /* =========================================================
+     BROWSER BACK BUTTON
+     ========================================================= */
 
   useEffect(() => {
     window.history.replaceState(
@@ -93,6 +101,10 @@ function App() {
     };
   }, []);
 
+  /* =========================================================
+     LANGUAGE
+     ========================================================= */
+
   const handleLangChange = (newLang: Language) => {
     setLang(newLang);
 
@@ -101,6 +113,10 @@ function App() {
       language: newLang,
     }));
   };
+
+  /* =========================================================
+     START JANSAHAY FLOW
+     ========================================================= */
 
   const handleStart = (
     mode: 'guided' | 'conversation',
@@ -122,6 +138,10 @@ function App() {
     navigate('input');
   };
 
+  /* =========================================================
+     PROFILE COMPLETE
+     ========================================================= */
+
   const handleProfileComplete = (
     completedProfile: ApplicantProfile
   ) => {
@@ -140,6 +160,10 @@ function App() {
     navigate('scheme');
   };
 
+  /* =========================================================
+     RESET
+     ========================================================= */
+
   const handleReset = () => {
     setProfile(createEmptyProfile());
     setMatch(null);
@@ -148,15 +172,27 @@ function App() {
     navigate('home');
   };
 
+  /* =========================================================
+     FLOW SCREEN
+     ========================================================= */
+
   const isFlowScreen =
     screen === 'scheme' ||
     screen === 'emi' ||
     screen === 'partner' ||
     screen === 'readiness';
 
+  /* =========================================================
+     PREVIOUS
+     ========================================================= */
+
   const handlePrevious = () => {
     window.history.back();
   };
+
+  /* =========================================================
+     STEPPER
+     ========================================================= */
 
   const stepperStep =
     screen === 'scheme'
@@ -168,24 +204,84 @@ function App() {
           ? 3
           : 1;
 
+  /* =========================================================
+     APP
+     ========================================================= */
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-50 to-primary-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+    <div
+      className="
+        relative
+        min-h-screen
+
+        bg-transparent
+
+        dark:bg-transparent
+      "
+    >
+
+      {/* =====================================================
+          HEADER
+          ===================================================== */}
 
       <Header
         lang={lang}
         onLangChange={handleLangChange}
-        onDashboardClick={() => navigate('dashboard')}
-        onFAQClick={() => navigate('faq')}
-        onContactClick={() => navigate('contact')}
+        onDashboardClick={() =>
+          navigate('dashboard')
+        }
+        onFAQClick={() =>
+          navigate('faq')
+        }
+        onContactClick={() =>
+          navigate('contact')
+        }
         showDashboard={screen === 'dashboard'}
         themeMode={themeMode}
         onThemeChange={setThemeMode}
       />
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 pb-16 pt-6">
+
+      {/* =====================================================
+          MAIN CONTENT
+
+          IMPORTANT:
+          bg-transparent allows the fixed JanSahay background
+          from HomeScreen to remain visible.
+          ===================================================== */}
+
+      <main
+        className="
+          relative
+          z-10
+
+          max-w-2xl
+          mx-auto
+
+          px-4
+          sm:px-6
+
+          pb-16
+          pt-6
+
+          bg-transparent
+        "
+      >
+
+        {/* ===================================================
+            FLOW BACK / HOME BUTTONS
+            =================================================== */}
 
         {isFlowScreen && (
-          <div className="flex items-center justify-between mb-4">
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+
+              mb-4
+            "
+          >
 
             <button
               onClick={handlePrevious}
@@ -194,6 +290,7 @@ function App() {
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
+
 
             <button
               onClick={handleReset}
@@ -206,12 +303,22 @@ function App() {
           </div>
         )}
 
+
+        {/* ===================================================
+            DASHBOARD
+            =================================================== */}
+
         {screen === 'dashboard' && (
           <Dashboard
             lang={lang}
             onBack={() => navigate('home')}
           />
         )}
+
+
+        {/* ===================================================
+            HOME
+            =================================================== */}
 
         {screen === 'home' && (
           <HomeScreen
@@ -221,15 +328,27 @@ function App() {
           />
         )}
 
+
+        {/* ===================================================
+            GUIDED INPUT
+            =================================================== */}
+
         {screen === 'input' &&
           inputMode === 'guided' && (
             <GuidedWizard
               lang={lang}
               initialProfile={profile}
               onComplete={handleProfileComplete}
-              onBack={() => navigate('home')}
+              onBack={() =>
+                navigate('home')
+              }
             />
           )}
+
+
+        {/* ===================================================
+            CONVERSATION INPUT
+            =================================================== */}
 
         {screen === 'input' &&
           inputMode === 'conversation' && (
@@ -237,23 +356,44 @@ function App() {
               lang={lang}
               initialProfile={profile}
               onComplete={handleProfileComplete}
-              onBack={() => setScreen('home')}
+              onBack={() =>
+                setScreen('home')
+              }
             />
           )}
+
+
+        {/* ===================================================
+            FAQ
+            =================================================== */}
 
         {screen === 'faq' && (
           <FAQ
             lang={lang}
-            onBack={() => navigate('home')}
+            onBack={() =>
+              navigate('home')
+            }
           />
         )}
+
+
+        {/* ===================================================
+            CONTACT
+            =================================================== */}
 
         {screen === 'contact' && (
           <ContactUs
             lang={lang}
-            onBack={() => navigate('home')}
+            onBack={() =>
+              navigate('home')
+            }
           />
         )}
+
+
+        {/* ===================================================
+            STEPPER
+            =================================================== */}
 
         {(screen === 'scheme' ||
           screen === 'emi' ||
@@ -265,59 +405,129 @@ function App() {
           />
         )}
 
+
+        {/* ===================================================
+            SCHEME RESULT
+            =================================================== */}
+
         {screen === 'scheme' && match && (
           <SchemeResult
             lang={lang}
             match={match}
             onProceed={() =>
-              match.eligible && navigate('emi')
+              match.eligible &&
+              navigate('emi')
             }
             onReset={handleReset}
           />
         )}
 
-        {screen === 'emi' && match?.eligible && (
-          <EMICalculator
-            lang={lang}
-            match={match}
-            onProceed={() => navigate('partner')}
-            onReset={handleReset}
-          />
-        )}
 
-        {screen === 'partner' && match?.eligible && (
-          <PartnerLocator
-            lang={lang}
-            match={match}
-            userCity={profile.location.display_name}
-            userLatitude={profile.location.latitude}
-            userLongitude={profile.location.longitude}
-            onProceed={(partner) => {
-              setSelectedPartner(partner);
-              navigate('readiness');
-            }}
-            onReset={handleReset}
-          />
-        )}
+        {/* ===================================================
+            EMI CALCULATOR
+            =================================================== */}
 
-        {screen === 'readiness' && match?.eligible && (
-          <ReadinessChecklist
-            lang={lang}
-            match={match}
-            profile={profile}
-            selectedPartner={selectedPartner}
-            onReset={handleReset}
-          />
-        )}
+        {screen === 'emi' &&
+          match?.eligible && (
+            <EMICalculator
+              lang={lang}
+              match={match}
+              onProceed={() =>
+                navigate('partner')
+              }
+              onReset={handleReset}
+            />
+          )}
+
+
+        {/* ===================================================
+            PARTNER LOCATOR
+            =================================================== */}
+
+        {screen === 'partner' &&
+          match?.eligible && (
+            <PartnerLocator
+              lang={lang}
+              match={match}
+              userCity={
+                profile.location.display_name
+              }
+              userLatitude={
+                profile.location.latitude
+              }
+              userLongitude={
+                profile.location.longitude
+              }
+              onProceed={(partner) => {
+                setSelectedPartner(partner);
+                navigate('readiness');
+              }}
+              onReset={handleReset}
+            />
+          )}
+
+
+        {/* ===================================================
+            READINESS CHECKLIST
+            =================================================== */}
+
+        {screen === 'readiness' &&
+          match?.eligible && (
+            <ReadinessChecklist
+              lang={lang}
+              match={match}
+              profile={profile}
+              selectedPartner={selectedPartner}
+              onReset={handleReset}
+            />
+          )}
 
       </main>
 
-      <footer className="border-t border-slate-200/60 bg-white/50 dark:border-slate-800 dark:bg-slate-950/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-center">
+
+      {/* =====================================================
+          FOOTER
+          ===================================================== */}
+
+      <footer
+        className="
+          relative
+          z-10
+
+          border-t
+          border-slate-200/60
+
+          bg-white/50
+          backdrop-blur-sm
+
+          dark:border-slate-800
+          dark:bg-slate-950/50
+        "
+      >
+
+        <div
+          className="
+            max-w-6xl
+            mx-auto
+
+            px-4
+            sm:px-6
+
+            py-4
+
+            text-center
+          "
+        >
+
           <p className="text-xs text-slate-400">
-            Interest rate bands and partner NPA data are illustrative for the demo. In production, these would integrate with NSFDC/SCA live data feeds.
+            Interest rate bands and partner NPA data
+            are illustrative for the demo. In production,
+            these would integrate with NSFDC/SCA live
+            data feeds.
           </p>
+
         </div>
+
       </footer>
 
     </div>
