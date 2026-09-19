@@ -10,7 +10,7 @@ export const translations = {
     // Home
     heroTitle: 'Find the right government loan for your needs',
     heroSubtitle: 'Tell us what you need.',
-    tellUs: 'Type in your language',
+    tellUs: 'Tell us what you need',
     orDivider: 'or',
     checkEligibility: 'Check eligibility',
     businessLoan: 'Start / Grow Business',
