@@ -250,13 +250,14 @@ function App() {
 
   const stepperStep =
     screen === 'scheme'
-      ? 1
+      ? 2
       : screen === 'emi'
-        ? 2
-        : screen === 'partner' ||
-            screen === 'readiness'
-          ? 3
-          : 1;
+        ? 3
+        : screen === 'partner'
+          ? 4
+          : screen === 'readiness'
+            ? 5
+            : 2;
 
 
   /* =========================================================
@@ -383,6 +384,9 @@ function App() {
           lang={lang}
           onLangChange={
             handleLangChange
+          }
+          onHomeClick={() =>
+            navigate('home')
           }
           onDashboardClick={() =>
             navigate('dashboard')

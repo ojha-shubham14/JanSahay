@@ -7,6 +7,7 @@ import {
   Monitor,
   Menu,
   X,
+  Home,
 } from 'lucide-react';
 
 import type { Language } from '@/lib/types';
@@ -16,6 +17,7 @@ import { t, type TranslationKey } from '@/i18n/translations';
 interface HeaderProps {
   lang: Language;
   onLangChange: (lang: Language) => void;
+  onHomeClick: () => void;
   onDashboardClick: () => void;
   onFAQClick: () => void;
   onContactClick: () => void;
@@ -56,6 +58,7 @@ const themeOptions: {
 export function Header({
   lang,
   onLangChange,
+  onHomeClick,
   onDashboardClick,
   onFAQClick,
   onContactClick,
@@ -74,6 +77,11 @@ export function Header({
 
   const handleLanguageChange = (newLang: Language) => {
     onLangChange(newLang);
+  };
+
+  const handleHome = () => {
+    closeMobileMenu();
+    onHomeClick();
   };
 
   const handleFAQ = () => {
@@ -103,14 +111,18 @@ export function Header({
         <div className="flex items-center justify-between gap-3 py-3 sm:py-3.5">
 
           {/* JanSahay identity */}
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-
-            <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary-600 text-white flex-shrink-0">
+          <button
+            type="button"
+            onClick={handleHome}
+            className="flex items-center gap-2.5 sm:gap-3 min-w-0 text-left rounded-md transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 cursor-pointer group"
+            aria-label="JanSahay - Home"
+          >
+            <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary-600 text-white flex-shrink-0 group-hover:bg-primary-700 transition-colors shadow-sm">
               <Landmark className="w-5 h-5" />
             </div>
 
             <div className="min-w-0">
-              <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight dark:text-slate-100">
+              <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight dark:text-slate-100 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">
                 {tr('appName')}
               </h1>
 
@@ -118,8 +130,7 @@ export function Header({
                 {tr('tagline')}
               </p>
             </div>
-
-          </div>
+          </button>
 
           {/* =================================================
               DESKTOP CONTROLS
@@ -319,6 +330,33 @@ export function Header({
 
               {/* Navigation */}
               <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-1">
+
+                <button
+                  onClick={handleHome}
+                  className="
+                    w-full
+                    flex
+                    items-center
+                    justify-between
+                    px-3
+                    py-3
+                    rounded-md
+                    text-sm
+                    font-medium
+                    text-slate-700
+                    hover:bg-slate-50
+                    dark:text-slate-200
+                    dark:hover:bg-slate-800
+                  "
+                >
+                  <span className="flex items-center gap-2">
+                    <Home className="w-4 h-4" />
+                    Home
+                  </span>
+                  <span className="text-slate-400">
+                    →
+                  </span>
+                </button>
 
                 <button
                   onClick={handleFAQ}

@@ -28,8 +28,8 @@ export function Dashboard({ lang, onBack }: DashboardProps) {
     Bengaluru: 312,
     Hyderabad: 218,
     Chennai: 195,
-    Pune: 167,
     Delhi: 189,
+    Pune: 167,
     Kolkata: 112,
     Patna: 91,
   };
@@ -39,6 +39,14 @@ export function Dashboard({ lang, onBack }: DashboardProps) {
     'Term Loan Scheme': 398,
     'Educational Loan Scheme': 344,
   };
+
+  const sortedApplicationsByCity = Object.entries(applicationsByCity).sort(
+    ([, countA], [, countB]) => countB - countA
+  );
+
+  const sortedSchemeDemand = Object.entries(schemeDemand).sort(
+    ([, countA], [, countB]) => countB - countA
+  );
 
   const maxCityCount = Math.max(
     ...Object.values(applicationsByCity)
@@ -167,7 +175,7 @@ export function Dashboard({ lang, onBack }: DashboardProps) {
           </div>
 
           <div className="space-y-4">
-            {Object.entries(schemeDemand).map(
+            {sortedSchemeDemand.map(
               ([name, count]) => (
                 <div key={name}>
                   <div className="flex items-center justify-between mb-1.5 gap-3">
@@ -205,7 +213,7 @@ export function Dashboard({ lang, onBack }: DashboardProps) {
           </div>
 
           <div className="space-y-4">
-            {Object.entries(applicationsByCity).map(
+            {sortedApplicationsByCity.map(
               ([city, count]) => (
                 <div key={city}>
                   <div className="flex items-center justify-between mb-1.5 gap-3">

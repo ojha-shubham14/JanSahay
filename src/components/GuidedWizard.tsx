@@ -828,29 +828,34 @@ export function GuidedWizard({
       )}
 
       {/* Navigation */}
-      <div className="flex items-center gap-3 mt-6">
+      <div className="flex items-center gap-2 sm:gap-3 mt-6 w-full">
         <button
+          type="button"
           onClick={prevStep}
-          className="btn-secondary"
+          className="btn-secondary !px-3.5 sm:!px-6 !py-2.5 sm:!py-3 text-sm sm:text-base flex-shrink-0"
         >
-          <ArrowLeft className="w-5 h-5" />
-          {tr('back')}
+          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span>{tr('back')}</span>
         </button>
 
         <button
+          type="button"
           onClick={nextStep}
-          className="btn-primary flex-1"
+          className="btn-primary flex-1 min-w-0 !px-3.5 sm:!px-6 !py-2.5 sm:!py-3 text-sm sm:text-base"
         >
-          {isLastStep ? tr('seeResults') : tr('next')}
-          <ArrowRight className="w-5 h-5" />
+          <span className="truncate">{isLastStep ? tr('seeResults') : tr('next')}</span>
+          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
         </button>
 
         <button
+          type="button"
           onClick={onBack}
-          className="btn-ghost"
+          className="btn-ghost !px-3 sm:!px-4 !py-2.5 sm:!py-3 text-sm sm:text-base flex-shrink-0"
+          title="Home"
+          aria-label="Home"
         >
-          <Home className="w-5 h-5" />
-          Home
+          <Home className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="hidden xs:inline sm:inline">Home</span>
         </button>
       </div>
     </div>

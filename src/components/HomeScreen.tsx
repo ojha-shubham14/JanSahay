@@ -1089,40 +1089,37 @@ export function HomeScreen({
             <div
               className="
                 grid
-                gap-5
-
-                sm:grid-cols-4
+                gap-4
+                sm:grid-cols-2
+                lg:grid-cols-5
               "
             >
 
               {[
                 {
                   number: '1',
-                  title:
-                    tr('step1Title'),
-                  description:
-                    'Find schemes based on your needs and eligibility.',
+                  title: tr('step1Title'),
+                  description: tr('step1Desc'),
                 },
                 {
                   number: '2',
-                  title:
-                    tr('step2Title'),
-                  description:
-                    'Plan your loan with simple calculations.',
+                  title: tr('step2Title'),
+                  description: tr('step2Desc'),
                 },
                 {
                   number: '3',
-                  title:
-                    tr('step3Title'),
-                  description:
-                    'Locate nearby banks and channel partners.',
+                  title: tr('step3Title'),
+                  description: tr('step3Desc'),
                 },
                 {
                   number: '4',
-                  title:
-                    tr('step4Title'),
-                  description:
-                    'See required documents and next steps.',
+                  title: tr('step4Title'),
+                  description: tr('step4Desc'),
+                },
+                {
+                  number: '5',
+                  title: tr('step5Title'),
+                  description: tr('step5Desc'),
                 },
               ].map(
                 (item) => (
