@@ -57,40 +57,6 @@ function App() {
     useState<RankedPartner | null>(null);
 
   /* =========================================================
-     BACKGROUND PARALLAX
-     ========================================================= */
-
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (ticking) return;
-
-      window.requestAnimationFrame(() => {
-        setScrollY(window.scrollY);
-        ticking = false;
-      });
-
-      ticking = true;
-    };
-
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const backgroundOffset = Math.min(
-    scrollY * 0.08,
-    180
-  );
-
-  /* =========================================================
      NAVIGATION
      ========================================================= */
 
@@ -102,11 +68,12 @@ function App() {
     );
 
     setScreen(nextScreen);
-  };
 
-  /* =========================================================
-     BROWSER BACK
-     ========================================================= */
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
   useEffect(() => {
     window.history.replaceState(
@@ -120,6 +87,11 @@ function App() {
         event.state?.screen as Screen | undefined;
 
       setScreen(previousScreen ?? 'home');
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     };
 
     window.addEventListener(
@@ -149,7 +121,7 @@ function App() {
   };
 
   /* =========================================================
-     START
+     START FLOW
      ========================================================= */
 
   const handleStart = (
@@ -185,7 +157,8 @@ function App() {
       completedProfile.annual_family_income!,
       completedProfile.purpose!,
       completedProfile.estimated_cost!,
-      completedProfile.education_status ?? undefined
+      completedProfile.education_status ??
+        undefined
     );
 
     setMatch(result);
@@ -207,7 +180,7 @@ function App() {
   };
 
   /* =========================================================
-     FLOW
+     FLOW SCREENS
      ========================================================= */
 
   const isFlowScreen =
@@ -220,6 +193,10 @@ function App() {
     window.history.back();
   };
 
+  /* =========================================================
+     STEPPER
+     ========================================================= */
+
   const stepperStep =
     screen === 'scheme'
       ? 1
@@ -230,30 +207,18 @@ function App() {
           ? 3
           : 1;
 
-  /* =========================================================
-     APP
-     ========================================================= */
-
   return (
     <div
       className="
         relative
         min-h-screen
         overflow-x-hidden
-
-        bg-slate-50
-        dark:bg-slate-950
+        bg-transparent
       "
     >
 
       {/* =====================================================
-          GLOBAL BACKGROUND
-
-          IMPORTANT:
-          This is now in App.tsx, outside HomeScreen.
-
-          It covers the COMPLETE viewport and remains present
-          while the user scrolls.
+          GLOBAL JANSAHAY BACKGROUND
           ===================================================== */}
 
       {screen === 'home' && (
@@ -267,50 +232,43 @@ function App() {
           "
         >
 
-          {/* Desktop + mobile background */}
-
-          <img
-            src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
-            alt=""
-            aria-hidden="true"
-            draggable={false}
-            className="
-              absolute
-              inset-0
-
-              w-full
-              h-full
-
-              object-cover
-              object-center
-
-              max-[639px]:object-[center_center]
-
-              select-none
-            "
-            style={{
-              transform: `translate3d(0, ${-backgroundOffset}px, 0) scale(1.03)`,
-              transformOrigin: 'center center',
-              willChange: 'transform',
-            }}
-          />
-
-          {/* Light overlay */}
+          {/* =================================================
+              BACKGROUND IMAGE
+              ================================================= */}
 
           <div
             className="
               absolute
               inset-0
+              bg-cover
+              bg-center
+              bg-no-repeat
+            "
+            style={{
+              backgroundImage: `url(${import.meta.env.BASE_URL}images/backgroundHomepage.png)`,
+            }}
+          />
 
+          {/* =================================================
+              VERY LIGHT OVERLAY
+
+              Previously this was:
               bg-white/10
 
-              dark:bg-slate-950/45
+              Now we use almost no overlay so the
+              background remains clearly visible on PC.
+              ================================================= */}
+
+          <div
+            className="
+              absolute
+              inset-0
+              bg-white/[0.02]
             "
           />
 
         </div>
       )}
-
 
       {/* =====================================================
           HEADER
@@ -323,18 +281,17 @@ function App() {
           onDashboardClick={() =>
             navigate('dashboard')
           }
-          onFAQClick={() =>
-            navigate('faq')
-          }
+          onFAQClick={() => navigate('faq')}
           onContactClick={() =>
             navigate('contact')
           }
-          showDashboard={screen === 'dashboard'}
+          showDashboard={
+            screen === 'dashboard'
+          }
           themeMode={themeMode}
           onThemeChange={setThemeMode}
         />
       </div>
-
 
       {/* =====================================================
           MAIN CONTENT
@@ -344,19 +301,19 @@ function App() {
         className="
           relative
           z-10
-
           max-w-2xl
           mx-auto
-
           px-4
           sm:px-6
-
           pb-16
           pt-6
-
           bg-transparent
         "
       >
+
+        {/* ===================================================
+            FLOW NAVIGATION
+            =================================================== */}
 
         {isFlowScreen && (
           <div
@@ -367,7 +324,6 @@ function App() {
               mb-4
             "
           >
-
             <button
               onClick={handlePrevious}
               className="btn-secondary"
@@ -383,10 +339,8 @@ function App() {
               <Home className="w-4 h-4" />
               Home
             </button>
-
           </div>
         )}
-
 
         {/* ===================================================
             DASHBOARD
@@ -398,7 +352,6 @@ function App() {
             onBack={() => navigate('home')}
           />
         )}
-
 
         {/* ===================================================
             HOME
@@ -412,9 +365,8 @@ function App() {
           />
         )}
 
-
         {/* ===================================================
-            GUIDED WIZARD
+            GUIDED INPUT
             =================================================== */}
 
         {screen === 'input' &&
@@ -422,14 +374,17 @@ function App() {
             <GuidedWizard
               lang={lang}
               initialProfile={profile}
-              onComplete={handleProfileComplete}
-              onBack={() => navigate('home')}
+              onComplete={
+                handleProfileComplete
+              }
+              onBack={() =>
+                navigate('home')
+              }
             />
           )}
 
-
         {/* ===================================================
-            CONVERSATION
+            CONVERSATION INPUT
             =================================================== */}
 
         {screen === 'input' &&
@@ -437,11 +392,14 @@ function App() {
             <ConversationMode
               lang={lang}
               initialProfile={profile}
-              onComplete={handleProfileComplete}
-              onBack={() => setScreen('home')}
+              onComplete={
+                handleProfileComplete
+              }
+              onBack={() =>
+                navigate('home')
+              }
             />
           )}
-
 
         {/* ===================================================
             FAQ
@@ -450,10 +408,11 @@ function App() {
         {screen === 'faq' && (
           <FAQ
             lang={lang}
-            onBack={() => navigate('home')}
+            onBack={() =>
+              navigate('home')
+            }
           />
         )}
-
 
         {/* ===================================================
             CONTACT
@@ -462,10 +421,11 @@ function App() {
         {screen === 'contact' && (
           <ContactUs
             lang={lang}
-            onBack={() => navigate('home')}
+            onBack={() =>
+              navigate('home')
+            }
           />
         )}
-
 
         {/* ===================================================
             STEPPER
@@ -481,26 +441,25 @@ function App() {
           />
         )}
 
-
         {/* ===================================================
-            SCHEME
+            SCHEME RESULT
             =================================================== */}
 
-        {screen === 'scheme' && match && (
-          <SchemeResult
-            lang={lang}
-            match={match}
-            onProceed={() =>
-              match.eligible &&
-              navigate('emi')
-            }
-            onReset={handleReset}
-          />
-        )}
-
+        {screen === 'scheme' &&
+          match && (
+            <SchemeResult
+              lang={lang}
+              match={match}
+              onProceed={() =>
+                match.eligible &&
+                navigate('emi')
+              }
+              onReset={handleReset}
+            />
+          )}
 
         {/* ===================================================
-            EMI
+            EMI CALCULATOR
             =================================================== */}
 
         {screen === 'emi' &&
@@ -515,9 +474,8 @@ function App() {
             />
           )}
 
-
         {/* ===================================================
-            PARTNER
+            PARTNER LOCATOR
             =================================================== */}
 
         {screen === 'partner' &&
@@ -535,16 +493,18 @@ function App() {
                 profile.location.longitude
               }
               onProceed={(partner) => {
-                setSelectedPartner(partner);
+                setSelectedPartner(
+                  partner
+                );
+
                 navigate('readiness');
               }}
               onReset={handleReset}
             />
           )}
 
-
         {/* ===================================================
-            READINESS
+            READINESS CHECKLIST
             =================================================== */}
 
         {screen === 'readiness' &&
@@ -553,13 +513,14 @@ function App() {
               lang={lang}
               match={match}
               profile={profile}
-              selectedPartner={selectedPartner}
+              selectedPartner={
+                selectedPartner
+              }
               onReset={handleReset}
             />
           )}
 
       </main>
-
 
       {/* =====================================================
           FOOTER
@@ -569,41 +530,31 @@ function App() {
         className="
           relative
           z-10
-
           border-t
           border-slate-200/60
-
           bg-white/50
           backdrop-blur-sm
-
           dark:border-slate-800
           dark:bg-slate-950/50
         "
       >
-
         <div
           className="
             max-w-6xl
             mx-auto
-
             px-4
             sm:px-6
-
             py-4
-
             text-center
           "
         >
-
           <p className="text-xs text-slate-400">
-            Interest rate bands and partner NPA data are
-            illustrative for the demo. In production,
-            these would integrate with NSFDC/SCA live
-            data feeds.
+            Interest rate bands and partner NPA
+            data are illustrative for the demo.
+            In production, these would integrate
+            with NSFDC/SCA live data feeds.
           </p>
-
         </div>
-
       </footer>
 
     </div>
