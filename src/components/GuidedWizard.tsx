@@ -157,14 +157,24 @@ const effectiveStepOrder = stepOrder.filter((s) => {
   setError('');
 
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      setLocationLoading(false);
+  (position) => {
+    setLocationLoading(false);
 
-      setUseCurrentLocation(true);
+    setUseCurrentLocation(true);
 
-      setCity('Current location');
+    setCity('Current location');
 
-    },
+    setGpsLocation({
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    });
+
+    console.log(
+      'GPS LOCATION:',
+      position.coords.latitude,
+      position.coords.longitude
+    );
+  },
     () => {
       setLocationLoading(false);
       setError('We could not access your location. Please allow location access or select your city manually.');
