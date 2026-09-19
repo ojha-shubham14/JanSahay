@@ -270,7 +270,7 @@ export function PartnerLocator({
                     <div className="flex-1 min-w-0">
                       {/* Partner name + distance */}
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-bold text-slate-900 text-sm leading-snug">
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug">
                           {partner.name}
                         </h3>
 
