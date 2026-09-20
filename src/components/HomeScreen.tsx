@@ -457,161 +457,6 @@ export function HomeScreen({
                 mx-auto
               "
             >
-
-              <button
-                type="button"
-                onClick={() =>
-                  onStart(
-                    'conversation'
-                  )
-                }
-                className="
-                  w-full
-
-                  flex
-                  items-center
-                  gap-4
-
-                  p-4
-                  sm:p-5
-
-                  rounded-md
-
-                  bg-primary-700
-                  text-white
-
-                  hover:bg-primary-800
-
-                  transition-colors
-                  duration-150
-
-                  shadow-md
-                "
-              >
-
-                {/* Microphone */}
-
-                <div
-                  className="
-                    flex
-                    items-center
-                    justify-center
-
-                    w-10
-                    h-10
-
-                    rounded-md
-
-                    bg-white/15
-
-                    flex-shrink-0
-                  "
-                >
-                  <Mic
-                    className="w-5 h-5"
-                  />
-                </div>
-
-
-                {/* Text */}
-
-                <div
-                  className="
-                    flex-1
-                    text-left
-                  "
-                >
-
-                  <p
-                    className="
-                      font-bold
-                      text-base
-                      sm:text-lg
-                    "
-                  >
-                    {tr('tellUs')}
-                  </p>
-
-                  <p
-                    className="
-                      text-xs
-                      sm:text-sm
-
-                      text-primary-100
-
-                      mt-0.5
-                    "
-                  >
-                    Speak or type in
-                    simple language
-                  </p>
-
-                </div>
-
-
-                {/* Arrow */}
-
-                <ArrowRight
-                  className="
-                    w-5
-                    h-5
-
-                    flex-shrink-0
-                  "
-                />
-
-              </button>
-
-
-              {/* =================================================
-                  OR DIVIDER
-                  ================================================= */}
-
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-3
-
-                  py-1
-                "
-              >
-
-                <div
-                  className="
-                    flex-1
-                    h-px
-
-                    bg-slate-300
-                  "
-                />
-
-                <span
-                  className="
-                    text-xs
-                    font-medium
-
-                    text-slate-500
-
-                    uppercase
-                    tracking-wide
-                  "
-                >
-                  {tr('orDivider')}
-                </span>
-
-                <div
-                  className="
-                    flex-1
-                    h-px
-
-                    bg-slate-300
-                  "
-                />
-
-              </div>
-
-
               {/* =================================================
                   PURPOSE CHOICES
                   ================================================= */}
@@ -814,6 +659,157 @@ export function HomeScreen({
 
               </div>
 
+              {/* =================================================
+                  OR DIVIDER
+                  ================================================= */}
+
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-3
+
+                  py-1
+                "
+              >
+
+                <div
+                  className="
+                    flex-1
+                    h-px
+
+                    bg-slate-400
+                  "
+                />
+
+                <span
+                  className="
+                    text-xs
+                    font-medium
+
+                    text-slate-600
+
+                    uppercase
+                    tracking-wide
+                  "
+                >
+                  {tr('orDivider')}
+                </span>
+
+                <div
+                  className="
+                    flex-1
+                    h-px
+
+                    bg-slate-400
+                  "
+                />
+
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  onStart(
+                    'conversation'
+                  )
+                }
+                className="
+                  w-full
+
+                  flex
+                  items-center
+                  gap-4
+
+                  p-4
+                  sm:p-5
+
+                  rounded-md
+
+                  bg-primary-700
+                  text-white
+
+                  hover:bg-primary-800
+
+                  transition-colors
+                  duration-150
+
+                  shadow-md
+                "
+              >
+
+                {/* Microphone */}
+
+                <div
+                  className="
+                    flex
+                    items-center
+                    justify-center
+
+                    w-10
+                    h-10
+
+                    rounded-md
+
+                    bg-white/15
+
+                    flex-shrink-0
+                  "
+                >
+                  <Mic
+                    className="w-5 h-5"
+                  />
+                </div>
+
+
+                {/* Text */}
+
+                <div
+                  className="
+                    flex-1
+                    text-left
+                  "
+                >
+
+                  <p
+                    className="
+                      font-bold
+                      text-base
+                      sm:text-lg
+                    "
+                  >
+                    {tr('tellUs')}
+                  </p>
+
+                  <p
+                    className="
+                      text-xs
+                      sm:text-sm
+
+                      text-primary-100
+
+                      mt-0.5
+                    "
+                  >
+                    Speak or type in
+                    simple language
+                  </p>
+
+                </div>
+
+
+                {/* Arrow */}
+
+                <ArrowRight
+                  className="
+                    w-5
+                    h-5
+
+                    flex-shrink-0
+                  "
+                />
+
+              </button>
             </div>
 
 
