@@ -1,11 +1,12 @@
 import {
   BarChart3,
   ArrowLeft,
-  TrendingUp,
-  MapPin,
   Building2,
+  MapPin,
   PieChart,
-  Activity,
+  Database,
+  CheckCircle2,
+  WalletCards,
 } from 'lucide-react';
 
 import type { Language } from '@/lib/types';
@@ -21,50 +22,76 @@ interface DashboardProps {
 export function Dashboard({ lang, onBack }: DashboardProps) {
   const tr = (key: TranslationKey) => t(lang, key);
 
-  // Simulated demo data
-  const totalApplications = 1284;
-
-  const applicationsByCity: Record<string, number> = {
-    Bengaluru: 312,
-    Hyderabad: 218,
-    Chennai: 195,
-    Delhi: 189,
-    Pune: 167,
-    Kolkata: 112,
-    Patna: 91,
+  const schemeDisplayName = (schemeId: string, fallback: string) => {
+    switch (schemeId) {
+      case 'micro_finance':
+        return tr('microFinanceScheme');
+      case 'term_loan':
+        return tr('termLoanScheme');
+      case 'education_loan':
+        return tr('educationLoanScheme');
+      default:
+        return fallback;
+    }
   };
 
-  const schemeDemand: Record<string, number> = {
-    'Micro Finance Scheme': 542,
-    'Term Loan Scheme': 398,
-    'Educational Loan Scheme': 344,
-  };
+  /*
+   * IMPORTANT:
+   *
+   * This dashboard intentionally contains NO invented application numbers,
+   * loan amounts, success rates, or demand percentages.
+   *
+   * Every number below is calculated from the actual prototype datasets:
+   *   - src/data/schemes.ts
+   *   - src/data/partners.ts
+   *
+   * This makes the dashboard defensible during an SIH demo.
+   */
 
-  const sortedApplicationsByCity = Object.entries(applicationsByCity).sort(
-    ([, countA], [, countB]) => countB - countA
-  );
+  const totalSchemes = schemes.length;
+  const totalPartners = partners.length;
 
-  const sortedSchemeDemand = Object.entries(schemeDemand).sort(
-    ([, countA], [, countB]) => countB - countA
-  );
-
-  const maxCityCount = Math.max(
-    ...Object.values(applicationsByCity)
-  );
-
-  const maxSchemeCount = Math.max(
-    ...Object.values(schemeDemand)
-  );
+  const cities = Array.from(
+    new Set(partners.map((partner) => partner.city))
+  ).sort((a, b) => a.localeCompare(b));
 
   const acceptingPartners = partners.filter(
-    (p) => p.accepting_applications
+    (partner) => partner.accepting_applications
   ).length;
 
-  const fundsAvailable = partners.filter(
-    (p) => p.funds_available
+  const fundedPartners = partners.filter(
+    (partner) => partner.funds_available
   ).length;
 
-  const totalCapacity = partners.length;
+  const acceptingAndFunded = partners.filter(
+    (partner) =>
+      partner.accepting_applications && partner.funds_available
+  ).length;
+
+  const partnersByCity = cities
+    .map((city) => ({
+      city,
+      count: partners.filter((partner) => partner.city === city).length,
+    }))
+    .sort((a, b) => b.count - a.count || a.city.localeCompare(b.city));
+
+  const schemeCoverage = schemes.map((scheme) => ({
+    id: scheme.scheme_id,
+    name: schemeDisplayName(scheme.scheme_id, scheme.name),
+    count: partners.filter((partner) =>
+      partner.schemes_handled.includes(scheme.scheme_id)
+    ).length,
+  }));
+
+  const maxCityCount = Math.max(
+    1,
+    ...partnersByCity.map((item) => item.count)
+  );
+
+  const maxSchemeCoverage = Math.max(
+    1,
+    ...schemeCoverage.map((item) => item.count)
+  );
 
   return (
     <div className="portal-section p-5 sm:p-6 animate-slide-up">
@@ -96,156 +123,195 @@ export function Dashboard({ lang, onBack }: DashboardProps) {
         </button>
       </div>
 
-      {/* Demo notice */}
-      <div className="portal-notice mb-6 border-warning-200 bg-warning-50 dark:border-warning-800 dark:bg-warning-900/20">
-        <p className="text-xs sm:text-sm text-warning-800 dark:text-warning-300 leading-relaxed">
-          {tr('simulatedData')}
-        </p>
+      {/* Dataset notice */}
+      <div className="portal-notice mb-6 border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/30">
+        <div className="flex items-start gap-3">
+          <Database className="w-4 h-4 mt-0.5 text-primary-700 dark:text-primary-400 flex-shrink-0" />
+          <p className="text-xs sm:text-sm text-primary-800 dark:text-primary-300 leading-relaxed">
+            {tr('datasetNote')}
+          </p>
+        </div>
       </div>
 
-      {/* Stats */}
+      {/* Dataset-derived stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        {/* Applications */}
-        <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
-          <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-4 h-4 text-primary-700 dark:text-primary-400" />
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {tr('totalApplications')}
-            </p>
-          </div>
-
-          <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            {totalApplications.toLocaleString('en-IN')}
-          </p>
-        </div>
-
-        {/* Capacity */}
-        <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
-          <div className="flex items-center gap-2 mb-2">
-            <Building2 className="w-4 h-4 text-success-600 dark:text-success-400" />
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {tr('availableCapacity')}
-            </p>
-          </div>
-
-          <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            {fundsAvailable}/{totalCapacity}
-          </p>
-        </div>
-
-        {/* Workload */}
-        <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-accent-600 dark:text-accent-400" />
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {tr('partnerWorkload')}
-            </p>
-          </div>
-
-          <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            {acceptingPartners}/{totalCapacity}
-          </p>
-        </div>
-
-        {/* Schemes */}
         <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
           <div className="flex items-center gap-2 mb-2">
             <PieChart className="w-4 h-4 text-primary-700 dark:text-primary-400" />
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              {tr('schemeDistribution')}
+              {tr('configuredSchemes')}
             </p>
           </div>
-
           <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            {schemes.length}
+            {totalSchemes}
+          </p>
+        </div>
+
+        <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
+          <div className="flex items-center gap-2 mb-2">
+            <Building2 className="w-4 h-4 text-primary-700 dark:text-primary-400" />
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {tr('partnerRecords')}
+            </p>
+          </div>
+          <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            {totalPartners}
+          </p>
+        </div>
+
+        <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="w-4 h-4 text-accent-600 dark:text-accent-400" />
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {tr('citiesCovered')}
+            </p>
+          </div>
+          <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            {cities.length}
+          </p>
+        </div>
+
+        <div className="border border-slate-200 rounded-md p-4 bg-white dark:bg-slate-900 dark:border-slate-700">
+          <div className="flex items-center gap-2 mb-2">
+            <CheckCircle2 className="w-4 h-4 text-success-600 dark:text-success-400" />
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {tr('acceptingPartnerRecords')}
+            </p>
+          </div>
+          <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            {acceptingPartners}/{totalPartners}
           </p>
         </div>
       </div>
 
-      {/* Charts */}
+      {/* Partner records by city + scheme coverage */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Scheme demand */}
         <div className="border border-slate-200 rounded-md p-5 bg-white dark:bg-slate-900 dark:border-slate-700">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-              {tr('schemeDemand')}
-            </h3>
-
-            <PieChart className="w-4 h-4 text-slate-400" />
-          </div>
-
-          <div className="space-y-4">
-            {sortedSchemeDemand.map(
-              ([name, count]) => (
-                <div key={name}>
-                  <div className="flex items-center justify-between mb-1.5 gap-3">
-                    <span className="text-xs text-slate-600 dark:text-slate-300">
-                      {name}
-                    </span>
-
-                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      {count}
-                    </span>
-                  </div>
-
-                  <div className="h-2 rounded-sm bg-slate-100 overflow-hidden dark:bg-slate-800">
-                    <div
-                      className="h-full bg-primary-600 transition-all duration-500"
-                      style={{
-                        width: `${(count / maxSchemeCount) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-        </div>
-
-        {/* Applications by city */}
-        <div className="border border-slate-200 rounded-md p-5 bg-white dark:bg-slate-900 dark:border-slate-700">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-              {tr('applicationsByCity')}
-            </h3>
-
+            <div>
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                {tr('partnersByCity')}
+              </h3>
+              <p className="text-xs text-slate-400 mt-1 dark:text-slate-500">
+                {tr('datasetDerived')}
+              </p>
+            </div>
             <MapPin className="w-4 h-4 text-slate-400" />
           </div>
 
           <div className="space-y-4">
-            {sortedApplicationsByCity.map(
-              ([city, count]) => (
-                <div key={city}>
-                  <div className="flex items-center justify-between mb-1.5 gap-3">
-                    <span className="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-slate-400" />
-                      {city}
-                    </span>
+            {partnersByCity.map(({ city, count }) => (
+              <div key={city}>
+                <div className="flex items-center justify-between mb-1.5 gap-3">
+                  <span className="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                    <MapPin className="w-3 h-3 text-slate-400" />
+                    {city}
+                  </span>
 
-                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      {count}
-                    </span>
-                  </div>
-
-                  <div className="h-2 rounded-sm bg-slate-100 overflow-hidden dark:bg-slate-800">
-                    <div
-                      className="h-full bg-accent-500 transition-all duration-500"
-                      style={{
-                        width: `${(count / maxCityCount) * 100}%`,
-                      }}
-                    />
-                  </div>
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                    {count}
+                  </span>
                 </div>
-              )
-            )}
+
+                <div className="h-2 rounded-sm bg-slate-100 overflow-hidden dark:bg-slate-800">
+                  <div
+                    className="h-full bg-primary-600 transition-all duration-500"
+                    style={{
+                      width: `${(count / maxCityCount) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="border border-slate-200 rounded-md p-5 bg-white dark:bg-slate-900 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                {tr('schemeCoverage')}
+              </h3>
+              <p className="text-xs text-slate-400 mt-1 dark:text-slate-500">
+                {tr('datasetDerived')}
+              </p>
+            </div>
+            <PieChart className="w-4 h-4 text-slate-400" />
+          </div>
+
+          <div className="space-y-4">
+            {schemeCoverage.map(({ id, name, count }) => (
+              <div key={id}>
+                <div className="flex items-center justify-between mb-1.5 gap-3">
+                  <span className="text-xs text-slate-600 dark:text-slate-300">
+                    {name}
+                  </span>
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                    {count}/{totalPartners}
+                  </span>
+                </div>
+
+                <div className="h-2 rounded-sm bg-slate-100 overflow-hidden dark:bg-slate-800">
+                  <div
+                    className="h-full bg-accent-500 transition-all duration-500"
+                    style={{
+                      width: `${(count / maxSchemeCoverage) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Bottom note */}
+      {/* Partner availability */}
+      <div className="mt-4 border border-slate-200 rounded-md p-5 bg-white dark:bg-slate-900 dark:border-slate-700">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+              {tr('partnerStatus')}
+            </h3>
+            <p className="text-xs text-slate-400 mt-1 dark:text-slate-500">
+              {tr('datasetDerived')}
+            </p>
+          </div>
+          <WalletCards className="w-4 h-4 text-slate-400" />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="rounded-md border border-slate-200 p-4 dark:border-slate-700">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {tr('acceptingPartnerRecords')}
+            </p>
+            <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {acceptingPartners}/{totalPartners}
+            </p>
+          </div>
+
+          <div className="rounded-md border border-slate-200 p-4 dark:border-slate-700">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {tr('fundsAvailableLabel')}
+            </p>
+            <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {fundedPartners}/{totalPartners}
+            </p>
+          </div>
+
+          <div className="rounded-md border border-slate-200 p-4 dark:border-slate-700">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {tr('acceptingAndFunded')}
+            </p>
+            <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {acceptingAndFunded}/{totalPartners}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
         <p className="text-xs text-slate-400 text-center dark:text-slate-500">
-          {tr('simulatedData')}
+          {tr('datasetNote')}
         </p>
       </div>
     </div>

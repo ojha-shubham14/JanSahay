@@ -26,6 +26,36 @@ export function SchemeResult({
 }: SchemeResultProps) {
   const tr = (key: TranslationKey) => t(lang, key);
 
+  const schemeDisplayName = (schemeId?: string, fallback?: string) => {
+    switch (schemeId) {
+      case 'micro_finance':
+        return tr('microFinanceScheme');
+      case 'term_loan':
+        return tr('termLoanScheme');
+      case 'education_loan':
+        return tr('educationLoanScheme');
+      default:
+        return fallback ?? 'N/A';
+    }
+  };
+
+  const checkLabel = (index: number, fallback: string) => {
+    const keys: TranslationKey[] = [
+      'familyIncomeCheck',
+      'purposeCheck',
+      'projectCostCheck',
+      'financingCheck',
+    ];
+    return index < keys.length ? tr(keys[index]) : fallback;
+  };
+
+  const comparisonReason = (reason: string) => {
+    if (reason === 'Meets current demo rules') return tr('meetsRules');
+    if (reason === 'Purpose does not match') return tr('purposeMismatch');
+    if (reason === 'Exceeds configured limit') return tr('exceedsLimit');
+    return reason;
+  };
+
   if (!match.eligible) {
     return (
       <div className="portal-section p-5 sm:p-6 animate-slide-up">
@@ -66,7 +96,7 @@ export function SchemeResult({
         </p>
 
         <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900">
-          {match.scheme_name}
+          {schemeDisplayName(match.scheme_id, match.scheme_name)}
         </h2>
       </div>
 
@@ -84,7 +114,7 @@ export function SchemeResult({
               </h3>
 
               <p className="text-sm text-primary-800 leading-relaxed">
-                {match.reasoning}
+                {tr('schemeMatchReason')}
               </p>
             </div>
           </div>
@@ -119,7 +149,7 @@ export function SchemeResult({
                 </div>
 
                 <p className="text-sm text-slate-700 leading-relaxed">
-                  {check.label}
+                  {checkLabel(i, check.label)}
                 </p>
               </div>
             ))}
@@ -230,7 +260,7 @@ export function SchemeResult({
                     }
                   >
                     <td className="px-4 py-3 font-medium text-slate-700">
-                      {c.scheme_name}
+                      {schemeDisplayName(c.scheme_id, c.scheme_name)}
                     </td>
 
                     <td className="px-4 py-3">
@@ -248,7 +278,7 @@ export function SchemeResult({
                     </td>
 
                     <td className="px-4 py-3 text-slate-500 text-xs leading-relaxed">
-                      {c.reason}
+                      {comparisonReason(c.reason)}
                     </td>
                   </tr>
                 ))}

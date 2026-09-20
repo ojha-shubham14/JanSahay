@@ -142,7 +142,7 @@ export function ConversationMode({
 
     if (!SpeechRecognition) {
       setVoiceError(
-        'Voice input is not supported in this browser. Please type your answer instead.'
+        tr('voiceNotSupported')
       );
       return;
     }
@@ -196,15 +196,15 @@ export function ConversationMode({
 
       if (event.error === 'not-allowed') {
         setVoiceError(
-          'Microphone permission was denied. Please allow microphone access or type your answer.'
+          tr('microphoneDenied')
         );
       } else if (event.error === 'no-speech') {
         setVoiceError(
-          'I could not hear anything. Please try again.'
+          tr('noSpeech')
         );
       } else {
         setVoiceError(
-          'Voice input could not be started. Please try again or type your answer.'
+          tr('voiceInputFailed')
         );
       }
     };
@@ -227,7 +227,7 @@ export function ConversationMode({
       setIsListening(false);
 
       setVoiceError(
-        'Unable to start the microphone. Please try again.'
+        tr('microphoneStartFailed')
       );
     }
   };
@@ -413,11 +413,11 @@ export function ConversationMode({
 
           <div className="min-w-0">
             <h2 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100">
-              JanSahay Assistant
+              {tr('assistantTitle')}
             </h2>
 
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Speak or type in simple language
+              {tr('assistantSubtitle')}
             </p>
           </div>
         </div>
@@ -445,8 +445,7 @@ export function ConversationMode({
           <Info className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
 
           <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            Answer a few simple questions. You can
-            type your answer or use the microphone.
+            {tr('assistantInfo')}
           </p>
         </div>
       </div>
@@ -549,7 +548,7 @@ export function ConversationMode({
             </span>
 
             <p className="text-xs font-medium text-red-700 dark:text-red-300">
-              Listening... Speak now
+              {tr('listening')}
             </p>
           </div>
         </div>
@@ -603,13 +602,13 @@ export function ConversationMode({
             }`}
             aria-label={
               isListening
-                ? 'Stop listening'
-                : 'Use voice input'
+                ? tr('stopListening')
+                : tr('useVoiceInput')
             }
             title={
               isListening
-                ? 'Stop listening'
-                : 'Speak your answer'
+                ? tr('stopListening')
+                : tr('speakAnswer')
             }
           >
             {isListening ? (
@@ -640,11 +639,11 @@ export function ConversationMode({
           !voiceError && (
             <div className="flex items-center justify-between gap-3 mt-2 px-1">
               <p className="text-xs text-slate-400 dark:text-slate-500">
-                Speak or type your answer
+                {tr('speakOrType')}
               </p>
 
               <p className="hidden sm:block text-xs text-slate-400 dark:text-slate-500">
-                Press Enter to send
+                {tr('pressEnter')}
               </p>
             </div>
           )}

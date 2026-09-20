@@ -161,12 +161,12 @@ export function GuidedWizard({
     }
 
     if (step === 'course' && !course.trim()) {
-      setError('Please enter your course');
+      setError(tr('courseRequired'));
       return;
     }
 
     if (step === 'institution' && !institution.trim()) {
-      setError('Please enter your institution');
+      setError(tr('institutionRequired'));
       return;
     }
 
@@ -217,7 +217,7 @@ export function GuidedWizard({
       () => {
         setLocationLoading(false);
         setError(
-          'We could not access your location. Please allow location access or select your city manually.'
+          tr('locationErrorAccess')
         );
       },
       {
@@ -243,7 +243,7 @@ export function GuidedWizard({
 
   const complete = () => {
     if (!name.trim() || !income || !purpose || !cost || !city) {
-      setError('Please fill all fields');
+      setError(tr('fillAllFields'));
       return;
     }
 
@@ -493,9 +493,7 @@ export function GuidedWizard({
               onKeyDown={(e) =>
                 e.key === 'Enter' && nextStep()
               }
-              placeholder={
-                isEducationFlow ? 'e.g. 500000' : 'e.g. 120000'
-              }
+              placeholder={isEducationFlow ? '500000' : '120000'}
               className="input-field pl-10"
               min="1"
             />
@@ -540,11 +538,11 @@ export function GuidedWizard({
       {step === 'course' && (
         <div className="animate-fade-in">
           <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            What course are you studying?
+            {tr('courseQuestion')}
           </h2>
 
           <p className="text-sm text-slate-500 mb-5">
-            Enter the name of your course or program.
+            {tr('courseHint')}
           </p>
 
           <input
@@ -555,7 +553,7 @@ export function GuidedWizard({
             onKeyDown={(e) =>
               e.key === 'Enter' && nextStep()
             }
-            placeholder="e.g. B.Tech, MBA, B.Sc Nursing"
+            placeholder={tr('coursePlaceholder')}
             className="input-field"
           />
         </div>
@@ -565,11 +563,11 @@ export function GuidedWizard({
       {step === 'institution' && (
         <div className="animate-fade-in">
           <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            Which college or institution?
+            {tr('institutionQuestion')}
           </h2>
 
           <p className="text-sm text-slate-500 mb-5">
-            Enter the name of your college or educational institution.
+            {tr('institutionHint')}
           </p>
 
           <input
@@ -580,7 +578,7 @@ export function GuidedWizard({
             onKeyDown={(e) =>
               e.key === 'Enter' && nextStep()
             }
-            placeholder="e.g. Government Engineering College"
+            placeholder={tr('institutionPlaceholder')}
             className="input-field"
           />
         </div>
@@ -597,12 +595,11 @@ export function GuidedWizard({
 
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">
-                  Education recognition check
+                  {tr('educationVerificationTitle')}
                 </h2>
 
                 <p className="text-sm text-slate-500">
-                  We checked the course and institution information
-                  you provided.
+                  {tr('educationVerificationSubtitle')}
                 </p>
               </div>
             </div>
@@ -610,7 +607,7 @@ export function GuidedWizard({
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
               <div>
                 <p className="text-xs text-slate-500">
-                  Course
+                  {tr('courseLabel')}
                 </p>
 
                 <p className="font-semibold text-slate-900">
@@ -620,7 +617,7 @@ export function GuidedWizard({
 
               <div>
                 <p className="text-xs text-slate-500">
-                  Institution
+                  {tr('institutionLabel')}
                 </p>
 
                 <p className="font-semibold text-slate-900">
@@ -630,7 +627,7 @@ export function GuidedWizard({
 
               <div>
                 <p className="text-xs text-slate-500">
-                  Recognition authority
+                  {tr('recognitionAuthority')}
                 </p>
 
                 <p className="font-semibold text-slate-900">
@@ -650,21 +647,23 @@ export function GuidedWizard({
             >
               <p className="font-semibold text-slate-900">
                 {educationVerification.status === 'verified'
-                  ? '✓ Recognition found'
+                  ? `✓ ${tr('recognitionFound')}`
                   : educationVerification.status === 'manual_review'
-                    ? '⚠ Manual verification recommended'
-                    : '✕ Institution not found'}
+                    ? `⚠ ${tr('manualReviewRecommended')}`
+                    : `✕ ${tr('institutionNotFound')}`}
               </p>
 
               <p className="text-sm text-slate-600 mt-1">
-                {educationVerification.message}
+                {educationVerification.status === 'verified'
+                  ? tr('verificationFoundMessage')
+                  : educationVerification.status === 'manual_review'
+                    ? tr('verificationManualMessage')
+                    : tr('verificationNotFoundMessage')}
               </p>
             </div>
 
             <p className="text-xs text-slate-400 mt-4">
-              This check is for guidance only. Final recognition and
-              loan eligibility are determined by the relevant
-              authority and authorized Channel Partner.
+              {tr('verificationGuidance')}
             </p>
           </div>
         )}
@@ -688,7 +687,7 @@ export function GuidedWizard({
             onKeyDown={(e) =>
               e.key === 'Enter' && nextStep()
             }
-            placeholder="tailoring, retail, transport..."
+            placeholder={tr('projectTypePlaceholder')}
             className="input-field"
           />
         </div>
@@ -698,12 +697,11 @@ export function GuidedWizard({
       {step === 'location' && (
         <div className="animate-fade-in">
           <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-            Where should we find a nearby partner?
+            {tr('locationQuestion')}
           </h2>
 
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-            Use your current location for the most accurate nearby
-            partner results, or select a city manually.
+            {tr('locationSubtitle')}
           </p>
 
           {/* Use current location */}
@@ -724,14 +722,14 @@ export function GuidedWizard({
             <div className="text-left flex-1">
               <p className="font-semibold text-slate-900 dark:text-white">
                 {locationLoading
-                  ? 'Detecting your location...'
+                  ? tr('detectingLocation')
                   : useCurrentLocation
-                    ? 'Current location selected'
-                    : 'Use my current location'}
+                    ? tr('currentLocationSelected')
+                    : tr('useCurrentLocation')}
               </p>
 
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                Find authorized partners closest to you
+                {tr('nearbyPartnerDescription')}
               </p>
             </div>
           </button>
@@ -741,7 +739,7 @@ export function GuidedWizard({
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
 
             <span className="text-xs font-medium text-slate-400">
-              OR SELECT CITY
+              {tr('orSelectCity')}
             </span>
 
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
@@ -804,13 +802,14 @@ export function GuidedWizard({
             </div>
 
             <h3 className="text-xl font-bold text-center text-error-600 dark:text-error-400">
-              Not eligible
+              {tr('notEligibleTitle')}
             </h3>
 
             <p className="mt-3 text-sm leading-6 text-center text-slate-600 dark:text-slate-300">
-              Family income ₹
-              {Number(income).toLocaleString('en-IN')} exceeds the
-              ₹5,00,000 SC eligibility limit.
+              {tr('notEligibleIncomeMessage').replace(
+                '{income}',
+                Number(income).toLocaleString('en-IN'),
+              )}
             </p>
 
             <button
@@ -851,11 +850,11 @@ export function GuidedWizard({
           type="button"
           onClick={onBack}
           className="btn-ghost !px-3 sm:!px-4 !py-2.5 sm:!py-3 text-sm sm:text-base flex-shrink-0"
-          title="Home"
-          aria-label="Home"
+          title={tr('home')}
+          aria-label={tr('home')}
         >
           <Home className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="hidden xs:inline sm:inline">Home</span>
+          <span className="hidden xs:inline sm:inline">{tr('home')}</span>
         </button>
       </div>
     </div>
