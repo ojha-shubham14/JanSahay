@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import {
   ArrowRight,
   ArrowLeft,
@@ -9,6 +8,7 @@ import {
   MapPin,
   AlertCircle,
   User,
+  Home,
   XCircle,
 } from 'lucide-react';
 
@@ -50,7 +50,8 @@ export function GuidedWizard({
 }: GuidedWizardProps) {
   const tr = (key: TranslationKey) => t(lang, key);
 
-  const [step, setStep] = useState<WizardStep>('details');
+  const [step, setStep] =
+    useState<WizardStep>('details');
 
   const [name, setName] = useState(
     initialProfile.applicant_name ?? ''
@@ -64,9 +65,10 @@ export function GuidedWizard({
     initialProfile.annual_family_income?.toString() ?? ''
   );
 
-  const [purpose, setPurpose] = useState<Purpose | ''>(
-    initialProfile.purpose ?? ''
-  );
+  const [purpose, setPurpose] =
+    useState<Purpose | ''>(
+      initialProfile.purpose ?? ''
+    );
 
   const [cost, setCost] = useState(
     initialProfile.estimated_cost?.toString() ?? ''
@@ -81,11 +83,14 @@ export function GuidedWizard({
   const [institution, setInstitution] = useState('');
 
   const [educationVerification, setEducationVerification] =
-    useState<ReturnType<typeof verifyEducation> | null>(null);
+    useState<
+      ReturnType<typeof verifyEducation> | null
+    >(null);
 
-  const [projectType, setProjectType] = useState(
-    initialProfile.project_type ?? ''
-  );
+  const [projectType, setProjectType] =
+    useState(
+      initialProfile.project_type ?? ''
+    );
 
   const [city, setCity] = useState(
     initialProfile.location.display_name ?? ''
@@ -95,6 +100,18 @@ export function GuidedWizard({
 
   const [showIncomeLimitPopup, setShowIncomeLimitPopup] =
     useState(false);
+
+  const [useCurrentLocation, setUseCurrentLocation] =
+    useState(false);
+
+  const [locationLoading, setLocationLoading] =
+    useState(false);
+
+  const [gpsLocation, setGpsLocation] =
+    useState<{
+      latitude: number;
+      longitude: number;
+    } | null>(null);
 
   const stepOrder: WizardStep[] = [
     'details',
@@ -110,67 +127,70 @@ export function GuidedWizard({
   ];
 
   /*
-   * If Business/Education was already selected from the
-   * Home page, do not ask the user for it again.
+   * If Business/Education was already selected
+   * from the Home page, don't ask again.
    */
-  const purposePreselected = Boolean(initialProfile.purpose);
+  const purposePreselected =
+    Boolean(initialProfile.purpose);
 
-  const isEducationFlow = purpose === 'education';
+  const isEducationFlow =
+    purpose === 'education';
 
-  const effectiveStepOrder = stepOrder.filter((s) => {
-    if (s === 'purpose' && purposePreselected) {
-      return false;
-    }
+  const effectiveStepOrder =
+    stepOrder.filter((s) => {
+      if (
+        s === 'purpose' &&
+        purposePreselected
+      ) {
+        return false;
+      }
 
-    if (
-      s === 'education_status' &&
-      !isEducationFlow
-    ) {
-      return false;
-    }
+      if (
+        s === 'education_status' &&
+        !isEducationFlow
+      ) {
+        return false;
+      }
 
-    if (s === 'course' && !isEducationFlow) {
-      return false;
-    }
+      if (
+        s === 'course' &&
+        !isEducationFlow
+      ) {
+        return false;
+      }
 
-    if (
-      s === 'institution' &&
-      !isEducationFlow
-    ) {
-      return false;
-    }
+      if (
+        s === 'institution' &&
+        !isEducationFlow
+      ) {
+        return false;
+      }
 
-    if (
-      s === 'education_verification' &&
-      !isEducationFlow
-    ) {
-      return false;
-    }
+      if (
+        s === 'education_verification' &&
+        !isEducationFlow
+      ) {
+        return false;
+      }
 
-    if (
-      s === 'project_type' &&
-      isEducationFlow
-    ) {
-      return false;
-    }
+      if (
+        s === 'project_type' &&
+        isEducationFlow
+      ) {
+        return false;
+      }
 
-    return true;
-  });
+      return true;
+    });
 
   const getStepIndex = () =>
     effectiveStepOrder.indexOf(step);
 
-  /*
-   * Move to the next wizard step.
-   */
   const nextStep = () => {
     const idx = getStepIndex();
 
     setError('');
 
-    /*
-     * NAME + AGE VALIDATION
-     */
     if (
       step === 'details' &&
       (!name.trim() ||
@@ -181,13 +201,13 @@ export function GuidedWizard({
       return;
     }
 
-    /*
-     * INCOME VALIDATION
-     */
     if (step === 'income') {
       const incomeValue = Number(income);
 
-      if (!income || incomeValue <= 0) {
+      if (
+        !income ||
+        incomeValue <= 0
+      ) {
         setError(tr('questionIncome'));
         return;
       }
@@ -198,9 +218,6 @@ export function GuidedWizard({
       }
     }
 
-    /*
-     * PURPOSE VALIDATION
-     */
     if (
       step === 'purpose' &&
       !purpose
@@ -209,52 +226,48 @@ export function GuidedWizard({
       return;
     }
 
-    /*
-     * COST VALIDATION
-     */
     if (
       step === 'cost' &&
-      (!cost || Number(cost) <= 0)
+      (!cost ||
+        Number(cost) <= 0)
     ) {
       setError(tr('questionCost'));
       return;
     }
 
-    /*
-     * COURSE VALIDATION
-     */
     if (
       step === 'course' &&
       !course.trim()
     ) {
-      setError('Please enter your course');
+      setError(
+        'Please enter your course'
+      );
       return;
     }
 
-    /*
-     * INSTITUTION VALIDATION
-     */
     if (
       step === 'institution' &&
       !institution.trim()
     ) {
-      setError('Please enter your institution');
+      setError(
+        'Please enter your institution'
+      );
       return;
     }
 
-    /*
-     * EDUCATION VERIFICATION
-     */
     if (
       step === 'institution' &&
       isEducationFlow
     ) {
-      const result = verifyEducation(
-        course,
-        institution
-      );
+      const result =
+        verifyEducation(
+          course,
+          institution
+        );
 
-      setEducationVerification(result);
+      setEducationVerification(
+        result
+      );
     }
 
     const next =
@@ -268,8 +281,81 @@ export function GuidedWizard({
   };
 
   /*
-   * Go to previous wizard step.
+   * Name + Enter:
+   * ONLY move focus to Age.
+   *
+   * Do NOT advance the wizard.
    */
+  const handleNameKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key !== 'Enter') return;
+
+    e.preventDefault();
+
+    const ageInput =
+      document.getElementById(
+        'jansasahay-age-input'
+      ) as HTMLInputElement | null;
+
+    ageInput?.focus();
+  };
+
+  /*
+   * Age + Enter:
+   * behave exactly like clicking Next.
+   */
+  const handleAgeKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key !== 'Enter') return;
+
+    e.preventDefault();
+
+    nextStep();
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setError(
+        'Location is not supported by your browser. Please select your city manually.'
+      );
+      return;
+    }
+
+    setLocationLoading(true);
+    setError('');
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocationLoading(false);
+
+        setUseCurrentLocation(true);
+
+        setCity('Current location');
+
+        setGpsLocation({
+          latitude:
+            position.coords.latitude,
+          longitude:
+            position.coords.longitude,
+        });
+      },
+      () => {
+        setLocationLoading(false);
+
+        setError(
+          'We could not access your location. Please allow location access or select your city manually.'
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
+
   const prevStep = () => {
     const idx = getStepIndex();
 
@@ -286,10 +372,6 @@ export function GuidedWizard({
     setStep(prev);
   };
 
-  /*
-   * Complete the wizard and create
-   * the ApplicantProfile.
-   */
   const complete = () => {
     if (
       !name.trim() ||
@@ -298,12 +380,15 @@ export function GuidedWizard({
       !cost ||
       !city
     ) {
-      setError('Please fill all fields');
+      setError(
+        'Please fill all fields'
+      );
       return;
     }
 
     const profile: ApplicantProfile = {
-      applicant_name: name.trim(),
+      applicant_name:
+        name.trim(),
 
       applicant_age:
         Number(age) || null,
@@ -333,20 +418,25 @@ export function GuidedWizard({
         projectType || null,
 
       location: {
-        latitude:
-          cityCoordinates[city]?.lat ??
-          null,
+        latitude: useCurrentLocation
+          ? gpsLocation?.latitude ??
+            null
+          : cityCoordinates[city]
+              ?.lat ?? null,
 
-        longitude:
-          cityCoordinates[city]?.lon ??
-          null,
+        longitude: useCurrentLocation
+          ? gpsLocation?.longitude ??
+            null
+          : cityCoordinates[city]
+              ?.lon ?? null,
 
         display_name:
-          city,
+          useCurrentLocation
+            ? 'Current location'
+            : city,
       },
 
-      language:
-        lang,
+      language: lang,
     };
 
     onComplete(profile);
@@ -371,32 +461,27 @@ export function GuidedWizard({
             s === step;
 
           const isPast =
-            effectiveStepOrder.indexOf(s) <
-            getStepIndex();
+            effectiveStepOrder.indexOf(
+              s
+            ) < getStepIndex();
 
           return (
             <div
               key={s}
-              className={`
-                h-1.5
-                rounded-full
-                transition-all
-                duration-300
-                ${
-                  isActive
-                    ? 'bg-primary-600 flex-1'
-                    : isPast
-                      ? 'bg-primary-300 flex-1'
-                      : 'bg-slate-200 w-6'
-                }
-              `}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                isActive
+                  ? 'bg-primary-600 flex-1'
+                  : isPast
+                    ? 'bg-primary-300 flex-1'
+                    : 'bg-slate-200 w-6'
+              }`}
             />
           );
         })}
       </div>
 
       {/* =====================================================
-          DETAILS STEP
+          DETAILS
           ===================================================== */}
 
       {step === 'details' && (
@@ -413,6 +498,7 @@ export function GuidedWizard({
           <div className="space-y-4">
 
             {/* NAME */}
+
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                 {tr('questionName')}
@@ -420,94 +506,54 @@ export function GuidedWizard({
 
               <div className="relative">
 
-                <User
-                  className="
-                    absolute
-                    left-3
-                    top-1/2
-                    -translate-y-1/2
-                    w-5
-                    h-5
-                    text-slate-400
-                  "
-                />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
 
                 <input
                   type="text"
                   autoFocus
                   value={name}
                   onChange={(e) =>
-                    setName(e.target.value)
+                    setName(
+                      e.target.value
+                    )
                   }
-
-                  /*
-                   * IMPORTANT:
-                   *
-                   * Pressing Enter in the NAME field
-                   * should NOT go to the next wizard step.
-                   *
-                   * It only moves focus to AGE.
-                   */
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-
-                      document
-                        .getElementById(
-                          'age-input'
-                        )
-                        ?.focus();
-                    }
-                  }}
-
+                  onKeyDown={
+                    handleNameKeyDown
+                  }
                   placeholder={tr(
                     'namePlaceholder'
                   )}
-
-                  className="
-                    input-field
-                    pl-10
-                  "
+                  className="input-field pl-10"
                 />
 
               </div>
             </div>
 
             {/* AGE */}
-            <div>
 
+            <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                 {tr('questionAge')}
               </label>
 
               <input
-                id="age-input"
+                id="jansasahay-age-input"
                 type="number"
                 value={age}
                 onChange={(e) =>
-                  setAge(e.target.value)
+                  setAge(
+                    e.target.value
+                  )
                 }
-
-                /*
-                 * Pressing Enter in AGE
-                 * performs the normal Next action.
-                 */
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    nextStep();
-                  }
-                }}
-
+                onKeyDown={
+                  handleAgeKeyDown
+                }
                 placeholder={tr(
                   'agePlaceholder'
                 )}
-
                 className="input-field"
-
                 min="1"
               />
-
             </div>
 
           </div>
@@ -515,7 +561,7 @@ export function GuidedWizard({
       )}
 
       {/* =====================================================
-          INCOME STEP
+          INCOME
           ===================================================== */}
 
       {step === 'income' && (
@@ -531,38 +577,25 @@ export function GuidedWizard({
 
           <div className="relative">
 
-            <IndianRupee
-              className="
-                absolute
-                left-3
-                top-1/2
-                -translate-y-1/2
-                w-5
-                h-5
-                text-slate-400
-              "
-            />
+            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
 
             <input
               type="number"
               autoFocus
               value={income}
               onChange={(e) =>
-                setIncome(e.target.value)
+                setIncome(
+                  e.target.value
+                )
               }
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  nextStep();
-                }
-              }}
+              onKeyDown={(e) =>
+                e.key === 'Enter' &&
+                nextStep()
+              }
               placeholder={tr(
                 'incomePlaceholder'
               )}
-              className="
-                input-field
-                pl-10
-              "
+              className="input-field pl-10"
               min="1"
             />
 
@@ -571,7 +604,7 @@ export function GuidedWizard({
       )}
 
       {/* =====================================================
-          PURPOSE STEP
+          PURPOSE
           ===================================================== */}
 
       {step === 'purpose' && (
@@ -583,7 +616,6 @@ export function GuidedWizard({
 
           <div className="space-y-3">
 
-            {/* BUSINESS */}
             <button
               type="button"
               onClick={() =>
@@ -591,140 +623,91 @@ export function GuidedWizard({
                   'business_project'
                 )
               }
-              className={`
-                w-full
-                flex
-                items-center
-                gap-4
-                p-5
-                rounded-xl
-                border-2
-                transition-all
-                duration-200
-                ${
-                  purpose ===
-                  'business_project'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-slate-200 hover:border-slate-300'
-                }
-              `}
+              className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-200 ${
+                purpose ===
+                'business_project'
+                  ? 'border-primary-500 bg-primary-50'
+                  : 'border-slate-200 hover:border-slate-300'
+              }`}
             >
 
               <div
-                className={`
-                  flex
-                  items-center
-                  justify-center
-                  w-12
-                  h-12
-                  rounded-xl
-                  ${
-                    purpose ===
-                    'business_project'
-                      ? 'bg-accent-100'
-                      : 'bg-slate-100'
-                  }
-                `}
+                className={`flex items-center justify-center w-12 h-12 rounded-xl ${
+                  purpose ===
+                  'business_project'
+                    ? 'bg-accent-100'
+                    : 'bg-slate-100'
+                }`}
               >
                 <Briefcase
-                  className={`
-                    w-6
-                    h-6
-                    ${
-                      purpose ===
-                      'business_project'
-                        ? 'text-accent-600'
-                        : 'text-slate-400'
-                    }
-                  `}
+                  className={`w-6 h-6 ${
+                    purpose ===
+                    'business_project'
+                      ? 'text-accent-600'
+                      : 'text-slate-400'
+                  }`}
                 />
               </div>
 
               <span
-                className={`
-                  font-semibold
-                  text-base
-                  ${
-                    purpose ===
-                    'business_project'
-                      ? 'text-primary-900'
-                      : 'text-slate-600'
-                  }
-                `}
+                className={`font-semibold text-base ${
+                  purpose ===
+                  'business_project'
+                    ? 'text-primary-900'
+                    : 'text-slate-600'
+                }`}
               >
-                {tr('purposeBusiness')}
+                {tr(
+                  'purposeBusiness'
+                )}
               </span>
 
             </button>
 
-            {/* EDUCATION */}
             <button
               type="button"
               onClick={() =>
-                setPurpose('education')
-              }
-              className={`
-                w-full
-                flex
-                items-center
-                gap-4
-                p-5
-                rounded-xl
-                border-2
-                transition-all
-                duration-200
-                ${
-                  purpose ===
+                setPurpose(
                   'education'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-slate-200 hover:border-slate-300'
-                }
-              `}
+                )
+              }
+              className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-200 ${
+                purpose ===
+                'education'
+                  ? 'border-primary-500 bg-primary-50'
+                  : 'border-slate-200 hover:border-slate-300'
+              }`}
             >
 
               <div
-                className={`
-                  flex
-                  items-center
-                  justify-center
-                  w-12
-                  h-12
-                  rounded-xl
-                  ${
-                    purpose ===
-                    'education'
-                      ? 'bg-success-100'
-                      : 'bg-slate-100'
-                  }
-                `}
+                className={`flex items-center justify-center w-12 h-12 rounded-xl ${
+                  purpose ===
+                  'education'
+                    ? 'bg-success-100'
+                    : 'bg-slate-100'
+                }`}
               >
                 <GraduationCap
-                  className={`
-                    w-6
-                    h-6
-                    ${
-                      purpose ===
-                      'education'
-                        ? 'text-success-600'
-                        : 'text-slate-400'
-                    }
-                  `}
+                  className={`w-6 h-6 ${
+                    purpose ===
+                    'education'
+                      ? 'text-success-600'
+                      : 'text-slate-400'
+                  }`}
                 />
               </div>
 
               <span
-                className={`
-                  font-semibold
-                  text-base
-                  ${
-                    purpose ===
-                    'education'
-                      ? 'text-primary-900'
-                      : 'text-slate-600'
-                  }
-                `}
+                className={`font-semibold text-base ${
+                  purpose ===
+                  'education'
+                    ? 'text-primary-900'
+                    : 'text-slate-600'
+                }`}
               >
-                {tr('purposeEducation')}
+                {tr(
+                  'purposeEducation'
+                )}
               </span>
 
             </button>
@@ -734,7 +717,7 @@ export function GuidedWizard({
       )}
 
       {/* =====================================================
-          COST STEP
+          COST
           ===================================================== */}
 
       {step === 'cost' && (
@@ -746,46 +729,37 @@ export function GuidedWizard({
 
           <p className="text-sm text-slate-500 mb-5">
             {isEducationFlow
-              ? tr('costEducationHint')
-              : tr('costBusinessHint')}
+              ? tr(
+                  'costEducationHint'
+                )
+              : tr(
+                  'costBusinessHint'
+                )}
           </p>
 
           <div className="relative">
 
-            <IndianRupee
-              className="
-                absolute
-                left-3
-                top-1/2
-                -translate-y-1/2
-                w-5
-                h-5
-                text-slate-400
-              "
-            />
+            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
 
             <input
               type="number"
               autoFocus
               value={cost}
               onChange={(e) =>
-                setCost(e.target.value)
+                setCost(
+                  e.target.value
+                )
               }
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  nextStep();
-                }
-              }}
+              onKeyDown={(e) =>
+                e.key === 'Enter' &&
+                nextStep()
+              }
               placeholder={
                 isEducationFlow
                   ? 'e.g. 500000'
                   : 'e.g. 120000'
               }
-              className="
-                input-field
-                pl-10
-              "
+              className="input-field pl-10"
               min="1"
             />
 
@@ -797,7 +771,8 @@ export function GuidedWizard({
           EDUCATION STATUS
           ===================================================== */}
 
-      {step === 'education_status' && (
+      {step ===
+        'education_status' && (
         <div className="animate-fade-in">
 
           <h2 className="text-xl font-bold text-slate-900 mb-5">
@@ -815,25 +790,16 @@ export function GuidedWizard({
                   'pursuing'
                 )
               }
-              className={`
-                w-full
-                p-5
-                rounded-xl
-                border-2
-                text-left
-                font-semibold
-                text-base
-                transition-all
-                duration-200
-                ${
-                  educationStatus ===
-                  'pursuing'
-                    ? 'border-primary-500 bg-primary-50 text-primary-900'
-                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                }
-              `}
+              className={`w-full p-5 rounded-xl border-2 text-left font-semibold text-base transition-all duration-200 ${
+                educationStatus ===
+                'pursuing'
+                  ? 'border-primary-500 bg-primary-50 text-primary-900'
+                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
+              }`}
             >
-              {tr('statusPursuing')}
+              {tr(
+                'statusPursuing'
+              )}
             </button>
 
             <button
@@ -843,25 +809,16 @@ export function GuidedWizard({
                   'planning'
                 )
               }
-              className={`
-                w-full
-                p-5
-                rounded-xl
-                border-2
-                text-left
-                font-semibold
-                text-base
-                transition-all
-                duration-200
-                ${
-                  educationStatus ===
-                  'planning'
-                    ? 'border-primary-500 bg-primary-50 text-primary-900'
-                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                }
-              `}
+              className={`w-full p-5 rounded-xl border-2 text-left font-semibold text-base transition-all duration-200 ${
+                educationStatus ===
+                'planning'
+                  ? 'border-primary-500 bg-primary-50 text-primary-900'
+                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
+              }`}
             >
-              {tr('statusPlanning')}
+              {tr(
+                'statusPlanning'
+              )}
             </button>
 
           </div>
@@ -888,14 +845,14 @@ export function GuidedWizard({
             autoFocus
             value={course}
             onChange={(e) =>
-              setCourse(e.target.value)
+              setCourse(
+                e.target.value
+              )
             }
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                nextStep();
-              }
-            }}
+            onKeyDown={(e) =>
+              e.key === 'Enter' &&
+              nextStep()
+            }
             placeholder="e.g. B.Tech, MBA, B.Sc Nursing"
             className="input-field"
           />
@@ -907,7 +864,8 @@ export function GuidedWizard({
           INSTITUTION
           ===================================================== */}
 
-      {step === 'institution' && (
+      {step ===
+        'institution' && (
         <div className="animate-fade-in">
 
           <h2 className="text-xl font-bold text-slate-900 mb-2">
@@ -923,14 +881,14 @@ export function GuidedWizard({
             autoFocus
             value={institution}
             onChange={(e) =>
-              setInstitution(e.target.value)
+              setInstitution(
+                e.target.value
+              )
             }
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                nextStep();
-              }
-            }}
+            onKeyDown={(e) =>
+              e.key === 'Enter' &&
+              nextStep()
+            }
             placeholder="e.g. Government Engineering College"
             className="input-field"
           />
@@ -942,22 +900,17 @@ export function GuidedWizard({
           EDUCATION VERIFICATION
           ===================================================== */}
 
-      {step === 'education_verification' &&
+      {step ===
+        'education_verification' &&
         educationVerification && (
           <div className="animate-fade-in">
 
             <div className="flex items-center gap-3 mb-4">
 
-              <div className="
-                flex
-                items-center
-                justify-center
-                w-12
-                h-12
-                rounded-xl
-                bg-primary-50
-              ">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50">
+
                 <GraduationCap className="w-6 h-6 text-primary-600" />
+
               </div>
 
               <div>
@@ -974,14 +927,7 @@ export function GuidedWizard({
 
             </div>
 
-            <div className="
-              rounded-xl
-              border
-              border-slate-200
-              bg-slate-50
-              p-4
-              space-y-3
-            ">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
 
               <div>
                 <p className="text-xs text-slate-500">
@@ -1009,28 +955,24 @@ export function GuidedWizard({
                 </p>
 
                 <p className="font-semibold text-slate-900">
-                  {educationVerification.authority}
+                  {
+                    educationVerification.authority
+                  }
                 </p>
               </div>
 
             </div>
 
             <div
-              className={`
-                mt-4
-                rounded-xl
-                border
-                p-4
-                ${
-                  educationVerification.status ===
-                  'verified'
-                    ? 'bg-success-50 border-success-200'
-                    : educationVerification.status ===
-                        'manual_review'
-                      ? 'bg-amber-50 border-amber-200'
-                      : 'bg-error-50 border-error-200'
-                }
-              `}
+              className={`mt-4 rounded-xl border p-4 ${
+                educationVerification.status ===
+                'verified'
+                  ? 'bg-success-50 border-success-200'
+                  : educationVerification.status ===
+                    'manual_review'
+                    ? 'bg-amber-50 border-amber-200'
+                    : 'bg-error-50 border-error-200'
+              }`}
             >
 
               <p className="font-semibold text-slate-900">
@@ -1039,14 +981,16 @@ export function GuidedWizard({
                 'verified'
                   ? '✓ Recognition found'
                   : educationVerification.status ===
-                      'manual_review'
+                    'manual_review'
                     ? '⚠ Manual verification recommended'
                     : '✕ Institution not found'}
 
               </p>
 
               <p className="text-sm text-slate-600 mt-1">
-                {educationVerification.message}
+                {
+                  educationVerification.message
+                }
               </p>
 
             </div>
@@ -1066,11 +1010,15 @@ export function GuidedWizard({
         <div className="animate-fade-in">
 
           <h2 className="text-xl font-bold text-slate-900 mb-2">
-            {tr('questionProjectType')}
+            {tr(
+              'questionProjectType'
+            )}
           </h2>
 
           <p className="text-sm text-slate-500 mb-5">
-            {tr('projectTypeHint')}
+            {tr(
+              'projectTypeHint'
+            )}
           </p>
 
           <input
@@ -1078,14 +1026,14 @@ export function GuidedWizard({
             autoFocus
             value={projectType}
             onChange={(e) =>
-              setProjectType(e.target.value)
+              setProjectType(
+                e.target.value
+              )
             }
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                nextStep();
-              }
-            }}
+            onKeyDown={(e) =>
+              e.key === 'Enter' &&
+              nextStep()
+            }
             placeholder="tailoring, retail, transport..."
             className="input-field"
           />
@@ -1101,63 +1049,52 @@ export function GuidedWizard({
         <div className="animate-fade-in">
 
           <h2 className="text-xl font-bold text-slate-900 mb-2">
-            {tr('questionLocation')}
+            {tr(
+              'questionLocation'
+            )}
           </h2>
 
           <p className="text-sm text-slate-500 mb-5">
-            {tr('locationHint')}
+            {tr(
+              'locationHint'
+            )}
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
 
             {Object.entries(
               cityCoordinates
-            ).map(([key, cityData]) => (
-
-              <button
-                type="button"
-                key={key}
-                onClick={() =>
-                  setCity(key)
-                }
-                className={`
-                  flex
-                  items-center
-                  gap-2
-                  p-4
-                  rounded-xl
-                  border-2
-                  text-sm
-                  font-medium
-                  transition-all
-                  duration-200
-                  ${
+            ).map(
+              ([key, cityData]) => (
+                <button
+                  type="button"
+                  key={key}
+                  onClick={() =>
+                    setCity(key)
+                  }
+                  className={`flex items-center gap-2 p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
                     city === key
                       ? 'border-primary-500 bg-primary-50 text-primary-900'
                       : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                  }
-                `}
-              >
+                  }`}
+                >
 
-                <MapPin
-                  className={`
-                    w-4
-                    h-4
-                    ${
+                  <MapPin
+                    className={`w-4 h-4 ${
                       city === key
                         ? 'text-primary-600'
                         : 'text-slate-400'
-                    }
-                  `}
-                />
+                    }`}
+                  />
 
-                {cityData.label}
+                  {cityData.label}
 
-              </button>
-
-            ))}
+                </button>
+              )
+            )}
 
           </div>
+
         </div>
       )}
 
@@ -1166,28 +1103,9 @@ export function GuidedWizard({
           ===================================================== */}
 
       {error && (
-        <div className="
-          flex
-          items-start
-          gap-2
-          mt-4
-          p-3
-          rounded-xl
-          bg-error-50
-          border
-          border-error-200
-          animate-fade-in
-        ">
+        <div className="flex items-start gap-2 mt-4 p-3 rounded-xl bg-error-50 border border-error-200 animate-fade-in">
 
-          <AlertCircle
-            className="
-              w-5
-              h-5
-              text-error-500
-              flex-shrink-0
-              mt-0.5
-            "
-          />
+          <AlertCircle className="w-5 h-5 text-error-500 flex-shrink-0 mt-0.5" />
 
           <p className="text-sm text-error-700">
             {error}
@@ -1201,102 +1119,45 @@ export function GuidedWizard({
           ===================================================== */}
 
       {showIncomeLimitPopup && (
-        <div className="
-          fixed
-          inset-0
-          z-50
-          flex
-          items-center
-          justify-center
-          bg-black/40
-          px-4
-          animate-fade-in
-        ">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 animate-fade-in">
 
-          <div className="
-            w-full
-            max-w-2xl
-            rounded-2xl
-            bg-white
-            p-6
-            shadow-2xl
-            dark:bg-slate-900
-            animate-popup-attention
-          ">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 animate-popup-attention">
 
             <div className="flex justify-center mb-4">
 
-              <div className="
-                flex
-                items-center
-                justify-center
-                w-16
-                h-16
-                rounded-full
-                bg-error-50
-              ">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-error-50">
 
-                <XCircle className="
-                  w-9
-                  h-9
-                  text-error-500
-                " />
+                <XCircle className="w-9 h-9 text-error-500" />
 
               </div>
 
             </div>
 
-            <h3 className="
-              text-xl
-              font-bold
-              text-center
-              text-error-600
-              dark:text-error-400
-            ">
+            <h3 className="text-xl font-bold text-center text-error-600 dark:text-error-400">
               Not eligible
             </h3>
 
-            <p className="
-              mt-3
-              text-sm
-              leading-6
-              text-center
-              text-slate-600
-              dark:text-slate-300
-            ">
+            <p className="mt-3 text-sm leading-6 text-center text-slate-600 dark:text-slate-300">
               Family income ₹
-              {Number(income).toLocaleString(
+              {Number(
+                income
+              ).toLocaleString(
                 'en-IN'
               )}{' '}
-              exceeds the ₹5,00,000 SC eligibility limit.
+              exceeds the
+              ₹5,00,000 SC eligibility limit.
             </p>
 
             <button
               type="button"
               onClick={() => {
-                setShowIncomeLimitPopup(false);
+                setShowIncomeLimitPopup(
+                  false
+                );
+
                 setIncome('');
               }}
-              className="
-                mt-6
-                mx-auto
-                flex
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border-2
-                border-slate-300
-                px-6
-                py-3
-                font-semibold
-                text-slate-700
-                hover:bg-slate-50
-                transition
-                dark:border-slate-600
-                dark:text-slate-200
-                dark:hover:bg-slate-800
-              "
+              className="mt-6 mx-auto flex items-center justify-center gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50 transition dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
             >
 
               <ArrowLeft className="w-4 h-4" />
@@ -1306,20 +1167,20 @@ export function GuidedWizard({
             </button>
 
           </div>
+
         </div>
       )}
 
       {/* =====================================================
           NAVIGATION
+          
+          IMPORTANT:
+          !flex !flex-row forces the icon and text to stay
+          horizontally together even if the global button
+          styles try to change the layout.
           ===================================================== */}
 
-      <div className="
-        flex
-        items-center
-        gap-3
-        mt-6
-        sm:justify-between
-      ">
+      <div className="flex items-center gap-3 mt-6">
 
         {/* BACK */}
 
@@ -1328,23 +1189,19 @@ export function GuidedWizard({
           onClick={prevStep}
           className="
             btn-secondary
-            sm:!justify-center
-            sm:!gap-2
+            !flex
+            !flex-row
+            !items-center
+            !justify-center
+            !gap-2
+            whitespace-nowrap
           "
         >
-
-          <ArrowLeft
-            className="
-              w-5
-              h-5
-              shrink-0
-            "
-          />
+          <ArrowLeft className="w-5 h-5 shrink-0" />
 
           <span>
             {tr('back')}
           </span>
-
         </button>
 
         {/* NEXT */}
@@ -1355,25 +1212,43 @@ export function GuidedWizard({
           className="
             btn-primary
             flex-1
-            sm:!justify-center
-            sm:!gap-2
+            !flex
+            !flex-row
+            !items-center
+            !justify-center
+            !gap-2
+            whitespace-nowrap
           "
         >
-
           <span>
             {isLastStep
               ? tr('seeResults')
               : tr('next')}
           </span>
 
-          <ArrowRight
-            className="
-              w-5
-              h-5
-              shrink-0
-            "
-          />
+          <ArrowRight className="w-5 h-5 shrink-0" />
+        </button>
 
+        {/* HOME */}
+
+        <button
+          type="button"
+          onClick={onBack}
+          className="
+            btn-ghost
+            !flex
+            !flex-row
+            !items-center
+            !justify-center
+            !gap-2
+            whitespace-nowrap
+          "
+        >
+          <Home className="w-5 h-5 shrink-0" />
+
+          <span>
+            Home
+          </span>
         </button>
 
       </div>
