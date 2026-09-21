@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   ArrowRight,
   ArrowLeft,
@@ -8,15 +9,16 @@ import {
   MapPin,
   AlertCircle,
   User,
-  Home,
   XCircle,
 } from 'lucide-react';
+
 import type {
   Language,
   Purpose,
   EducationStatus,
   ApplicantProfile,
 } from '@/lib/types';
+
 import { t, type TranslationKey } from '@/i18n/translations';
 import { cityCoordinates } from '@/data/partners';
 import { verifyEducation } from '@/lib/educationVerifier';
@@ -49,43 +51,50 @@ export function GuidedWizard({
   const tr = (key: TranslationKey) => t(lang, key);
 
   const [step, setStep] = useState<WizardStep>('details');
-  const [name, setName] = useState(initialProfile.applicant_name ?? '');
+
+  const [name, setName] = useState(
+    initialProfile.applicant_name ?? ''
+  );
+
   const [age, setAge] = useState(
     initialProfile.applicant_age?.toString() ?? ''
   );
+
   const [income, setIncome] = useState(
     initialProfile.annual_family_income?.toString() ?? ''
   );
+
   const [purpose, setPurpose] = useState<Purpose | ''>(
     initialProfile.purpose ?? ''
   );
+
   const [cost, setCost] = useState(
     initialProfile.estimated_cost?.toString() ?? ''
   );
 
-  const [educationStatus, setEducationStatus] = useState<
-    EducationStatus | ''
-  >(initialProfile.education_status ?? '');
+  const [educationStatus, setEducationStatus] =
+    useState<EducationStatus | ''>(
+      initialProfile.education_status ?? ''
+    );
+
   const [course, setCourse] = useState('');
   const [institution, setInstitution] = useState('');
-  const [educationVerification, setEducationVerification] = useState<
-    ReturnType<typeof verifyEducation> | null
-  >(null);
+
+  const [educationVerification, setEducationVerification] =
+    useState<ReturnType<typeof verifyEducation> | null>(null);
+
   const [projectType, setProjectType] = useState(
     initialProfile.project_type ?? ''
   );
+
   const [city, setCity] = useState(
     initialProfile.location.display_name ?? ''
   );
-  const [error, setError] = useState('');
-  const [showIncomeLimitPopup, setShowIncomeLimitPopup] = useState(false);
-  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
-  const [locationLoading, setLocationLoading] = useState(false);
 
-  const [gpsLocation, setGpsLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [error, setError] = useState('');
+
+  const [showIncomeLimitPopup, setShowIncomeLimitPopup] =
+    useState(false);
 
   const stepOrder: WizardStep[] = [
     'details',
@@ -100,42 +109,81 @@ export function GuidedWizard({
     'location',
   ];
 
-  // If Business/Education was already selected from the Home page,
-  // do not ask the user for it again.
+  /*
+   * If Business/Education was already selected from the
+   * Home page, do not ask the user for it again.
+   */
   const purposePreselected = Boolean(initialProfile.purpose);
 
   const isEducationFlow = purpose === 'education';
 
   const effectiveStepOrder = stepOrder.filter((s) => {
-    if (s === 'purpose' && purposePreselected) return false;
+    if (s === 'purpose' && purposePreselected) {
+      return false;
+    }
 
-    if (s === 'education_status' && !isEducationFlow) return false;
+    if (
+      s === 'education_status' &&
+      !isEducationFlow
+    ) {
+      return false;
+    }
 
-    if (s === 'course' && !isEducationFlow) return false;
+    if (s === 'course' && !isEducationFlow) {
+      return false;
+    }
 
-    if (s === 'institution' && !isEducationFlow) return false;
+    if (
+      s === 'institution' &&
+      !isEducationFlow
+    ) {
+      return false;
+    }
 
-    if (s === 'education_verification' && !isEducationFlow) return false;
+    if (
+      s === 'education_verification' &&
+      !isEducationFlow
+    ) {
+      return false;
+    }
 
-    if (s === 'project_type' && isEducationFlow) return false;
+    if (
+      s === 'project_type' &&
+      isEducationFlow
+    ) {
+      return false;
+    }
 
     return true;
   });
 
-  const getStepIndex = () => effectiveStepOrder.indexOf(step);
+  const getStepIndex = () =>
+    effectiveStepOrder.indexOf(step);
 
+  /*
+   * Move to the next wizard step.
+   */
   const nextStep = () => {
     const idx = getStepIndex();
+
     setError('');
 
+    /*
+     * NAME + AGE VALIDATION
+     */
     if (
       step === 'details' &&
-      (!name.trim() || !age || Number(age) <= 0)
+      (!name.trim() ||
+        !age ||
+        Number(age) <= 0)
     ) {
       setError(tr('personalDetails'));
       return;
     }
 
+    /*
+     * INCOME VALIDATION
+     */
     if (step === 'income') {
       const incomeValue = Number(income);
 
@@ -150,32 +198,67 @@ export function GuidedWizard({
       }
     }
 
-    if (step === 'purpose' && !purpose) {
+    /*
+     * PURPOSE VALIDATION
+     */
+    if (
+      step === 'purpose' &&
+      !purpose
+    ) {
       setError(tr('questionPurpose'));
       return;
     }
 
-    if (step === 'cost' && (!cost || Number(cost) <= 0)) {
+    /*
+     * COST VALIDATION
+     */
+    if (
+      step === 'cost' &&
+      (!cost || Number(cost) <= 0)
+    ) {
       setError(tr('questionCost'));
       return;
     }
 
-    if (step === 'course' && !course.trim()) {
-      setError(tr('courseRequired'));
+    /*
+     * COURSE VALIDATION
+     */
+    if (
+      step === 'course' &&
+      !course.trim()
+    ) {
+      setError('Please enter your course');
       return;
     }
 
-    if (step === 'institution' && !institution.trim()) {
-      setError(tr('institutionRequired'));
+    /*
+     * INSTITUTION VALIDATION
+     */
+    if (
+      step === 'institution' &&
+      !institution.trim()
+    ) {
+      setError('Please enter your institution');
       return;
     }
 
-    if (step === 'institution' && isEducationFlow) {
-      const result = verifyEducation(course, institution);
+    /*
+     * EDUCATION VERIFICATION
+     */
+    if (
+      step === 'institution' &&
+      isEducationFlow
+    ) {
+      const result = verifyEducation(
+        course,
+        institution
+      );
+
       setEducationVerification(result);
     }
 
-    const next = effectiveStepOrder[idx + 1];
+    const next =
+      effectiveStepOrder[idx + 1];
 
     if (next) {
       setStep(next);
@@ -184,52 +267,12 @@ export function GuidedWizard({
     }
   };
 
-  const handleUseCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setError(
-        'Location is not supported by your browser. Please select your city manually.'
-      );
-      return;
-    }
-
-    setLocationLoading(true);
-    setError('');
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocationLoading(false);
-
-        setUseCurrentLocation(true);
-
-        setCity('Current location');
-
-        setGpsLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-
-        console.log(
-          'GPS LOCATION:',
-          position.coords.latitude,
-          position.coords.longitude
-        );
-      },
-      () => {
-        setLocationLoading(false);
-        setError(
-          tr('locationErrorAccess')
-        );
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
-  };
-
+  /*
+   * Go to previous wizard step.
+   */
   const prevStep = () => {
     const idx = getStepIndex();
+
     setError('');
 
     if (idx === 0) {
@@ -237,76 +280,129 @@ export function GuidedWizard({
       return;
     }
 
-    const prev = effectiveStepOrder[idx - 1];
+    const prev =
+      effectiveStepOrder[idx - 1];
+
     setStep(prev);
   };
 
+  /*
+   * Complete the wizard and create
+   * the ApplicantProfile.
+   */
   const complete = () => {
-    if (!name.trim() || !income || !purpose || !cost || !city) {
-      setError(tr('fillAllFields'));
+    if (
+      !name.trim() ||
+      !income ||
+      !purpose ||
+      !cost ||
+      !city
+    ) {
+      setError('Please fill all fields');
       return;
     }
 
     const profile: ApplicantProfile = {
       applicant_name: name.trim(),
-      applicant_age: Number(age) || null,
-      annual_family_income: Number(income),
-      purpose: purpose as Purpose,
-      estimated_cost: Number(cost),
-      requested_loan_amount: null,
-      education_status: educationStatus || null,
-      course: course || null,
-      institution: institution || null,
-      project_type: projectType || null,
+
+      applicant_age:
+        Number(age) || null,
+
+      annual_family_income:
+        Number(income),
+
+      purpose:
+        purpose as Purpose,
+
+      estimated_cost:
+        Number(cost),
+
+      requested_loan_amount:
+        null,
+
+      education_status:
+        educationStatus || null,
+
+      course:
+        course || null,
+
+      institution:
+        institution || null,
+
+      project_type:
+        projectType || null,
+
       location: {
-        latitude: useCurrentLocation
-          ? gpsLocation?.latitude ?? null
-          : cityCoordinates[city]?.lat ?? null,
+        latitude:
+          cityCoordinates[city]?.lat ??
+          null,
 
-        longitude: useCurrentLocation
-          ? gpsLocation?.longitude ?? null
-          : cityCoordinates[city]?.lon ?? null,
+        longitude:
+          cityCoordinates[city]?.lon ??
+          null,
 
-        display_name: useCurrentLocation ? 'Current location' : city,
+        display_name:
+          city,
       },
-      language: lang,
+
+      language:
+        lang,
     };
 
     onComplete(profile);
   };
 
-  const isLastStep = step === 'location';
+  const isLastStep =
+    step === 'location';
 
-  const visibleSteps = effectiveStepOrder;
+  const visibleSteps =
+    effectiveStepOrder;
 
   return (
-    <div className="portal-section p-5 sm:p-6 animate-slide-up">
-      {/* Progress bar */}
+    <div className="card p-6 sm:p-8 animate-slide-up">
+
+      {/* =====================================================
+          PROGRESS BAR
+          ===================================================== */}
+
       <div className="flex items-center gap-1.5 mb-6">
         {visibleSteps.map((s) => {
-          const isActive = s === step;
+          const isActive =
+            s === step;
+
           const isPast =
-            effectiveStepOrder.indexOf(s) < getStepIndex();
+            effectiveStepOrder.indexOf(s) <
+            getStepIndex();
 
           return (
             <div
               key={s}
-              className={`h-2 rounded-sm transition-all duration-200 ${
-                isActive
-                  ? 'bg-primary-700 flex-1'
-                  : isPast
-                    ? 'bg-primary-300 flex-1'
-                    : 'bg-slate-200 w-6'
-              }`}
+              className={`
+                h-1.5
+                rounded-full
+                transition-all
+                duration-300
+                ${
+                  isActive
+                    ? 'bg-primary-600 flex-1'
+                    : isPast
+                      ? 'bg-primary-300 flex-1'
+                      : 'bg-slate-200 w-6'
+                }
+              `}
             />
           );
         })}
       </div>
 
-      {/* Details step */}
+      {/* =====================================================
+          DETAILS STEP
+          ===================================================== */}
+
       {step === 'details' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
             {tr('personalDetails')}
           </h2>
 
@@ -315,53 +411,117 @@ export function GuidedWizard({
           </p>
 
           <div className="space-y-4">
+
+            {/* NAME */}
             <div>
-              <label className="form-label">
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                 {tr('questionName')}
               </label>
 
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+
+                <User
+                  className="
+                    absolute
+                    left-3
+                    top-1/2
+                    -translate-y-1/2
+                    w-5
+                    h-5
+                    text-slate-400
+                  "
+                />
 
                 <input
                   type="text"
                   autoFocus
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) =>
-                    e.key === 'Enter' && nextStep()
+                  onChange={(e) =>
+                    setName(e.target.value)
                   }
-                  placeholder={tr('namePlaceholder')}
-                  className="input-field pl-10"
+
+                  /*
+                   * IMPORTANT:
+                   *
+                   * Pressing Enter in the NAME field
+                   * should NOT go to the next wizard step.
+                   *
+                   * It only moves focus to AGE.
+                   */
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+
+                      document
+                        .getElementById(
+                          'age-input'
+                        )
+                        ?.focus();
+                    }
+                  }}
+
+                  placeholder={tr(
+                    'namePlaceholder'
+                  )}
+
+                  className="
+                    input-field
+                    pl-10
+                  "
                 />
+
               </div>
             </div>
 
+            {/* AGE */}
             <div>
-              <label className="form-label">
+
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                 {tr('questionAge')}
               </label>
 
               <input
+                id="age-input"
                 type="number"
                 value={age}
-                onChange={(e) => setAge(e.target.value)}
-                onKeyDown={(e) =>
-                  e.key === 'Enter' && nextStep()
+                onChange={(e) =>
+                  setAge(e.target.value)
                 }
-                placeholder={tr('agePlaceholder')}
+
+                /*
+                 * Pressing Enter in AGE
+                 * performs the normal Next action.
+                 */
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    nextStep();
+                  }
+                }}
+
+                placeholder={tr(
+                  'agePlaceholder'
+                )}
+
                 className="input-field"
+
                 min="1"
               />
+
             </div>
+
           </div>
         </div>
       )}
 
-      {/* Income step */}
+      {/* =====================================================
+          INCOME STEP
+          ===================================================== */}
+
       {step === 'income' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
             {tr('questionIncome')}
           </h2>
 
@@ -370,109 +530,217 @@ export function GuidedWizard({
           </p>
 
           <div className="relative">
-            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+
+            <IndianRupee
+              className="
+                absolute
+                left-3
+                top-1/2
+                -translate-y-1/2
+                w-5
+                h-5
+                text-slate-400
+              "
+            />
 
             <input
               type="number"
               autoFocus
               value={income}
-              onChange={(e) => setIncome(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === 'Enter' && nextStep()
+              onChange={(e) =>
+                setIncome(e.target.value)
               }
-              placeholder={tr('incomePlaceholder')}
-              className="input-field pl-10"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  nextStep();
+                }
+              }}
+              placeholder={tr(
+                'incomePlaceholder'
+              )}
+              className="
+                input-field
+                pl-10
+              "
               min="1"
             />
+
           </div>
         </div>
       )}
 
-      {/* Purpose step */}
+      {/* =====================================================
+          PURPOSE STEP
+          ===================================================== */}
+
       {step === 'purpose' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-5">
+
+          <h2 className="text-xl font-bold text-slate-900 mb-5">
             {tr('questionPurpose')}
           </h2>
 
           <div className="space-y-3">
+
+            {/* BUSINESS */}
             <button
-              onClick={() => setPurpose('business_project')}
-              className={`w-full flex items-center gap-4 p-5 rounded-md border transition-all duration-200 ${
-                purpose === 'business_project'
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-slate-200 hover:border-slate-300'
-              }`}
+              type="button"
+              onClick={() =>
+                setPurpose(
+                  'business_project'
+                )
+              }
+              className={`
+                w-full
+                flex
+                items-center
+                gap-4
+                p-5
+                rounded-xl
+                border-2
+                transition-all
+                duration-200
+                ${
+                  purpose ===
+                  'business_project'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-slate-200 hover:border-slate-300'
+                }
+              `}
             >
+
               <div
-                className={`flex items-center justify-center w-12 h-12 rounded-md ${
-                  purpose === 'business_project'
-                    ? 'bg-accent-100'
-                    : 'bg-slate-100'
-                }`}
+                className={`
+                  flex
+                  items-center
+                  justify-center
+                  w-12
+                  h-12
+                  rounded-xl
+                  ${
+                    purpose ===
+                    'business_project'
+                      ? 'bg-accent-100'
+                      : 'bg-slate-100'
+                  }
+                `}
               >
                 <Briefcase
-                  className={`w-6 h-6 ${
-                    purpose === 'business_project'
-                      ? 'text-accent-600'
-                      : 'text-slate-400'
-                  }`}
+                  className={`
+                    w-6
+                    h-6
+                    ${
+                      purpose ===
+                      'business_project'
+                        ? 'text-accent-600'
+                        : 'text-slate-400'
+                    }
+                  `}
                 />
               </div>
 
               <span
-                className={`font-semibold text-base ${
-                  purpose === 'business_project'
-                    ? 'text-primary-900'
-                    : 'text-slate-600'
-                }`}
+                className={`
+                  font-semibold
+                  text-base
+                  ${
+                    purpose ===
+                    'business_project'
+                      ? 'text-primary-900'
+                      : 'text-slate-600'
+                  }
+                `}
               >
                 {tr('purposeBusiness')}
               </span>
+
             </button>
 
+            {/* EDUCATION */}
             <button
-              onClick={() => setPurpose('education')}
-              className={`w-full flex items-center gap-4 p-5 rounded-md border transition-all duration-200 ${
-                purpose === 'education'
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-slate-200 hover:border-slate-300'
-              }`}
+              type="button"
+              onClick={() =>
+                setPurpose('education')
+              }
+              className={`
+                w-full
+                flex
+                items-center
+                gap-4
+                p-5
+                rounded-xl
+                border-2
+                transition-all
+                duration-200
+                ${
+                  purpose ===
+                  'education'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-slate-200 hover:border-slate-300'
+                }
+              `}
             >
+
               <div
-                className={`flex items-center justify-center w-12 h-12 rounded-md ${
-                  purpose === 'education'
-                    ? 'bg-success-100'
-                    : 'bg-slate-100'
-                }`}
+                className={`
+                  flex
+                  items-center
+                  justify-center
+                  w-12
+                  h-12
+                  rounded-xl
+                  ${
+                    purpose ===
+                    'education'
+                      ? 'bg-success-100'
+                      : 'bg-slate-100'
+                  }
+                `}
               >
                 <GraduationCap
-                  className={`w-6 h-6 ${
-                    purpose === 'education'
-                      ? 'text-success-600'
-                      : 'text-slate-400'
-                  }`}
+                  className={`
+                    w-6
+                    h-6
+                    ${
+                      purpose ===
+                      'education'
+                        ? 'text-success-600'
+                        : 'text-slate-400'
+                    }
+                  `}
                 />
               </div>
 
               <span
-                className={`font-semibold text-base ${
-                  purpose === 'education'
-                    ? 'text-primary-900'
-                    : 'text-slate-600'
-                }`}
+                className={`
+                  font-semibold
+                  text-base
+                  ${
+                    purpose ===
+                    'education'
+                      ? 'text-primary-900'
+                      : 'text-slate-600'
+                  }
+                `}
               >
                 {tr('purposeEducation')}
               </span>
+
             </button>
+
           </div>
         </div>
       )}
 
-      {/* Cost step */}
+      {/* =====================================================
+          COST STEP
+          ===================================================== */}
+
       {step === 'cost' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
             {tr('questionCost')}
           </h2>
 
@@ -483,131 +751,241 @@ export function GuidedWizard({
           </p>
 
           <div className="relative">
-            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+
+            <IndianRupee
+              className="
+                absolute
+                left-3
+                top-1/2
+                -translate-y-1/2
+                w-5
+                h-5
+                text-slate-400
+              "
+            />
 
             <input
               type="number"
               autoFocus
               value={cost}
-              onChange={(e) => setCost(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === 'Enter' && nextStep()
+              onChange={(e) =>
+                setCost(e.target.value)
               }
-              placeholder={isEducationFlow ? '500000' : '120000'}
-              className="input-field pl-10"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  nextStep();
+                }
+              }}
+              placeholder={
+                isEducationFlow
+                  ? 'e.g. 500000'
+                  : 'e.g. 120000'
+              }
+              className="
+                input-field
+                pl-10
+              "
               min="1"
             />
+
           </div>
         </div>
       )}
 
-      {/* Education status step */}
+      {/* =====================================================
+          EDUCATION STATUS
+          ===================================================== */}
+
       {step === 'education_status' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-5">
-            {tr('questionEducationStatus')}
+
+          <h2 className="text-xl font-bold text-slate-900 mb-5">
+            {tr(
+              'questionEducationStatus'
+            )}
           </h2>
 
           <div className="space-y-3">
+
             <button
-              onClick={() => setEducationStatus('pursuing')}
-              className={`w-full p-5 rounded-md border text-left font-semibold text-base transition-all duration-200 ${
-                educationStatus === 'pursuing'
-                  ? 'border-primary-500 bg-primary-50 text-primary-900'
-                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
-              }`}
+              type="button"
+              onClick={() =>
+                setEducationStatus(
+                  'pursuing'
+                )
+              }
+              className={`
+                w-full
+                p-5
+                rounded-xl
+                border-2
+                text-left
+                font-semibold
+                text-base
+                transition-all
+                duration-200
+                ${
+                  educationStatus ===
+                  'pursuing'
+                    ? 'border-primary-500 bg-primary-50 text-primary-900'
+                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                }
+              `}
             >
               {tr('statusPursuing')}
             </button>
 
             <button
-              onClick={() => setEducationStatus('planning')}
-              className={`w-full p-5 rounded-md border text-left font-semibold text-base transition-all duration-200 ${
-                educationStatus === 'planning'
-                  ? 'border-primary-500 bg-primary-50 text-primary-900'
-                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
-              }`}
+              type="button"
+              onClick={() =>
+                setEducationStatus(
+                  'planning'
+                )
+              }
+              className={`
+                w-full
+                p-5
+                rounded-xl
+                border-2
+                text-left
+                font-semibold
+                text-base
+                transition-all
+                duration-200
+                ${
+                  educationStatus ===
+                  'planning'
+                    ? 'border-primary-500 bg-primary-50 text-primary-900'
+                    : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                }
+              `}
             >
               {tr('statusPlanning')}
             </button>
+
           </div>
         </div>
       )}
 
-      {/* Course step */}
+      {/* =====================================================
+          COURSE
+          ===================================================== */}
+
       {step === 'course' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            {tr('courseQuestion')}
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            What course are you studying?
           </h2>
 
           <p className="text-sm text-slate-500 mb-5">
-            {tr('courseHint')}
+            Enter the name of your course or program.
           </p>
 
           <input
             type="text"
             autoFocus
             value={course}
-            onChange={(e) => setCourse(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === 'Enter' && nextStep()
+            onChange={(e) =>
+              setCourse(e.target.value)
             }
-            placeholder={tr('coursePlaceholder')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+              }
+            }}
+            placeholder="e.g. B.Tech, MBA, B.Sc Nursing"
             className="input-field"
           />
+
         </div>
       )}
 
-      {/* Institution step */}
+      {/* =====================================================
+          INSTITUTION
+          ===================================================== */}
+
       {step === 'institution' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            {tr('institutionQuestion')}
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            Which college or institution?
           </h2>
 
           <p className="text-sm text-slate-500 mb-5">
-            {tr('institutionHint')}
+            Enter the name of your college or educational institution.
           </p>
 
           <input
             type="text"
             autoFocus
             value={institution}
-            onChange={(e) => setInstitution(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === 'Enter' && nextStep()
+            onChange={(e) =>
+              setInstitution(e.target.value)
             }
-            placeholder={tr('institutionPlaceholder')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+              }
+            }}
+            placeholder="e.g. Government Engineering College"
             className="input-field"
           />
+
         </div>
       )}
 
-      {/* Education verification step */}
+      {/* =====================================================
+          EDUCATION VERIFICATION
+          ===================================================== */}
+
       {step === 'education_verification' &&
         educationVerification && (
           <div className="animate-fade-in">
+
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-md bg-primary-50">
+
+              <div className="
+                flex
+                items-center
+                justify-center
+                w-12
+                h-12
+                rounded-xl
+                bg-primary-50
+              ">
                 <GraduationCap className="w-6 h-6 text-primary-600" />
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-slate-900">
-                  {tr('educationVerificationTitle')}
+
+                <h2 className="text-xl font-bold text-slate-900">
+                  Education recognition check
                 </h2>
 
                 <p className="text-sm text-slate-500">
-                  {tr('educationVerificationSubtitle')}
+                  We checked the course and institution information you provided.
                 </p>
+
               </div>
+
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+            <div className="
+              rounded-xl
+              border
+              border-slate-200
+              bg-slate-50
+              p-4
+              space-y-3
+            ">
+
               <div>
                 <p className="text-xs text-slate-500">
-                  {tr('courseLabel')}
+                  Course
                 </p>
 
                 <p className="font-semibold text-slate-900">
@@ -617,7 +995,7 @@ export function GuidedWizard({
 
               <div>
                 <p className="text-xs text-slate-500">
-                  {tr('institutionLabel')}
+                  Institution
                 </p>
 
                 <p className="font-semibold text-slate-900">
@@ -627,51 +1005,67 @@ export function GuidedWizard({
 
               <div>
                 <p className="text-xs text-slate-500">
-                  {tr('recognitionAuthority')}
+                  Recognition authority
                 </p>
 
                 <p className="font-semibold text-slate-900">
                   {educationVerification.authority}
                 </p>
               </div>
+
             </div>
 
             <div
-              className={`mt-4 rounded-xl border p-4 ${
-                educationVerification.status === 'verified'
-                  ? 'bg-success-50 border-success-200'
-                  : educationVerification.status === 'manual_review'
-                    ? 'bg-amber-50 border-amber-200'
-                    : 'bg-error-50 border-error-200'
-              }`}
+              className={`
+                mt-4
+                rounded-xl
+                border
+                p-4
+                ${
+                  educationVerification.status ===
+                  'verified'
+                    ? 'bg-success-50 border-success-200'
+                    : educationVerification.status ===
+                        'manual_review'
+                      ? 'bg-amber-50 border-amber-200'
+                      : 'bg-error-50 border-error-200'
+                }
+              `}
             >
+
               <p className="font-semibold text-slate-900">
-                {educationVerification.status === 'verified'
-                  ? `✓ ${tr('recognitionFound')}`
-                  : educationVerification.status === 'manual_review'
-                    ? `⚠ ${tr('manualReviewRecommended')}`
-                    : `✕ ${tr('institutionNotFound')}`}
+
+                {educationVerification.status ===
+                'verified'
+                  ? '✓ Recognition found'
+                  : educationVerification.status ===
+                      'manual_review'
+                    ? '⚠ Manual verification recommended'
+                    : '✕ Institution not found'}
+
               </p>
 
               <p className="text-sm text-slate-600 mt-1">
-                {educationVerification.status === 'verified'
-                  ? tr('verificationFoundMessage')
-                  : educationVerification.status === 'manual_review'
-                    ? tr('verificationManualMessage')
-                    : tr('verificationNotFoundMessage')}
+                {educationVerification.message}
               </p>
+
             </div>
 
             <p className="text-xs text-slate-400 mt-4">
-              {tr('verificationGuidance')}
+              This check is for guidance only. Final recognition and loan eligibility are determined by the relevant authority and authorized Channel Partner.
             </p>
+
           </div>
         )}
 
-      {/* Project type step */}
+      {/* =====================================================
+          PROJECT TYPE
+          ===================================================== */}
+
       {step === 'project_type' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
             {tr('questionProjectType')}
           </h2>
 
@@ -683,180 +1077,307 @@ export function GuidedWizard({
             type="text"
             autoFocus
             value={projectType}
-            onChange={(e) => setProjectType(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === 'Enter' && nextStep()
+            onChange={(e) =>
+              setProjectType(e.target.value)
             }
-            placeholder={tr('projectTypePlaceholder')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+              }
+            }}
+            placeholder="tailoring, retail, transport..."
             className="input-field"
           />
+
         </div>
       )}
 
-      {/* Location step */}
+      {/* =====================================================
+          LOCATION
+          ===================================================== */}
+
       {step === 'location' && (
         <div className="animate-fade-in">
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-            {tr('locationQuestion')}
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            {tr('questionLocation')}
           </h2>
 
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-            {tr('locationSubtitle')}
+          <p className="text-sm text-slate-500 mb-5">
+            {tr('locationHint')}
           </p>
 
-          {/* Use current location */}
-          <button
-            type="button"
-            onClick={handleUseCurrentLocation}
-            disabled={locationLoading}
-            className={`w-full flex items-center gap-4 p-5 rounded-md border transition-all duration-200 mb-5 ${
-              useCurrentLocation
-                ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/30'
-                : 'border-slate-200 dark:border-slate-700 hover:border-primary-300 hover:bg-primary-50/40'
-            }`}
-          >
-            <div className="flex items-center justify-center w-12 h-12 rounded-md bg-primary-100 dark:bg-primary-900/40">
-              <MapPin className="w-6 h-6 text-primary-600" />
-            </div>
-
-            <div className="text-left flex-1">
-              <p className="font-semibold text-slate-900 dark:text-white">
-                {locationLoading
-                  ? tr('detectingLocation')
-                  : useCurrentLocation
-                    ? tr('currentLocationSelected')
-                    : tr('useCurrentLocation')}
-              </p>
-
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                {tr('nearbyPartnerDescription')}
-              </p>
-            </div>
-          </button>
-
-          {/* OR */}
-          <div className="flex items-center gap-3 my-5">
-            <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-
-            <span className="text-xs font-medium text-slate-400">
-              {tr('orSelectCity')}
-            </span>
-
-            <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-          </div>
-
-          {/* Manual city selection */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {Object.entries(cityCoordinates).map(
-              ([key, cityData]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => {
-                    setCity(key);
-                    setUseCurrentLocation(false);
-                    setGpsLocation(null);
-                    setError('');
-                  }}
-                  className={`flex items-center gap-2 p-4 rounded-md border text-sm font-medium transition-all duration-200 ${
-                    !useCurrentLocation && city === key
-                      ? 'border-primary-500 bg-primary-50 text-primary-900 dark:bg-primary-950/30 dark:text-primary-100'
-                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  <MapPin
-                    className={`w-4 h-4 ${
-                      !useCurrentLocation && city === key
+
+            {Object.entries(
+              cityCoordinates
+            ).map(([key, cityData]) => (
+
+              <button
+                type="button"
+                key={key}
+                onClick={() =>
+                  setCity(key)
+                }
+                className={`
+                  flex
+                  items-center
+                  gap-2
+                  p-4
+                  rounded-xl
+                  border-2
+                  text-sm
+                  font-medium
+                  transition-all
+                  duration-200
+                  ${
+                    city === key
+                      ? 'border-primary-500 bg-primary-50 text-primary-900'
+                      : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                  }
+                `}
+              >
+
+                <MapPin
+                  className={`
+                    w-4
+                    h-4
+                    ${
+                      city === key
                         ? 'text-primary-600'
                         : 'text-slate-400'
-                    }`}
-                  />
+                    }
+                  `}
+                />
 
-                  {cityData.label}
-                </button>
-              )
-            )}
+                {cityData.label}
+
+              </button>
+
+            ))}
+
           </div>
         </div>
       )}
 
-      {/* Error */}
+      {/* =====================================================
+          ERROR
+          ===================================================== */}
+
       {error && (
-        <div className="flex items-start gap-2 mt-4 p-3 rounded-xl bg-error-50 border border-error-200 animate-fade-in">
-          <AlertCircle className="w-5 h-5 text-error-500 flex-shrink-0 mt-0.5" />
+        <div className="
+          flex
+          items-start
+          gap-2
+          mt-4
+          p-3
+          rounded-xl
+          bg-error-50
+          border
+          border-error-200
+          animate-fade-in
+        ">
+
+          <AlertCircle
+            className="
+              w-5
+              h-5
+              text-error-500
+              flex-shrink-0
+              mt-0.5
+            "
+          />
 
           <p className="text-sm text-error-700">
             {error}
           </p>
+
         </div>
       )}
 
-      {/* Income limit popup */}
+      {/* =====================================================
+          INCOME LIMIT POPUP
+          ===================================================== */}
+
       {showIncomeLimitPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 animate-fade-in">
-          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 animate-popup-attention">
+        <div className="
+          fixed
+          inset-0
+          z-50
+          flex
+          items-center
+          justify-center
+          bg-black/40
+          px-4
+          animate-fade-in
+        ">
+
+          <div className="
+            w-full
+            max-w-2xl
+            rounded-2xl
+            bg-white
+            p-6
+            shadow-2xl
+            dark:bg-slate-900
+            animate-popup-attention
+          ">
+
             <div className="flex justify-center mb-4">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-error-50">
-                <XCircle className="w-9 h-9 text-error-500" />
+
+              <div className="
+                flex
+                items-center
+                justify-center
+                w-16
+                h-16
+                rounded-full
+                bg-error-50
+              ">
+
+                <XCircle className="
+                  w-9
+                  h-9
+                  text-error-500
+                " />
+
               </div>
+
             </div>
 
-            <h3 className="text-xl font-bold text-center text-error-600 dark:text-error-400">
-              {tr('notEligibleTitle')}
+            <h3 className="
+              text-xl
+              font-bold
+              text-center
+              text-error-600
+              dark:text-error-400
+            ">
+              Not eligible
             </h3>
 
-            <p className="mt-3 text-sm leading-6 text-center text-slate-600 dark:text-slate-300">
-              {tr('notEligibleIncomeMessage').replace(
-                '{income}',
-                Number(income).toLocaleString('en-IN'),
-              )}
+            <p className="
+              mt-3
+              text-sm
+              leading-6
+              text-center
+              text-slate-600
+              dark:text-slate-300
+            ">
+              Family income ₹
+              {Number(income).toLocaleString(
+                'en-IN'
+              )}{' '}
+              exceeds the ₹5,00,000 SC eligibility limit.
             </p>
 
             <button
+              type="button"
               onClick={() => {
                 setShowIncomeLimitPopup(false);
                 setIncome('');
               }}
-              className="mt-6 mx-auto flex items-center justify-center gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50 transition dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="
+                mt-6
+                mx-auto
+                flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                border-2
+                border-slate-300
+                px-6
+                py-3
+                font-semibold
+                text-slate-700
+                hover:bg-slate-50
+                transition
+                dark:border-slate-600
+                dark:text-slate-200
+                dark:hover:bg-slate-800
+              "
             >
+
               <ArrowLeft className="w-4 h-4" />
+
               Try again
+
             </button>
+
           </div>
         </div>
       )}
 
-      {/* Navigation */}
-      <div className="flex items-center gap-2 sm:gap-3 mt-6 w-full">
+      {/* =====================================================
+          NAVIGATION
+          ===================================================== */}
+
+      <div className="
+        flex
+        items-center
+        gap-3
+        mt-6
+        sm:justify-between
+      ">
+
+        {/* BACK */}
+
         <button
           type="button"
           onClick={prevStep}
-          className="btn-secondary !px-3.5 sm:!px-6 !py-2.5 sm:!py-3 text-sm sm:text-base flex-shrink-0"
+          className="
+            btn-secondary
+            sm:!justify-center
+            sm:!gap-2
+          "
         >
-          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>{tr('back')}</span>
+
+          <ArrowLeft
+            className="
+              w-5
+              h-5
+              shrink-0
+            "
+          />
+
+          <span>
+            {tr('back')}
+          </span>
+
         </button>
+
+        {/* NEXT */}
 
         <button
           type="button"
           onClick={nextStep}
-          className="btn-primary flex-1 min-w-0 !px-3.5 sm:!px-6 !py-2.5 sm:!py-3 text-sm sm:text-base"
+          className="
+            btn-primary
+            flex-1
+            sm:!justify-center
+            sm:!gap-2
+          "
         >
-          <span className="truncate">{isLastStep ? tr('seeResults') : tr('next')}</span>
-          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+
+          <span>
+            {isLastStep
+              ? tr('seeResults')
+              : tr('next')}
+          </span>
+
+          <ArrowRight
+            className="
+              w-5
+              h-5
+              shrink-0
+            "
+          />
+
         </button>
 
-        <button
-          type="button"
-          onClick={onBack}
-          className="btn-ghost !px-3 sm:!px-4 !py-2.5 sm:!py-3 text-sm sm:text-base flex-shrink-0"
-          title={tr('home')}
-          aria-label={tr('home')}
-        >
-          <Home className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="hidden xs:inline sm:inline">{tr('home')}</span>
-        </button>
       </div>
+
     </div>
   );
 }
