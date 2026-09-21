@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   Landmark,
   BarChart3,
@@ -8,6 +9,7 @@ import {
   Menu,
   X,
   Home,
+  ChevronDown,
 } from 'lucide-react';
 
 import type { Language } from '@/lib/types';
@@ -87,7 +89,13 @@ export function Header({
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 dark:bg-slate-950/95 dark:border-slate-800 shadow-sm transition-colors">
       <div className="max-w-5xl mx-auto px-3 sm:px-6">
+
         <div className="flex items-center justify-between gap-3 py-3 sm:py-3.5">
+
+          {/* =====================================================
+              BRAND / HOME
+              ===================================================== */}
+
           <button
             type="button"
             onClick={handleHome}
@@ -102,18 +110,27 @@ export function Header({
               <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight dark:text-slate-100 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">
                 {tr('appName')}
               </h1>
+
               <p className="text-[10px] sm:text-xs text-slate-500 leading-tight dark:text-slate-400 truncate max-w-[180px] sm:max-w-none">
                 {tr('tagline')}
               </p>
             </div>
           </button>
 
+          {/* =====================================================
+              DESKTOP NAVIGATION
+              ===================================================== */}
+
           <div className="hidden sm:flex items-center gap-2">
+
+            {/* Languages */}
             <div className="flex items-center border border-slate-200 rounded-md bg-white dark:bg-slate-900 dark:border-slate-700 overflow-hidden">
               {langLabels.map((language) => (
                 <button
                   key={language.code}
-                  onClick={() => handleLanguageChange(language.code)}
+                  onClick={() =>
+                    handleLanguageChange(language.code)
+                  }
                   className={`px-2.5 py-1.5 text-xs font-medium transition-colors ${
                     lang === language.code
                       ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/40 dark:text-primary-300'
@@ -126,24 +143,28 @@ export function Header({
               ))}
             </div>
 
+            {/* Theme */}
             <div className="flex items-center border border-slate-200 rounded-md bg-white dark:bg-slate-900 dark:border-slate-700 overflow-hidden">
-              {themeOptions.map(({ mode, icon: Icon, labelKey }) => (
-                <button
-                  key={mode}
-                  onClick={() => onThemeChange(mode)}
-                  className={`flex items-center justify-center w-7 h-7 transition-colors ${
-                    themeMode === mode
-                      ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/40 dark:text-primary-300'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800'
-                  }`}
-                  aria-label={tr(labelKey)}
-                  title={tr(labelKey)}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                </button>
-              ))}
+              {themeOptions.map(
+                ({ mode, icon: Icon, labelKey }) => (
+                  <button
+                    key={mode}
+                    onClick={() => onThemeChange(mode)}
+                    className={`flex items-center justify-center w-7 h-7 transition-colors ${
+                      themeMode === mode
+                        ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/40 dark:text-primary-300'
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800'
+                    }`}
+                    aria-label={tr(labelKey)}
+                    title={tr(labelKey)}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </button>
+                )
+              )}
             </div>
 
+            {/* FAQ */}
             <button
               onClick={onFAQClick}
               className="px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:text-primary-700 transition-colors dark:text-slate-300 dark:hover:text-primary-400"
@@ -151,6 +172,7 @@ export function Header({
               {tr('faqs')}
             </button>
 
+            {/* Contact */}
             <button
               onClick={onContactClick}
               className="px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:text-primary-700 transition-colors dark:text-slate-300 dark:hover:text-primary-400"
@@ -158,6 +180,7 @@ export function Header({
               {tr('contact')}
             </button>
 
+            {/* Dashboard */}
             {!showDashboard && (
               <button
                 onClick={onDashboardClick}
@@ -168,21 +191,63 @@ export function Header({
                 <BarChart3 className="w-4 h-4" />
               </button>
             )}
+
           </div>
 
-          <button
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            className="sm:hidden flex items-center justify-center w-10 h-10 rounded-md border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-            aria-label={mobileMenuOpen ? tr('closeMenu') : tr('openMenu')}
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* =====================================================
+              MOBILE MENU BUTTON + HINT
+              ===================================================== */}
+
+          <div className="sm:hidden flex items-center gap-2">
+
+            {/* Small mobile hint */}
+            {!mobileMenuOpen && (
+              <div className="flex flex-col items-center justify-center text-primary-600 dark:text-primary-400 leading-none select-none">
+                <span className="text-[10px] font-semibold">
+                  Menu
+                </span>
+
+                <ChevronDown
+                  className="w-3.5 h-3.5 animate-bounce"
+                />
+              </div>
+            )}
+
+            {/* Hamburger / Close */}
+            <button
+              type="button"
+              onClick={() =>
+                setMobileMenuOpen((open) => !open)
+              }
+              className="flex items-center justify-center w-10 h-10 rounded-md border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+              aria-label={
+                mobileMenuOpen
+                  ? tr('closeMenu')
+                  : tr('openMenu')
+              }
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+
+          </div>
+
         </div>
+
+        {/* =====================================================
+            MOBILE MENU
+            ===================================================== */}
 
         {mobileMenuOpen && (
           <div className="sm:hidden border-t border-slate-200 dark:border-slate-800 py-3 animate-fade-in">
+
             <div className="space-y-3">
+
+              {/* Languages */}
               <div>
                 <p className="px-1 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   {tr('language')}
@@ -192,7 +257,9 @@ export function Header({
                   {langLabels.map((language) => (
                     <button
                       key={language.code}
-                      onClick={() => handleLanguageChange(language.code)}
+                      onClick={() =>
+                        handleLanguageChange(language.code)
+                      }
                       className={`px-3 py-2.5 rounded-md border text-sm font-medium text-left transition-colors ${
                         lang === language.code
                           ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-500 dark:bg-primary-950/40 dark:text-primary-300'
@@ -205,30 +272,38 @@ export function Header({
                 </div>
               </div>
 
+              {/* Appearance */}
               <div>
                 <p className="px-1 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   {tr('appearance')}
                 </p>
 
                 <div className="grid grid-cols-3 gap-2">
-                  {themeOptions.map(({ mode, icon: Icon, labelKey }) => (
-                    <button
-                      key={mode}
-                      onClick={() => onThemeChange(mode)}
-                      className={`flex flex-col items-center justify-center gap-1.5 px-2 py-2.5 rounded-md border text-xs font-medium transition-colors ${
-                        themeMode === mode
-                          ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-500 dark:bg-primary-950/40 dark:text-primary-300'
-                          : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {tr(labelKey)}
-                    </button>
-                  ))}
+                  {themeOptions.map(
+                    ({ mode, icon: Icon, labelKey }) => (
+                      <button
+                        key={mode}
+                        onClick={() =>
+                          onThemeChange(mode)
+                        }
+                        className={`flex flex-col items-center justify-center gap-1.5 px-2 py-2.5 rounded-md border text-xs font-medium transition-colors ${
+                          themeMode === mode
+                            ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-500 dark:bg-primary-950/40 dark:text-primary-300'
+                            : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {tr(labelKey)}
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
 
+              {/* Navigation */}
               <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-1">
+
+                {/* Home */}
                 <button
                   onClick={handleHome}
                   className="w-full flex items-center justify-between px-3 py-3 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -237,25 +312,37 @@ export function Header({
                     <Home className="w-4 h-4" />
                     {tr('home')}
                   </span>
-                  <span className="text-slate-400">→</span>
+
+                  <span className="text-slate-400">
+                    →
+                  </span>
                 </button>
 
+                {/* FAQ */}
                 <button
                   onClick={handleFAQ}
                   className="w-full flex items-center justify-between px-3 py-3 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   <span>{tr('faqs')}</span>
-                  <span className="text-slate-400">→</span>
+
+                  <span className="text-slate-400">
+                    →
+                  </span>
                 </button>
 
+                {/* Contact */}
                 <button
                   onClick={handleContact}
                   className="w-full flex items-center justify-between px-3 py-3 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   <span>{tr('contact')}</span>
-                  <span className="text-slate-400">→</span>
+
+                  <span className="text-slate-400">
+                    →
+                  </span>
                 </button>
 
+                {/* Dashboard */}
                 {!showDashboard && (
                   <button
                     onClick={handleDashboard}
@@ -265,13 +352,20 @@ export function Header({
                       <BarChart3 className="w-4 h-4" />
                       {tr('dashboardLabel')}
                     </span>
-                    <span className="text-slate-400">→</span>
+
+                    <span className="text-slate-400">
+                      →
+                    </span>
                   </button>
                 )}
+
               </div>
+
             </div>
+
           </div>
         )}
+
       </div>
     </header>
   );
