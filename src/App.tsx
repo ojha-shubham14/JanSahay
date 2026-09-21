@@ -413,22 +413,24 @@ function App() {
           ===================================================== */}
 
       <main
-        className="
-          relative
-          z-10
+  className="
+    relative
+    z-10
 
-          max-w-2xl
-          mx-auto
+    max-w-2xl
+    lg:max-w-6xl
 
-          px-4
-          sm:px-6
+    mx-auto
 
-          pb-16
-          pt-6
+    px-4
+    sm:px-6
 
-          bg-transparent
-        "
-      >
+    pb-16
+    pt-6
+
+    bg-transparent
+  "
+>
 
         {/* ===================================================
             FLOW NAVIGATION

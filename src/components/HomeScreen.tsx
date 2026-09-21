@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
 import {
   Mic,
   Store,
@@ -8,12 +9,23 @@ import {
   Globe2,
 } from 'lucide-react';
 
-import type { Language, Purpose } from '@/lib/types';
-import { t, type TranslationKey } from '@/i18n/translations';
+import type {
+  Language,
+  Purpose,
+} from '@/lib/types';
+
+import {
+  t,
+  type TranslationKey,
+} from '@/i18n/translations';
 
 interface HomeScreenProps {
   lang: Language;
-  onLangChange: (newLang: Language) => void;
+
+  onLangChange: (
+    newLang: Language
+  ) => void;
+
   onStart: (
     mode: 'guided' | 'conversation',
     purpose?: Purpose
@@ -25,41 +37,23 @@ export function HomeScreen({
   onLangChange,
   onStart,
 }: HomeScreenProps) {
-  const tr = (key: TranslationKey) => t(lang, key);
+  const tr = (
+    key: TranslationKey
+  ) => t(lang, key);
 
-  const [showLanguageModal, setShowLanguageModal] = useState(true);
-  const [selectedLanguage, setSelectedLanguage] =
-    useState<Language>(lang);
+  const [
+    showLanguageModal,
+    setShowLanguageModal,
+  ] = useState(true);
+
+  const [
+    selectedLanguage,
+    setSelectedLanguage,
+  ] = useState<Language>(lang);
 
   /* =========================================================
-     SCROLL POSITION
-     Used to create a subtle background parallax movement.
+     LANGUAGES
      ========================================================= */
-
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
-          ticking = false;
-        });
-
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const languages: {
     code: Language;
@@ -88,151 +82,69 @@ export function HomeScreen({
     },
   ];
 
-  /*
-   * Limit the parallax movement.
-   *
-   * This prevents the image from moving so far that
-   * empty space appears at the bottom of the page.
-   */
   return (
     <div
       className="
         relative
         min-h-full
-        overflow-hidden
         animate-fade-in
       "
     >
 
       {/* =====================================================
-          GLOBAL JANSAHAY BACKGROUND
-          
-          IMPORTANT:
-          This is OUTSIDE the hero section.
-
-          Therefore the background exists throughout the
-          complete HomeScreen while scrolling.
-          ===================================================== */}
-
-      {/* =====================================================
-    GLOBAL JANSAHAY BACKGROUND
-    ===================================================== */}
-
-<div
-  className="
-    fixed
-    inset-0
-    z-0
-    overflow-hidden
-    pointer-events-none
-  "
->
-  <img
-    src={`${import.meta.env.BASE_URL}images/backgroundHomepage.png`}
-    alt=""
-    aria-hidden="true"
-    draggable={false}
-    className="
-      absolute
-      left-0
-      top-[-6%]
-
-      w-full
-      h-[112%]
-
-      max-w-none
-
-      object-cover
-      object-center
-
-      select-none
-
-      max-[639px]:left-[-22%]
-      max-[639px]:w-[180%]
-    "
-    style={{
-      transform: `translate3d(0, ${-Math.min(
-        scrollY * 0.08,
-        220
-      )}px, 0)`,
-      willChange: 'transform',
-    }}
-  />
-
-  {/* Light mode */}
-  <div
-    className="
-      absolute
-      inset-0
-      bg-white/10
-      dark:hidden
-    "
-  />
-
-  {/* Dark mode */}
-  <div
-    className="
-      absolute
-      inset-0
-      hidden
-      bg-slate-950/55
-      dark:block
-    "
-  />
-</div>
-
-
-      {/* =====================================================
           LANGUAGE POPUP
           
           IMPORTANT:
-          The popup is now rendered ON TOP of the homepage
-          instead of replacing the homepage.
+          The background is controlled globally by App.tsx.
 
-          Therefore the background remains visible behind it.
+          This popup only sits above that background.
           ===================================================== */}
 
       {showLanguageModal && (
-  <div
-    className="
-      fixed
-      inset-0
-      z-50
+        <div
+          className="
+            fixed
+            inset-0
+            z-[100]
 
-      flex
-      items-center
-      justify-center
+            flex
+            items-center
+            justify-center
 
-      px-4
+            px-4
 
-      bg-slate-950/55
-      backdrop-blur-md
-    "
-  >
-    <div
-      className="
-        relative
-        z-10
+            bg-slate-950/45
+            backdrop-blur-md
+          "
+        >
 
-        w-full
-        max-w-lg
+          <div
+            className="
+              relative
+              z-[101]
 
-        rounded-xl
+              w-full
+              max-w-lg
 
-        bg-white
-        dark:bg-slate-900
+              rounded-xl
 
-        border
-        border-slate-200
-        dark:border-slate-700
+              bg-white
 
-        p-6
-        sm:p-8
+              border
+              border-slate-200
 
-        shadow-2xl
-      "
-    >
-      {/* Globe */}
+              p-6
+              sm:p-8
+
+              shadow-2xl
+
+              animate-popup-attention
+            "
+          >
+
+            {/* =================================================
+                GLOBE
+                ================================================= */}
 
             <div className="flex justify-center mb-4">
 
@@ -249,9 +161,6 @@ export function HomeScreen({
 
                   bg-primary-50
                   text-primary-600
-
-                  dark:bg-primary-900/30
-                  dark:text-primary-400
                 "
               >
                 <Globe2 className="w-7 h-7" />
@@ -260,7 +169,9 @@ export function HomeScreen({
             </div>
 
 
-            {/* Heading */}
+            {/* =================================================
+                HEADING
+                ================================================= */}
 
             <h2
               className="
@@ -271,14 +182,15 @@ export function HomeScreen({
                 text-center
 
                 text-slate-900
-                dark:text-white
               "
             >
               {tr('languagePrompt')}
             </h2>
 
 
-            {/* Subtitle */}
+            {/* =================================================
+                SUBTITLE
+                ================================================= */}
 
             <p
               className="
@@ -286,7 +198,6 @@ export function HomeScreen({
                 text-center
 
                 text-slate-500
-                dark:text-slate-400
 
                 mt-2
               "
@@ -295,7 +206,9 @@ export function HomeScreen({
             </p>
 
 
-            {/* Languages */}
+            {/* =================================================
+                LANGUAGE OPTIONS
+                ================================================= */}
 
             <div
               className="
@@ -309,79 +222,92 @@ export function HomeScreen({
               "
             >
 
-              {languages.map((language) => {
+              {languages.map(
+                (language) => {
+                  const selected =
+                    selectedLanguage ===
+                    language.code;
 
-                const selected =
-                  selectedLanguage === language.code;
-
-                return (
-                  <button
-                    key={language.code}
-                    onClick={() =>
-                      setSelectedLanguage(language.code)
-                    }
-                    className={`
-                      rounded-lg
-                      border-2
-
-                      px-3
-                      py-3
-
-                      transition-colors
-                      duration-150
-
-                      ${
-                        selected
-                          ? `
-                            border-primary-500
-                            bg-primary-50
-                            text-primary-700
-                            shadow-sm
-
-                            dark:border-primary-400
-                            dark:bg-primary-950/40
-                            dark:text-primary-300
-                          `
-                          : `
-                            border-slate-200
-                            bg-white
-                            text-slate-700
-
-                            hover:border-primary-300
-                            hover:bg-primary-50/50
-
-                            dark:border-slate-700
-                            dark:bg-slate-800
-                            dark:text-slate-200
-
-                            dark:hover:border-primary-700
-                          `
+                  return (
+                    <button
+                      key={language.code}
+                      type="button"
+                      onClick={() =>
+                        setSelectedLanguage(
+                          language.code
+                        )
                       }
-                    `}
-                  >
+                      className={`
+                        rounded-lg
+                        border-2
 
-                    <div className="font-bold text-base">
-                      {language.native}
-                    </div>
+                        px-3
+                        py-3
 
-                    <div className="text-xs mt-1 opacity-70">
-                      {language.english}
-                    </div>
+                        transition-colors
+                        duration-150
 
-                  </button>
-                );
+                        ${
+                          selected
+                            ? `
+                              border-primary-500
+                              bg-primary-50
+                              text-primary-700
+                              shadow-sm
+                            `
+                            : `
+                              border-slate-200
+                              bg-white
+                              text-slate-700
 
-              })}
+                              hover:border-primary-300
+                              hover:bg-primary-50/50
+                            `
+                        }
+                      `}
+                    >
+
+                      <div
+                        className="
+                          font-bold
+                          text-base
+                        "
+                      >
+                        {language.native}
+                      </div>
+
+                      <div
+                        className="
+                          text-xs
+                          mt-1
+                          opacity-70
+                        "
+                      >
+                        {language.english}
+                      </div>
+
+                    </button>
+                  );
+                }
+              )}
 
             </div>
 
 
-            {/* Continue */}
+            {/* =================================================
+                CONTINUE
+                ================================================= */}
 
             <button
+              type="button"
               onClick={() => {
-                onLangChange(selectedLanguage);
-                setShowLanguageModal(false);
+                onLangChange(
+                  selectedLanguage
+                );
+
+                setShowLanguageModal(
+                  false
+                );
               }}
               className="
                 w-full
@@ -396,6 +322,7 @@ export function HomeScreen({
                 rounded-md
 
                 bg-primary-600
+
                 px-5
                 py-3.5
 
@@ -413,7 +340,9 @@ export function HomeScreen({
 
               {tr('continueLanguage')}
 
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight
+                className="w-4 h-4"
+              />
 
             </button>
 
@@ -424,7 +353,12 @@ export function HomeScreen({
 
 
       {/* =====================================================
-          MAIN CONTENT
+          MAIN JANSAHAY CONTENT
+          
+          IMPORTANT:
+          There is NO background image here.
+
+          App.tsx owns the single global background.
           ===================================================== */}
 
       <div className="relative z-10">
@@ -437,6 +371,7 @@ export function HomeScreen({
         <section
           className="
             relative
+
             min-h-[calc(100vh-80px)]
 
             flex
@@ -452,27 +387,35 @@ export function HomeScreen({
 
             px-4
             sm:px-6
+
+            lg:px-0
+            lg:max-w-6xl
+            lg:mx-auto
           "
         >
 
-          {/* Hero content */}
+          <div className="w-full lg:max-w-6xl lg:mx-auto">
 
-          <div className="w-full">
 
-            {/* Heading */}
+            {/* =================================================
+                HERO HEADING
+                ================================================= */}
 
             <h2
               className="
                 text-3xl
                 sm:text-4xl
+                lg:text-5xl
+                xl:text-6xl
 
                 font-bold
 
                 text-slate-900
-                dark:text-white
 
                 max-w-2xl
                 mx-auto
+
+                lg:max-w-4xl
 
                 leading-tight
 
@@ -483,12 +426,13 @@ export function HomeScreen({
             </h2>
 
 
-            {/* Subtitle */}
+            {/* =================================================
+                HERO SUBTITLE
+                ================================================= */}
 
             <p
               className="
                 text-slate-700
-                dark:text-slate-300
 
                 mt-4
 
@@ -497,6 +441,7 @@ export function HomeScreen({
 
                 text-base
                 sm:text-lg
+                lg:text-xl
 
                 leading-relaxed
 
@@ -519,129 +464,10 @@ export function HomeScreen({
 
                 max-w-xl
                 mx-auto
+
+                lg:max-w-4xl
               "
             >
-
-              <button
-                onClick={() => onStart('conversation')}
-                className="
-                  w-full
-
-                  flex
-                  items-center
-                  gap-4
-
-                  p-4
-                  sm:p-5
-
-                  rounded-md
-
-                  bg-primary-700
-                  text-white
-
-                  hover:bg-primary-800
-
-                  transition-colors
-                  duration-150
-
-                  shadow-md
-                "
-              >
-
-                <div
-                  className="
-                    flex
-                    items-center
-                    justify-center
-
-                    w-10
-                    h-10
-
-                    rounded-md
-
-                    bg-white/15
-
-                    flex-shrink-0
-                  "
-                >
-                  <Mic className="w-5 h-5" />
-                </div>
-
-
-                <div className="flex-1 text-left">
-
-                  <p className="font-bold text-base sm:text-lg">
-                    {tr('tellUs')}
-                  </p>
-
-                  <p className="text-xs sm:text-sm text-primary-100 mt-0.5">
-                    Speak or type in simple language
-                  </p>
-
-                </div>
-
-
-                <ArrowRight
-                  className="
-                    w-5
-                    h-5
-
-                    flex-shrink-0
-                  "
-                />
-
-              </button>
-
-
-              {/* OR */}
-
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-3
-
-                  py-1
-                "
-              >
-
-                <div
-                  className="
-                    flex-1
-                    h-px
-
-                    bg-slate-200
-                    dark:bg-slate-700
-                  "
-                />
-
-                <span
-                  className="
-                    text-xs
-                    font-medium
-
-                    text-slate-400
-
-                    uppercase
-                    tracking-wide
-                  "
-                >
-                  {tr('orDivider')}
-                </span>
-
-                <div
-                  className="
-                    flex-1
-                    h-px
-
-                    bg-slate-200
-                    dark:bg-slate-700
-                  "
-                />
-
-              </div>
-
-
               {/* =================================================
                   PURPOSE CHOICES
                   ================================================= */}
@@ -652,12 +478,17 @@ export function HomeScreen({
                   grid-cols-2
 
                   gap-3
+                  lg:gap-5
                 "
               >
 
-                {/* Business */}
+
+                {/* =================================================
+                    BUSINESS
+                    ================================================= */}
 
                 <button
+                  type="button"
                   onClick={() =>
                     onStart(
                       'guided',
@@ -672,9 +503,13 @@ export function HomeScreen({
                     p-4
                     sm:p-5
 
+                    lg:p-6
+                    lg:min-h-[120px]
+
                     rounded-md
 
-                    bg-white/95
+                    bg-white/90
+                    backdrop-blur-sm
 
                     border
                     border-slate-300
@@ -688,11 +523,6 @@ export function HomeScreen({
                     duration-150
 
                     text-left
-
-                    dark:bg-slate-900/95
-                    dark:border-slate-700
-
-                    dark:hover:border-primary-600
                   "
                 >
 
@@ -703,6 +533,8 @@ export function HomeScreen({
 
                       sm:w-8
                       sm:h-8
+                      lg:w-10
+                      lg:h-10
 
                       text-accent-600
 
@@ -710,7 +542,9 @@ export function HomeScreen({
                     "
                   />
 
-                  <div className="min-w-0">
+                  <div
+                    className="min-w-0"
+                  >
 
                     <span
                       className="
@@ -718,11 +552,11 @@ export function HomeScreen({
 
                         text-sm
                         sm:text-base
+                        lg:text-lg
 
                         font-semibold
 
                         text-slate-800
-                        dark:text-slate-200
                       "
                     >
                       {tr('businessLoan')}
@@ -734,15 +568,15 @@ export function HomeScreen({
                         sm:block
 
                         text-xs
+                        lg:text-sm
 
                         text-slate-500
 
                         mt-1
-
-                        dark:text-slate-400
                       "
                     >
-                      For your business needs
+                      For your business
+                      needs
                     </span>
 
                   </div>
@@ -750,9 +584,12 @@ export function HomeScreen({
                 </button>
 
 
-                {/* Education */}
+                {/* =================================================
+                    EDUCATION
+                    ================================================= */}
 
                 <button
+                  type="button"
                   onClick={() =>
                     onStart(
                       'guided',
@@ -769,7 +606,8 @@ export function HomeScreen({
 
                     rounded-md
 
-                    bg-white/95
+                    bg-white/90
+                    backdrop-blur-sm
 
                     border
                     border-slate-300
@@ -783,11 +621,6 @@ export function HomeScreen({
                     duration-150
 
                     text-left
-
-                    dark:bg-slate-900/95
-                    dark:border-slate-700
-
-                    dark:hover:border-primary-600
                   "
                 >
 
@@ -805,7 +638,9 @@ export function HomeScreen({
                     "
                   />
 
-                  <div className="min-w-0">
+                  <div
+                    className="min-w-0"
+                  >
 
                     <span
                       className="
@@ -817,7 +652,6 @@ export function HomeScreen({
                         font-semibold
 
                         text-slate-800
-                        dark:text-slate-200
                       "
                     >
                       {tr('educationLoan')}
@@ -833,8 +667,6 @@ export function HomeScreen({
                         text-slate-500
 
                         mt-1
-
-                        dark:text-slate-400
                       "
                     >
                       For higher education
@@ -846,10 +678,165 @@ export function HomeScreen({
 
               </div>
 
+              {/* =================================================
+                  OR DIVIDER
+                  ================================================= */}
+
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-3
+
+                  py-1
+                "
+              >
+
+                <div
+                  className="
+                    flex-1
+                    h-px
+
+                    bg-slate-400
+                  "
+                />
+
+                <span
+                  className="
+                    text-xs
+                    font-medium
+
+                    text-slate-600
+
+                    uppercase
+                    tracking-wide
+                  "
+                >
+                  {tr('orDivider')}
+                </span>
+
+                <div
+                  className="
+                    flex-1
+                    h-px
+
+                    bg-slate-400
+                  "
+                />
+
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  onStart(
+                    'conversation'
+                  )
+                }
+                className="
+                  w-full
+
+                  flex
+                  items-center
+                  gap-4
+
+                  p-4
+                  sm:p-5
+
+                  lg:p-6
+
+                  rounded-md
+
+                  bg-primary-700
+                  text-white
+
+                  hover:bg-primary-800
+
+                  transition-colors
+                  duration-150
+
+                  shadow-md
+                "
+              >
+
+                {/* Microphone */}
+
+                <div
+                  className="
+                    flex
+                    items-center
+                    justify-center
+
+                    w-10
+                    h-10
+
+                    rounded-md
+
+                    bg-white/15
+
+                    flex-shrink-0
+                  "
+                >
+                  <Mic
+                    className="w-5 h-5"
+                  />
+                </div>
+
+
+                {/* Text */}
+
+                <div
+                  className="
+                    flex-1
+                    text-left
+                  "
+                >
+
+                  <p
+                    className="
+                      font-bold
+                      text-base
+                      sm:text-lg
+                    "
+                  >
+                    {tr('tellUs')}
+                  </p>
+
+                  <p
+                    className="
+                      text-xs
+                      sm:text-sm
+
+                      text-primary-100
+
+                      mt-0.5
+                    "
+                  >
+                    Speak or type in
+                    simple language
+                  </p>
+
+                </div>
+
+
+                {/* Arrow */}
+
+                <ArrowRight
+                  className="
+                    w-5
+                    h-5
+
+                    flex-shrink-0
+                  "
+                />
+
+              </button>
             </div>
 
 
-            {/* Scroll indicator */}
+            {/* =================================================
+                SCROLL INDICATOR
+                ================================================= */}
 
             <div
               className="
@@ -859,13 +846,18 @@ export function HomeScreen({
                 flex-col
                 items-center
 
-                text-slate-400
-                dark:text-slate-500
+                text-slate-500
               "
             >
 
-              <span className="text-xs font-medium">
-                Scroll down to know more
+              <span
+                className="
+                  text-xs
+                  font-medium
+                "
+              >
+                Scroll down to know
+                more
               </span>
 
               <ArrowRight
@@ -902,8 +894,13 @@ export function HomeScreen({
 
             px-4
             sm:px-6
+
+            lg:px-0
+            lg:max-w-6xl
+            lg:mx-auto
           "
         >
+
 
           {/* =================================================
               KEY BENEFITS
@@ -913,10 +910,10 @@ export function HomeScreen({
             className="
               portal-section
 
+              lg:p-8
+
               bg-white/80
               backdrop-blur-sm
-
-              dark:bg-slate-900/85
             "
           >
 
@@ -930,11 +927,18 @@ export function HomeScreen({
               "
             >
 
+
               {/* Simple */}
 
               <div className="text-center">
 
-                <div className="text-primary-600 text-xl mb-1">
+                <div
+                  className="
+                    text-primary-600
+                    text-xl
+                    mb-1
+                  "
+                >
                   ✓
                 </div>
 
@@ -943,8 +947,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
-                    dark:text-slate-200
                   "
                 >
                   Simple & Easy
@@ -956,11 +958,10 @@ export function HomeScreen({
                     text-slate-500
 
                     mt-1
-
-                    dark:text-slate-400
                   "
                 >
-                  Designed for citizens
+                  Designed for
+                  citizens
                 </p>
 
               </div>
@@ -970,7 +971,13 @@ export function HomeScreen({
 
               <div className="text-center">
 
-                <div className="text-primary-600 text-xl mb-1">
+                <div
+                  className="
+                    text-primary-600
+                    text-xl
+                    mb-1
+                  "
+                >
                   ◎
                 </div>
 
@@ -979,8 +986,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
-                    dark:text-slate-200
                   "
                 >
                   Multiple Languages
@@ -992,11 +997,10 @@ export function HomeScreen({
                     text-slate-500
 
                     mt-1
-
-                    dark:text-slate-400
                   "
                 >
-                  English, Hindi, Kannada & Tamil
+                  English, Hindi,
+                  Kannada & Tamil
                 </p>
 
               </div>
@@ -1006,7 +1010,13 @@ export function HomeScreen({
 
               <div className="text-center">
 
-                <div className="text-primary-600 text-xl mb-1">
+                <div
+                  className="
+                    text-primary-600
+                    text-xl
+                    mb-1
+                  "
+                >
                   ✓
                 </div>
 
@@ -1015,8 +1025,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
-                    dark:text-slate-200
                   "
                 >
                   Clear Information
@@ -1028,8 +1036,6 @@ export function HomeScreen({
                     text-slate-500
 
                     mt-1
-
-                    dark:text-slate-400
                   "
                 >
                   Easy to understand
@@ -1042,7 +1048,13 @@ export function HomeScreen({
 
               <div className="text-center">
 
-                <div className="text-primary-600 text-xl mb-1">
+                <div
+                  className="
+                    text-primary-600
+                    text-xl
+                    mb-1
+                  "
+                >
                   ♙
                 </div>
 
@@ -1051,8 +1063,6 @@ export function HomeScreen({
                     font-semibold
                     text-slate-800
                     text-sm
-
-                    dark:text-slate-200
                   "
                 >
                   Citizen Friendly
@@ -1064,8 +1074,6 @@ export function HomeScreen({
                     text-slate-500
 
                     mt-1
-
-                    dark:text-slate-400
                   "
                 >
                   Built for easy access
@@ -1086,26 +1094,29 @@ export function HomeScreen({
             className="
               portal-section
 
-              bg-white/90
-              backdrop-blur-sm
+              lg:p-8
 
-              dark:bg-slate-900/90
+              bg-white/80
+              backdrop-blur-sm
             "
           >
 
-            <h3 className="portal-section-title mb-8">
+            <h3
+              className="
+                portal-section-title
+                mb-5
+              "
+            >
               How JanSahay helps you
             </h3>
+
 
             <div
               className="
                 grid
-                grid-cols-1
+                gap-4
                 sm:grid-cols-2
                 lg:grid-cols-5
-
-                gap-x-6
-                gap-y-10
               "
             >
 
@@ -1135,82 +1146,74 @@ export function HomeScreen({
                   title: tr('step5Title'),
                   description: tr('step5Desc'),
                 },
-              ].map((item) => (
+              ].map(
+                (item) => (
 
-                <div
-                  key={item.number}
-                  className="
-                    flex
-                    flex-col
-                    items-center
-                    text-center
-                  "
-                >
-
-                  {/* Number */}
                   <div
+                    key={item.number}
                     className="
                       flex
-                      items-center
-                      justify-center
-
-                      w-10
-                      h-10
-
-                      rounded-full
-
-                      bg-primary-600
-                      text-white
-
-                      text-base
-                      font-bold
-
-                      flex-shrink-0
+                      gap-3
                     "
                   >
-                    {item.number}
+
+                    <div
+                      className="
+                        flex-shrink-0
+
+                        flex
+                        items-center
+                        justify-center
+
+                        w-8
+                        h-8
+
+                        rounded-full
+
+                        bg-primary-600
+                        text-white
+
+                        text-sm
+                        font-bold
+                      "
+                    >
+                      {item.number}
+                    </div>
+
+
+                    <div>
+
+                      <p
+                        className="
+                          font-semibold
+
+                          text-slate-800
+                          text-sm
+                        "
+                      >
+                        {item.title}
+                      </p>
+
+                      <p
+                        className="
+                          text-xs
+
+                          text-slate-500
+
+                          mt-1
+
+                          leading-relaxed
+                        "
+                      >
+                        {item.description}
+                      </p>
+
+                    </div>
+
                   </div>
 
-                  {/* Title */}
-                  <p
-                    className="
-                      mt-5
-
-                      min-h-[48px]
-
-                      flex
-                      items-start
-                      justify-center
-
-                      font-bold
-                      text-[17px]
-                      leading-6
-
-                      text-slate-800
-                      dark:text-slate-200
-                    "
-                  >
-                    {item.title}
-                  </p>
-
-                  {/* Description */}
-                  <p
-                    className="
-                      mt-3
-
-                      text-[15px]
-                      leading-6
-
-                      text-slate-500
-                      dark:text-slate-400
-                    "
-                  >
-                    {item.description}
-                  </p>
-
-                </div>
-
-              ))}
+                )
+              )}
 
             </div>
 
@@ -1225,10 +1228,10 @@ export function HomeScreen({
             className="
               portal-notice
 
+              lg:p-6
+
               bg-white/85
               backdrop-blur-sm
-
-              dark:bg-slate-900/85
             "
           >
 
@@ -1255,8 +1258,6 @@ export function HomeScreen({
 
                     text-slate-800
                     text-sm
-
-                    dark:text-slate-200
                   "
                 >
                   Important Information
@@ -1271,13 +1272,14 @@ export function HomeScreen({
                     mt-1
 
                     leading-relaxed
-
-                    dark:text-slate-400
                   "
                 >
-                  JanSahay helps you find and understand suitable
-                  government schemes. Final eligibility and loan
-                  approval are decided by the authorized Channel
+                  JanSahay helps you find
+                  and understand suitable
+                  government schemes.
+                  Final eligibility and loan
+                  approval are decided by
+                  the authorized Channel
                   Partner.
                 </p>
 
