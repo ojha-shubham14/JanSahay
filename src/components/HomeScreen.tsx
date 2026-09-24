@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import {
+  Mic,
   Store,
   GraduationCap,
   ArrowRight,
@@ -122,12 +123,16 @@ export function HomeScreen({
         <>
           <style>
             {`
+              /* =================================================
+                 SPLASH FADE
+                 ================================================= */
+
               @keyframes splashFadeIn {
                 0% {
                   opacity: 0;
                 }
 
-                15% {
+                10% {
                   opacity: 1;
                 }
 
@@ -139,6 +144,11 @@ export function HomeScreen({
                   opacity: 0;
                 }
               }
+
+
+              /* =================================================
+                 LOGO ENTRANCE
+                 ================================================= */
 
               @keyframes splashLogoIn {
                 0% {
@@ -157,6 +167,27 @@ export function HomeScreen({
                 }
               }
 
+
+              /* =================================================
+                 LOGO SOFT PULSE
+                 ================================================= */
+
+              @keyframes splashLogoPulse {
+                0%,
+                100% {
+                  transform: scale(1);
+                }
+
+                50% {
+                  transform: scale(1.045);
+                }
+              }
+
+
+              /* =================================================
+                 TEXT ENTRANCE
+                 ================================================= */
+
               @keyframes splashTextIn {
                 0% {
                   opacity: 0;
@@ -174,79 +205,138 @@ export function HomeScreen({
                 }
               }
 
+
+              /* =================================================
+                 RING ANIMATION
+                 ================================================= */
+
               @keyframes splashRing {
                 0% {
-                  transform: translate(-50%, -50%) scale(0.55);
-                  opacity: 0;
+                  transform:
+                    translate(-50%, -50%)
+                    scale(0.55);
+
+                  opacity: 0.45;
                 }
 
-                15% {
+                12% {
                   opacity: 0.55;
                 }
 
+                40% {
+                  opacity: 0.38;
+                }
+
                 70% {
-                  opacity: 0.22;
+                  opacity: 0.18;
                 }
 
                 100% {
-                  transform: translate(-50%, -50%) scale(1.45);
+                  transform:
+                    translate(-50%, -50%)
+                    scale(1.45);
+
                   opacity: 0;
                 }
               }
 
-              @keyframes splashRing2 {
+
+              /* =================================================
+                 SECONDARY RING
+                 ================================================= */
+
+              @keyframes splashRingSoft {
                 0% {
-                  transform: translate(-50%, -50%) scale(0.65);
-                  opacity: 0;
+                  transform:
+                    translate(-50%, -50%)
+                    scale(0.60);
+
+                  opacity: 0.30;
                 }
 
-                20% {
-                  opacity: 0.35;
+                15% {
+                  opacity: 0.38;
                 }
 
-                75% {
-                  opacity: 0.15;
+                65% {
+                  opacity: 0.12;
                 }
 
                 100% {
-                  transform: translate(-50%, -50%) scale(1.65);
+                  transform:
+                    translate(-50%, -50%)
+                    scale(1.55);
+
                   opacity: 0;
                 }
               }
 
-              @keyframes splashGlow {
-                0%,
-                100% {
-                  transform: scale(1);
-                  opacity: 0.85;
-                }
 
-                50% {
-                  transform: scale(1.06);
-                  opacity: 1;
-                }
-              }
+              /* =================================================
+                 SPLASH CONTAINER
+                 ================================================= */
 
               .jansahay-splash {
                 animation:
-                  splashFadeIn 5s ease-in-out forwards;
+                  splashFadeIn
+                  5s
+                  ease-in-out
+                  forwards;
               }
+
+
+              /* =================================================
+                 LOGO
+                 ================================================= */
 
               .jansahay-splash-logo {
                 animation:
-                  splashLogoIn 1.3s ease-out both,
-                  splashGlow 2.8s ease-in-out 1.2s infinite;
+                  splashLogoIn
+                  1.2s
+                  ease-out
+                  both;
               }
+
+
+              .jansahay-splash-logo-inner {
+                animation:
+                  splashLogoPulse
+                  2.8s
+                  ease-in-out
+                  1.2s
+                  infinite;
+              }
+
+
+              /* =================================================
+                 TEXT
+                 ================================================= */
 
               .jansahay-splash-text {
                 animation:
-                  splashTextIn 1.2s ease-out 0.25s both;
+                  splashTextIn
+                  1.2s
+                  ease-out
+                  0.25s
+                  both;
               }
+
 
               .jansahay-splash-subtitle {
                 animation:
-                  splashTextIn 1.2s ease-out 0.45s both;
+                  splashTextIn
+                  1.2s
+                  ease-out
+                  0.45s
+                  both;
               }
+
+
+              /* =================================================
+                 RINGS
+                 IMPORTANT:
+                 These are centered relative to the FULL SCREEN.
+                 ================================================= */
 
               .jansahay-ring {
                 position: absolute;
@@ -259,10 +349,19 @@ export function HomeScreen({
                 border: 2px solid
                   rgba(59, 130, 246, 0.20);
 
+                transform:
+                  translate(-50%, -50%)
+                  scale(0.55);
+
+                pointer-events: none;
+
                 animation:
-                  splashRing 4.2s
-                  ease-out infinite;
+                  splashRing
+                  4.2s
+                  ease-out
+                  infinite;
               }
+
 
               .jansahay-ring-1 {
                 width: 260px;
@@ -271,28 +370,37 @@ export function HomeScreen({
                 animation-delay: 0s;
               }
 
+
               .jansahay-ring-2 {
                 width: 360px;
                 height: 360px;
 
-                animation-delay: 0.7s;
+                animation-delay: 0.65s;
               }
+
 
               .jansahay-ring-3 {
                 width: 460px;
                 height: 460px;
 
-                animation-delay: 1.4s;
+                animation-delay: 1.30s;
               }
+
 
               .jansahay-ring-4 {
                 width: 560px;
                 height: 560px;
 
-                animation-delay: 2.1s;
+                animation-delay: 1.95s;
               }
 
+
+              /* =================================================
+                 MOBILE RINGS
+                 ================================================= */
+
               @media (max-width: 640px) {
+
                 .jansahay-ring-1 {
                   width: 190px;
                   height: 190px;
@@ -312,14 +420,62 @@ export function HomeScreen({
                   width: 430px;
                   height: 430px;
                 }
+
+              }
+
+
+              /* =================================================
+                 REDUCED MOTION ACCESSIBILITY
+                 ================================================= */
+
+              @media (prefers-reduced-motion: reduce) {
+
+                .jansahay-splash {
+                  animation: none;
+                }
+
+                .jansahay-splash-logo {
+                  animation: none;
+                  opacity: 1;
+                }
+
+                .jansahay-splash-logo-inner {
+                  animation: none;
+                }
+
+                .jansahay-splash-text {
+                  animation: none;
+                  opacity: 1;
+                }
+
+                .jansahay-splash-subtitle {
+                  animation: none;
+                  opacity: 1;
+                }
+
+                .jansahay-ring {
+                  animation: none;
+                  opacity: 0.18;
+
+                  transform:
+                    translate(-50%, -50%)
+                    scale(1);
+                }
+
               }
             `}
           </style>
+
+
+          {/* =================================================
+              FULL SCREEN SPLASH
+              ================================================= */}
 
           <div
             className="
               fixed
               inset-0
+
               z-[300]
 
               overflow-hidden
@@ -352,6 +508,7 @@ export function HomeScreen({
               }}
             />
 
+
             {/* =================================================
                 MOBILE BACKGROUND
                 ================================================= */}
@@ -374,8 +531,9 @@ export function HomeScreen({
               }}
             />
 
+
             {/* =================================================
-                SOFT OVERLAY
+                VERY LIGHT OVERLAY
                 ================================================= */}
 
             <div
@@ -384,11 +542,69 @@ export function HomeScreen({
                 inset-0
 
                 bg-white/10
+
+                pointer-events-none
               "
             />
 
+
             {/* =================================================
-                CENTER BRANDING
+                FULL-SCREEN RING LAYER
+                ================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-0
+
+                pointer-events-none
+              "
+            >
+
+              {/* Ring 1 */}
+
+              <span
+                className="
+                  jansahay-ring
+                  jansahay-ring-1
+                "
+              />
+
+
+              {/* Ring 2 */}
+
+              <span
+                className="
+                  jansahay-ring
+                  jansahay-ring-2
+                "
+              />
+
+
+              {/* Ring 3 */}
+
+              <span
+                className="
+                  jansahay-ring
+                  jansahay-ring-3
+                "
+              />
+
+
+              {/* Ring 4 */}
+
+              <span
+                className="
+                  jansahay-ring
+                  jansahay-ring-4
+                "
+              />
+
+            </div>
+
+
+            {/* =================================================
+                CENTER JANSAHAY BRANDING
                 ================================================= */}
 
             <div
@@ -401,6 +617,8 @@ export function HomeScreen({
                 justify-center
 
                 px-5
+
+                pointer-events-none
               "
             >
 
@@ -421,118 +639,123 @@ export function HomeScreen({
               >
 
                 {/* =================================================
-                    RIPPLE RINGS
-                    ================================================= */}
-
-                <span
-                  className="
-                    jansahay-ring
-                    jansahay-ring-1
-                  "
-                />
-
-                <span
-                  className="
-                    jansahay-ring
-                    jansahay-ring-2
-                  "
-                />
-
-                <span
-                  className="
-                    jansahay-ring
-                    jansahay-ring-3
-                  "
-                />
-
-                <span
-                  className="
-                    jansahay-ring
-                    jansahay-ring-4
-                  "
-                />
-
-                {/* =================================================
                     LOGO
                     ================================================= */}
 
                 <div
                   className="
                     relative
-                    z-10
+                    z-20
 
                     jansahay-splash-logo
 
                     flex
                     items-center
                     justify-center
-
-                    w-24
-                    h-24
-
-                    sm:w-32
-                    sm:h-32
-
-                    rounded-[24px]
-                    sm:rounded-[30px]
-
-                    bg-blue-600
-
-                    shadow-2xl
-
-                    border
-                    border-white/80
                   "
                 >
 
-                  {/* Government building icon */}
-
-                  <svg
-                    viewBox="0 0 100 100"
+                  <div
                     className="
-                      w-14
-                      h-14
+                      jansahay-splash-logo-inner
 
-                      sm:w-20
-                      sm:h-20
+                      flex
+                      items-center
+                      justify-center
 
-                      text-white
+                      w-24
+                      h-24
+
+                      sm:w-32
+                      sm:h-32
+
+                      rounded-[24px]
+                      sm:rounded-[30px]
+
+                      bg-blue-600
+
+                      border
+                      border-white/80
+
+                      shadow-2xl
                     "
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
 
-                    <path d="M18 38 L50 16 L82 38" />
+                    {/* Government building logo */}
 
-                    <path d="M25 38 H75" />
+                    <svg
+                      viewBox="0 0 100 100"
+                      className="
+                        w-14
+                        h-14
 
-                    <path d="M30 40 V70" />
+                        sm:w-20
+                        sm:h-20
 
-                    <path d="M43 40 V70" />
+                        text-white
+                      "
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
 
-                    <path d="M57 40 V70" />
+                      {/* Roof */}
 
-                    <path d="M70 40 V70" />
+                      <path
+                        d="M18 38 L50 16 L82 38"
+                      />
 
-                    <path d="M20 74 H80" />
+                      {/* Roof base */}
 
-                    <path d="M15 82 H85" />
+                      <path
+                        d="M25 38 H75"
+                      />
 
-                  </svg>
+                      {/* Pillars */}
+
+                      <path
+                        d="M30 40 V70"
+                      />
+
+                      <path
+                        d="M43 40 V70"
+                      />
+
+                      <path
+                        d="M57 40 V70"
+                      />
+
+                      <path
+                        d="M70 40 V70"
+                      />
+
+                      {/* Bottom platform */}
+
+                      <path
+                        d="M20 74 H80"
+                      />
+
+                      <path
+                        d="M15 82 H85"
+                      />
+
+                    </svg>
+
+                  </div>
 
                 </div>
 
+
                 {/* =================================================
-                    JANSAHAY
+                    JANSAHAY TEXT
                     ================================================= */}
 
                 <h1
                   className="
                     relative
-                    z-10
+                    z-20
 
                     jansahay-splash-text
 
@@ -554,6 +777,7 @@ export function HomeScreen({
                   JanSahay
                 </h1>
 
+
                 {/* =================================================
                     TAGLINE
                     ================================================= */}
@@ -561,7 +785,7 @@ export function HomeScreen({
                 <p
                   className="
                     relative
-                    z-10
+                    z-20
 
                     jansahay-splash-subtitle
 
@@ -592,11 +816,14 @@ export function HomeScreen({
             </div>
 
           </div>
+
         </>
       )}
 
+
       {/* =====================================================
           LANGUAGE POPUP
+          Appears AFTER splash screen
           ===================================================== */}
 
       {showLanguageModal && (
@@ -641,6 +868,10 @@ export function HomeScreen({
             "
           >
 
+            {/* =================================================
+                GLOBE
+                ================================================= */}
+
             <div className="flex justify-center mb-4">
 
               <div
@@ -658,10 +889,17 @@ export function HomeScreen({
                   text-primary-600
                 "
               >
+
                 <Globe2 className="w-7 h-7" />
+
               </div>
 
             </div>
+
+
+            {/* =================================================
+                HEADING
+                ================================================= */}
 
             <h2
               className="
@@ -677,6 +915,11 @@ export function HomeScreen({
               {tr('languagePrompt')}
             </h2>
 
+
+            {/* =================================================
+                SUBTITLE
+                ================================================= */}
+
             <p
               className="
                 text-sm
@@ -690,6 +933,11 @@ export function HomeScreen({
             >
               {tr('languagePromptSubtitle')}
             </p>
+
+
+            {/* =================================================
+                LANGUAGE OPTIONS
+                ================================================= */}
 
             <div
               className="
@@ -774,6 +1022,11 @@ export function HomeScreen({
 
             </div>
 
+
+            {/* =================================================
+                CONTINUE
+                ================================================= */}
+
             <button
               type="button"
               onClick={() => {
@@ -781,7 +1034,9 @@ export function HomeScreen({
                   selectedLanguage
                 );
 
-                setShowLanguageModal(false);
+                setShowLanguageModal(
+                  false
+                );
               }}
               className="
                 w-full
@@ -807,11 +1062,20 @@ export function HomeScreen({
 
                 transition-all
                 duration-200
+
+                focus:outline-none
+                focus:ring-2
+                focus:ring-blue-500
+                focus:ring-offset-2
               "
             >
+
               {tr('continueLanguage')}
 
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight
+                className="w-4 h-4"
+              />
+
             </button>
 
           </div>
@@ -819,13 +1083,17 @@ export function HomeScreen({
         </div>
       )}
 
+
       {/* =====================================================
-          EXISTING JANSAHAY HOMEPAGE
+          MAIN JANSAHAY CONTENT
+          App.tsx owns the global background.
           ===================================================== */}
 
       <div className="relative z-10">
 
-        {/* HERO */}
+        {/* ===================================================
+            HERO
+            =================================================== */}
 
         <section
           className="
@@ -851,6 +1119,10 @@ export function HomeScreen({
 
           <div className="w-full">
 
+            {/* =================================================
+                HERO HEADING
+                ================================================= */}
+
             <h2
               className="
                 text-3xl
@@ -871,6 +1143,11 @@ export function HomeScreen({
             >
               {tr('heroTitle')}
             </h2>
+
+
+            {/* =================================================
+                HERO SUBTITLE
+                ================================================= */}
 
             <p
               className="
@@ -893,6 +1170,11 @@ export function HomeScreen({
               {tr('heroSubtitle')}
             </p>
 
+
+            {/* =================================================
+                MAIN ACTIONS
+                ================================================= */}
+
             <div
               className="
                 mt-8
@@ -904,6 +1186,10 @@ export function HomeScreen({
               "
             >
 
+              {/* =================================================
+                  BUSINESS + EDUCATION
+                  ================================================= */}
+
               <div
                 className="
                   grid
@@ -913,7 +1199,9 @@ export function HomeScreen({
                 "
               >
 
-                {/* BUSINESS */}
+                {/* =================================================
+                    BUSINESS
+                    ================================================= */}
 
                 <button
                   type="button"
@@ -966,7 +1254,11 @@ export function HomeScreen({
                     "
                   />
 
-                  <div className="min-w-0">
+                  <div
+                    className="
+                      min-w-0
+                    "
+                  >
 
                     <span
                       className="
@@ -1003,7 +1295,10 @@ export function HomeScreen({
 
                 </button>
 
-                {/* EDUCATION */}
+
+                {/* =================================================
+                    EDUCATION
+                    ================================================= */}
 
                 <button
                   type="button"
@@ -1056,7 +1351,11 @@ export function HomeScreen({
                     "
                   />
 
-                  <div className="min-w-0">
+                  <div
+                    className="
+                      min-w-0
+                    "
+                  >
 
                     <span
                       className="
@@ -1094,7 +1393,10 @@ export function HomeScreen({
 
               </div>
 
-              {/* OR */}
+
+              {/* =================================================
+                  OR DIVIDER
+                  ================================================= */}
 
               <div
                 className="
@@ -1138,7 +1440,10 @@ export function HomeScreen({
 
               </div>
 
-              {/* CONVERSATION */}
+
+              {/* =================================================
+                  CONVERSATION
+                  ================================================= */}
 
               <button
                 type="button"
@@ -1188,18 +1493,11 @@ export function HomeScreen({
                     flex-shrink-0
                   "
                 >
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M12 2v20" />
-                    <path d="M8 6v12" />
-                    <path d="M16 6v12" />
-                  </svg>
+
+                  <Mic className="w-5 h-5" />
+
                 </div>
+
 
                 <div
                   className="
@@ -1234,6 +1532,7 @@ export function HomeScreen({
 
                 </div>
 
+
                 <ArrowRight
                   className="
                     w-5
@@ -1247,7 +1546,10 @@ export function HomeScreen({
 
             </div>
 
-            {/* SCROLL */}
+
+            {/* =================================================
+                SCROLL INDICATOR
+                ================================================= */}
 
             <div
               className="
@@ -1290,6 +1592,7 @@ export function HomeScreen({
 
         </section>
 
+
         {/* ===================================================
             BELOW THE FOLD
             =================================================== */}
@@ -1303,6 +1606,10 @@ export function HomeScreen({
             sm:px-6
           "
         >
+
+          {/* =================================================
+              BENEFITS
+              ================================================= */}
 
           <div
             className="
@@ -1322,6 +1629,8 @@ export function HomeScreen({
                 gap-5
               "
             >
+
+              {/* Simple */}
 
               <div className="text-center">
 
@@ -1358,6 +1667,9 @@ export function HomeScreen({
 
               </div>
 
+
+              {/* Languages */}
+
               <div className="text-center">
 
                 <div
@@ -1393,6 +1705,9 @@ export function HomeScreen({
 
               </div>
 
+
+              {/* Information */}
+
               <div className="text-center">
 
                 <div
@@ -1426,6 +1741,9 @@ export function HomeScreen({
                 </p>
 
               </div>
+
+
+              {/* Citizen */}
 
               <div className="text-center">
 
@@ -1465,6 +1783,11 @@ export function HomeScreen({
 
           </div>
 
+
+          {/* =================================================
+              HOW JANSAHAY HELPS
+              ================================================= */}
+
           <div
             className="
               portal-section
@@ -1482,6 +1805,7 @@ export function HomeScreen({
             >
               How JanSahay helps you
             </h3>
+
 
             <div
               className="
@@ -1551,6 +1875,7 @@ export function HomeScreen({
                       {item.number}
                     </div>
 
+
                     <div>
 
                       <p
@@ -1563,6 +1888,7 @@ export function HomeScreen({
                       >
                         {item.title}
                       </p>
+
 
                       <p
                         className="
@@ -1588,6 +1914,11 @@ export function HomeScreen({
 
           </div>
 
+
+          {/* =================================================
+              IMPORTANT INFORMATION
+              ================================================= */}
+
           <div
             className="
               portal-notice
@@ -1612,6 +1943,7 @@ export function HomeScreen({
                 "
               />
 
+
               <div>
 
                 <h3
@@ -1624,6 +1956,7 @@ export function HomeScreen({
                 >
                   Important Information
                 </h3>
+
 
                 <p
                   className="
