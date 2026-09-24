@@ -8,8 +8,16 @@ import {
   AlertTriangle,
   Info,
 } from 'lucide-react';
-import type { Language, SchemeMatch } from '@/lib/types';
-import { t, type TranslationKey } from '@/i18n/translations';
+
+import type {
+  Language,
+  SchemeMatch,
+} from '@/lib/types';
+
+import {
+  t,
+  type TranslationKey,
+} from '@/i18n/translations';
 
 interface SchemeResultProps {
   lang: Language;
@@ -24,56 +32,163 @@ export function SchemeResult({
   onProceed,
   onReset,
 }: SchemeResultProps) {
-  const tr = (key: TranslationKey) => t(lang, key);
+  const tr = (
+    key: TranslationKey
+  ) => t(lang, key);
 
-  const schemeDisplayName = (schemeId?: string, fallback?: string) => {
+  const schemeDisplayName = (
+    schemeId?: string,
+    fallback?: string
+  ) => {
     switch (schemeId) {
       case 'micro_finance':
         return tr('microFinanceScheme');
+
       case 'term_loan':
         return tr('termLoanScheme');
+
       case 'education_loan':
         return tr('educationLoanScheme');
+
       default:
         return fallback ?? 'N/A';
     }
   };
 
-  const checkLabel = (index: number, fallback: string) => {
+  const checkLabel = (
+    index: number,
+    fallback: string
+  ) => {
     const keys: TranslationKey[] = [
       'familyIncomeCheck',
       'purposeCheck',
       'projectCostCheck',
       'financingCheck',
     ];
-    return index < keys.length ? tr(keys[index]) : fallback;
+
+    return index < keys.length
+      ? tr(keys[index])
+      : fallback;
   };
 
-  const comparisonReason = (reason: string) => {
-    if (reason === 'Meets current demo rules') return tr('meetsRules');
-    if (reason === 'Purpose does not match') return tr('purposeMismatch');
-    if (reason === 'Exceeds configured limit') return tr('exceedsLimit');
+  const comparisonReason = (
+    reason: string
+  ) => {
+    if (
+      reason ===
+      'Meets current demo rules'
+    ) {
+      return tr('meetsRules');
+    }
+
+    if (
+      reason ===
+      'Purpose does not match'
+    ) {
+      return tr('purposeMismatch');
+    }
+
+    if (
+      reason ===
+      'Exceeds configured limit'
+    ) {
+      return tr('exceedsLimit');
+    }
+
     return reason;
   };
 
+  /* =========================================================
+     NOT ELIGIBLE
+     ========================================================= */
+
   if (!match.eligible) {
     return (
-      <div className="portal-section p-5 sm:p-6 animate-slide-up">
-        <div className="flex flex-col items-center text-center py-6">
-          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-error-50 mb-4">
-            <XCircle className="w-8 h-8 text-error-500" />
+      <div
+        className="
+          portal-section
+          p-5
+          sm:p-6
+          animate-slide-up
+
+          bg-white/95
+          backdrop-blur-sm
+
+          border
+          border-slate-200
+          shadow-lg
+        "
+      >
+        <div
+          className="
+            flex
+            flex-col
+            items-center
+            text-center
+
+            py-6
+          "
+        >
+          <div
+            className="
+              flex
+              items-center
+              justify-center
+
+              w-16
+              h-16
+
+              rounded-full
+
+              bg-red-50
+
+              mb-4
+            "
+          >
+            <XCircle
+              className="
+                w-8
+                h-8
+                text-red-600
+              "
+            />
           </div>
 
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+          <h2
+            className="
+              text-xl
+              font-bold
+
+              text-slate-950
+
+              mb-2
+            "
+          >
             {tr('notEligible')}
           </h2>
 
-          <p className="text-sm text-slate-600 max-w-md mb-6">
+          <p
+            className="
+              text-sm
+              text-slate-700
+
+              max-w-md
+
+              mb-6
+            "
+          >
             {match.reason}
           </p>
 
-          <button onClick={onReset} className="btn-secondary">
-            <RotateCcw className="w-4 h-4" />
+          <button
+            type="button"
+            onClick={onReset}
+            className="btn-secondary"
+          >
+            <RotateCcw
+              className="w-4 h-4"
+            />
+
             {tr('tryAgain')}
           </button>
         </div>
@@ -81,254 +196,1024 @@ export function SchemeResult({
     );
   }
 
-  const statusLabel = (status: string): string => {
-    if (status === 'best') return tr('bestMatchStatus');
-    if (status === 'not_suitable') return tr('notSuitable');
+  const statusLabel = (
+    status: string
+  ): string => {
+    if (status === 'best') {
+      return tr('bestMatchStatus');
+    }
+
+    if (
+      status === 'not_suitable'
+    ) {
+      return tr('notSuitable');
+    }
+
     return tr('notApplicable');
   };
 
   return (
-    <div className="portal-section p-5 sm:p-6 animate-slide-up">
-      {/* Result heading */}
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-primary-700 mb-1">
+    <div
+      className="
+        portal-section
+
+        p-5
+        sm:p-6
+
+        animate-slide-up
+
+        bg-white/95
+        backdrop-blur-sm
+
+        border
+        border-slate-200
+
+        shadow-lg
+      "
+    >
+
+      {/* =====================================================
+          RESULT HEADING
+          ===================================================== */}
+
+      <div
+        className="
+          mb-6
+
+          rounded-xl
+
+          bg-white
+
+          border
+          border-slate-200
+
+          p-4
+          sm:p-5
+
+          shadow-sm
+        "
+      >
+        <p
+          className="
+            text-sm
+            font-bold
+
+            text-blue-700
+
+            mb-1
+          "
+        >
           {tr('bestMatch')}
         </p>
 
-        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900">
-          {schemeDisplayName(match.scheme_id, match.scheme_name)}
+        <h2
+          className="
+            text-2xl
+            sm:text-3xl
+
+            font-bold
+
+            text-slate-950
+
+            leading-tight
+          "
+        >
+          {schemeDisplayName(
+            match.scheme_id,
+            match.scheme_name
+          )}
         </h2>
       </div>
 
-      {/* Why this scheme */}
+
+      {/* =====================================================
+          WHY THIS SCHEME
+          ===================================================== */}
+
       <div className="mb-6">
-        <div className="portal-notice border-primary-200 bg-primary-50/60">
-          <div className="flex items-start gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary-100 flex-shrink-0">
-              <CheckCircle2 className="w-5 h-5 text-primary-700" />
+
+        <div
+          className="
+            rounded-xl
+
+            border
+            border-blue-200
+
+            bg-blue-50/95
+
+            p-4
+            sm:p-5
+
+            shadow-sm
+          "
+        >
+
+          <div
+            className="
+              flex
+              items-start
+              gap-3
+            "
+          >
+
+            <div
+              className="
+                flex
+                items-center
+                justify-center
+
+                w-10
+                h-10
+
+                rounded-lg
+
+                bg-blue-100
+
+                flex-shrink-0
+              "
+            >
+              <CheckCircle2
+                className="
+                  w-5
+                  h-5
+
+                  text-blue-700
+                "
+              />
             </div>
 
-            <div>
-              <h3 className="font-semibold text-primary-900 mb-1">
+            <div className="min-w-0">
+
+              <h3
+                className="
+                  font-bold
+
+                  text-blue-950
+
+                  mb-1
+                "
+              >
                 {tr('whyScheme')}
               </h3>
 
-              <p className="text-sm text-primary-800 leading-relaxed">
-                {tr('schemeMatchReason')}
+              <p
+                className="
+                  text-sm
+
+                  text-blue-900
+
+                  leading-relaxed
+                "
+              >
+                {tr(
+                  'schemeMatchReason'
+                )}
               </p>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
 
-      {/* Eligibility checks */}
-      {match.checks && match.checks.length > 0 && (
-        <div className="mb-6">
-          <h3 className="portal-section-title mb-3">
-            {tr('whyScheme')}
-          </h3>
 
-          <div className="border border-slate-200 rounded-md divide-y divide-slate-200">
-            {match.checks.map((check, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 p-3.5"
-              >
-                <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-full flex-shrink-0 ${
-                    check.passed
-                      ? 'bg-success-100'
-                      : 'bg-error-100'
-                  }`}
-                >
-                  {check.passed ? (
-                    <Check className="w-3.5 h-3.5 text-success-600" />
-                  ) : (
-                    <X className="w-3.5 h-3.5 text-error-500" />
-                  )}
-                </div>
+      {/* =====================================================
+          ELIGIBILITY CHECKS
+          ===================================================== */}
 
-                <p className="text-sm text-slate-700 leading-relaxed">
-                  {checkLabel(i, check.label)}
-                </p>
-              </div>
-            ))}
+      {match.checks &&
+        match.checks.length > 0 && (
+          <div className="mb-6">
+
+            <h3
+              className="
+                text-lg
+                font-bold
+
+                text-slate-950
+
+                mb-3
+              "
+            >
+              {tr('whyScheme')}
+            </h3>
+
+            <div
+              className="
+                overflow-hidden
+
+                rounded-xl
+
+                border
+                border-slate-300
+
+                bg-white
+              "
+            >
+
+              {match.checks.map(
+                (check, i) => (
+                  <div
+                    key={i}
+                    className="
+                      flex
+                      items-start
+                      gap-3
+
+                      p-4
+
+                      border-b
+                      border-slate-200
+
+                      last:border-b-0
+                    "
+                  >
+
+                    <div
+                      className={`
+                        flex
+                        items-center
+                        justify-center
+
+                        w-7
+                        h-7
+
+                        rounded-full
+
+                        flex-shrink-0
+
+                        ${
+                          check.passed
+                            ? 'bg-green-100'
+                            : 'bg-red-100'
+                        }
+                      `}
+                    >
+
+                      {check.passed ? (
+                        <Check
+                          className="
+                            w-4
+                            h-4
+                            text-green-700
+                          "
+                        />
+                      ) : (
+                        <X
+                          className="
+                            w-4
+                            h-4
+                            text-red-600
+                          "
+                        />
+                      )}
+
+                    </div>
+
+                    <p
+                      className="
+                        text-sm
+
+                        font-medium
+
+                        text-slate-800
+
+                        leading-relaxed
+                      "
+                    >
+                      {checkLabel(
+                        i,
+                        check.label
+                      )}
+                    </p>
+
+                  </div>
+                )
+              )}
+
+            </div>
+
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Loan summary */}
+
+      {/* =====================================================
+          LOAN SUMMARY
+          ===================================================== */}
+
       <div className="mb-6">
-        <h3 className="portal-section-title mb-3">
+
+        <h3
+          className="
+            text-lg
+            font-bold
+
+            text-slate-950
+
+            mb-3
+          "
+        >
           {tr('loanSummary')}
         </h3>
 
-        <div className="border border-slate-200 rounded-md divide-y divide-slate-200">
-          {/* Project cost */}
-          <div className="flex items-center justify-between gap-4 p-4">
-            <p className="text-sm text-slate-500">
+        <div
+          className="
+            overflow-hidden
+
+            rounded-xl
+
+            border
+            border-slate-300
+
+            bg-white
+
+            shadow-sm
+          "
+        >
+
+          {/* PROJECT COST */}
+
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+
+              sm:items-center
+              sm:justify-between
+
+              gap-2
+              sm:gap-4
+
+              p-4
+
+              border-b
+              border-slate-200
+            "
+          >
+
+            <p
+              className="
+                text-sm
+
+                font-semibold
+
+                text-slate-700
+              "
+            >
               {tr('projectCost')}
             </p>
 
-            <p className="text-base font-semibold text-slate-900 text-right">
-              ₹{match.loan_amount?.toLocaleString('en-IN')}
+            <p
+              className="
+                text-lg
+
+                font-bold
+
+                text-slate-950
+
+                text-left
+                sm:text-right
+
+                break-words
+              "
+            >
+              ₹
+              {match.loan_amount?.toLocaleString(
+                'en-IN'
+              )}
             </p>
+
           </div>
 
-          {/* Financing */}
-          <div className="flex items-center justify-between gap-4 p-4">
-            <p className="text-sm text-slate-500">
-              {tr('potentialFinancing')}
+
+          {/* FINANCING */}
+
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+
+              sm:items-center
+              sm:justify-between
+
+              gap-2
+              sm:gap-4
+
+              p-4
+
+              border-b
+              border-slate-200
+            "
+          >
+
+            <p
+              className="
+                text-sm
+
+                font-semibold
+
+                text-slate-700
+              "
+            >
+              {tr(
+                'potentialFinancing'
+              )}
             </p>
 
-            <p className="text-base font-semibold text-slate-900 text-right">
+            <p
+              className="
+                text-lg
+
+                font-bold
+
+                text-slate-950
+
+                text-left
+                sm:text-right
+              "
+            >
               {match.funding_cap_pct}%
             </p>
+
           </div>
 
-          {/* Interest */}
-          <div className="flex items-start justify-between gap-4 p-4">
-            <p className="text-sm text-slate-500">
+
+          {/* INTEREST */}
+
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+
+              sm:items-start
+              sm:justify-between
+
+              gap-2
+              sm:gap-4
+
+              p-4
+
+              border-b
+              border-slate-200
+            "
+          >
+
+            <p
+              className="
+                text-sm
+
+                font-semibold
+
+                text-slate-700
+              "
+            >
               {tr('interestRate')}
             </p>
 
-            <div className="text-right">
-              <p className="text-base font-semibold text-slate-900">
-                {match.interest_rate_range?.[0]}–
-                {match.interest_rate_range?.[1]}%
-                <span className="text-xs font-normal text-slate-400 ml-1">
+            <div
+              className="
+                text-left
+                sm:text-right
+
+                min-w-0
+              "
+            >
+
+              <p
+                className="
+                  text-lg
+
+                  font-bold
+
+                  text-slate-950
+
+                  break-words
+                "
+              >
+                {match
+                  .interest_rate_range?.[0]}
+                –
+                {match
+                  .interest_rate_range?.[1]}
+                %
+
+                <span
+                  className="
+                    text-sm
+
+                    font-semibold
+
+                    text-slate-700
+
+                    ml-1
+                  "
+                >
                   {tr('perAnnum')}
                 </span>
+
               </p>
 
-              <p className="text-xs text-slate-500 mt-1">
-                * {tr('illustrativeRange')}
+              <p
+                className="
+                  text-xs
+
+                  font-medium
+
+                  text-slate-600
+
+                  mt-1
+                "
+              >
+                * {tr(
+                  'illustrativeRange'
+                )}
               </p>
+
             </div>
+
           </div>
 
-          {/* Moratorium */}
-          <div className="flex items-center justify-between gap-4 p-4">
-            <p className="text-sm text-slate-500">
+
+          {/* MORATORIUM */}
+
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+
+              sm:items-center
+              sm:justify-between
+
+              gap-2
+              sm:gap-4
+
+              p-4
+            "
+          >
+
+            <p
+              className="
+                text-sm
+
+                font-semibold
+
+                text-slate-700
+              "
+            >
               {tr('moratorium')}
             </p>
 
-            <p className="text-base font-semibold text-slate-900 text-right">
-              {match.moratorium_range?.[0]}–
-              {match.moratorium_range?.[1]}
-              <span className="text-sm font-normal text-slate-400 ml-1">
+            <p
+              className="
+                text-lg
+
+                font-bold
+
+                text-slate-950
+
+                text-left
+                sm:text-right
+              "
+            >
+              {match
+                .moratorium_range?.[0]}
+              –
+              {match
+                .moratorium_range?.[1]}
+
+              <span
+                className="
+                  text-sm
+
+                  font-semibold
+
+                  text-slate-700
+
+                  ml-1
+                "
+              >
                 {tr('months')}
               </span>
             </p>
+
           </div>
+
         </div>
+
       </div>
 
-      {/* Compare schemes */}
+
+      {/* =====================================================
+          COMPARE SCHEMES
+          ===================================================== */}
+
       {match.comparisons && (
         <div className="mb-6">
-          <h3 className="portal-section-title mb-3">
-            {tr('compareSchemes')}
+
+          <h3
+            className="
+              text-lg
+              font-bold
+
+              text-slate-950
+
+              mb-3
+            "
+          >
+            {tr(
+              'compareSchemes'
+            )}
           </h3>
 
-          <div className="overflow-x-auto rounded-md border border-slate-200">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+          <div
+            className="
+              overflow-x-auto
+
+              rounded-xl
+
+              border
+              border-slate-300
+
+              bg-white
+
+              shadow-sm
+            "
+          >
+
+            <table
+              className="
+                w-full
+                min-w-[620px]
+
+                text-sm
+              "
+            >
+
+              <thead
+                className="
+                  bg-slate-100
+
+                  text-slate-800
+                "
+              >
+
                 <tr>
-                  <th className="px-4 py-3 text-left font-semibold">
+
+                  <th
+                    className="
+                      px-4
+                      py-3
+
+                      text-left
+
+                      font-bold
+                    "
+                  >
                     {tr('scheme')}
                   </th>
 
-                  <th className="px-4 py-3 text-left font-semibold">
+                  <th
+                    className="
+                      px-4
+                      py-3
+
+                      text-left
+
+                      font-bold
+                    "
+                  >
                     {tr('status')}
                   </th>
 
-                  <th className="px-4 py-3 text-left font-semibold">
+                  <th
+                    className="
+                      px-4
+                      py-3
+
+                      text-left
+
+                      font-bold
+                    "
+                  >
                     {tr('reason')}
                   </th>
+
                 </tr>
+
               </thead>
 
-              <tbody className="divide-y divide-slate-200">
-                {match.comparisons.map((c) => (
-                  <tr
-                    key={c.scheme_id}
-                    className={
-                      c.status === 'best'
-                        ? 'bg-primary-50/50'
-                        : 'bg-white'
-                    }
-                  >
-                    <td className="px-4 py-3 font-medium text-slate-700">
-                      {schemeDisplayName(c.scheme_id, c.scheme_name)}
-                    </td>
+              <tbody
+                className="
+                  divide-y
+                  divide-slate-200
+                "
+              >
 
-                    <td className="px-4 py-3">
-                      <span
-                        className={`text-xs font-semibold px-2 py-1 rounded-md ${
-                          c.status === 'best'
-                            ? 'bg-primary-100 text-primary-700'
-                            : c.status === 'not_applicable'
-                              ? 'bg-slate-100 text-slate-500'
-                              : 'bg-warning-100 text-warning-700'
-                        }`}
+                {match.comparisons.map(
+                  (c) => (
+                    <tr
+                      key={
+                        c.scheme_id
+                      }
+                      className={
+                        c.status ===
+                        'best'
+                          ? 'bg-blue-50/80'
+                          : 'bg-white'
+                      }
+                    >
+
+                      <td
+                        className="
+                          px-4
+                          py-3
+
+                          font-semibold
+
+                          text-slate-900
+                        "
                       >
-                        {statusLabel(c.status)}
-                      </span>
-                    </td>
+                        {schemeDisplayName(
+                          c.scheme_id,
+                          c.scheme_name
+                        )}
+                      </td>
 
-                    <td className="px-4 py-3 text-slate-500 text-xs leading-relaxed">
-                      {comparisonReason(c.reason)}
-                    </td>
-                  </tr>
-                ))}
+                      <td
+                        className="
+                          px-4
+                          py-3
+                        "
+                      >
+
+                        <span
+                          className={`
+                            inline-flex
+
+                            text-xs
+                            font-bold
+
+                            px-2.5
+                            py-1
+
+                            rounded-md
+
+                            ${
+                              c.status ===
+                              'best'
+                                ? `
+                                  bg-blue-100
+                                  text-blue-800
+                                `
+                                : c.status ===
+                                  'not_applicable'
+                                  ? `
+                                    bg-slate-200
+                                    text-slate-700
+                                  `
+                                  : `
+                                    bg-orange-100
+                                    text-orange-800
+                                  `
+                            }
+                          `}
+                        >
+                          {statusLabel(
+                            c.status
+                          )}
+                        </span>
+
+                      </td>
+
+                      <td
+                        className="
+                          px-4
+                          py-3
+
+                          text-slate-700
+
+                          font-medium
+
+                          text-xs
+
+                          leading-relaxed
+                        "
+                      >
+                        {comparisonReason(
+                          c.reason
+                        )}
+                      </td>
+
+                    </tr>
+                  )
+                )}
+
               </tbody>
+
             </table>
+
           </div>
+
         </div>
       )}
 
-      {/* Important notes */}
-      <div className="space-y-3 mb-6">
-        <div className="portal-notice border-warning-200 bg-warning-50">
-          <div className="flex items-start gap-2">
-            <AlertTriangle className="w-4 h-4 text-warning-600 flex-shrink-0 mt-0.5" />
 
-            <p className="text-xs text-warning-800 leading-relaxed">
-              {tr('finalSanctionNote')}
+      {/* =====================================================
+          IMPORTANT NOTES
+          ===================================================== */}
+
+      <div
+        className="
+          space-y-3
+
+          mb-6
+        "
+      >
+
+        {/* Final sanction */}
+
+        <div
+          className="
+            rounded-xl
+
+            border
+            border-orange-200
+
+            bg-orange-50/95
+
+            p-4
+          "
+        >
+
+          <div
+            className="
+              flex
+              items-start
+              gap-3
+            "
+          >
+
+            <AlertTriangle
+              className="
+                w-5
+                h-5
+
+                text-orange-700
+
+                flex-shrink-0
+
+                mt-0.5
+              "
+            />
+
+            <p
+              className="
+                text-sm
+
+                font-medium
+
+                text-orange-950
+
+                leading-relaxed
+              "
+            >
+              {tr(
+                'finalSanctionNote'
+              )}
             </p>
+
           </div>
+
         </div>
 
-        <div className="portal-notice">
-          <div className="flex items-start gap-2">
-            <Info className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />
 
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {tr('prototypeData')}
+        {/* Prototype data */}
+
+        <div
+          className="
+            rounded-xl
+
+            border
+            border-slate-300
+
+            bg-white
+
+            p-4
+          "
+        >
+
+          <div
+            className="
+              flex
+              items-start
+              gap-3
+            "
+          >
+
+            <Info
+              className="
+                w-5
+                h-5
+
+                text-slate-700
+
+                flex-shrink-0
+
+                mt-0.5
+              "
+            />
+
+            <p
+              className="
+                text-sm
+
+                font-medium
+
+                text-slate-700
+
+                leading-relaxed
+              "
+            >
+              {tr(
+                'prototypeData'
+              )}
             </p>
+
           </div>
+
         </div>
+
       </div>
 
-      {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-3">
+
+      {/* =====================================================
+          ACTIONS
+          ===================================================== */}
+
+      <div
+        className="
+          flex
+          flex-col
+          sm:flex-row
+
+          gap-3
+        "
+      >
+
         <button
+          type="button"
           onClick={onProceed}
-          className="btn-primary flex-1"
+          className="
+            btn-primary
+
+            flex-1
+
+            !bg-blue-600
+            hover:!bg-blue-700
+
+            !text-white
+
+            min-h-[48px]
+          "
         >
           {tr('proceedEMI')}
-          <ArrowRight className="w-5 h-5" />
+
+          <ArrowRight
+            className="w-5 h-5"
+          />
         </button>
 
         <button
+          type="button"
           onClick={onReset}
-          className="btn-secondary"
+          className="
+            btn-secondary
+
+            min-h-[48px]
+
+            !bg-white
+            hover:!bg-slate-50
+
+            !text-slate-800
+
+            !border-slate-300
+          "
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw
+            className="w-4 h-4"
+          />
+
           {tr('startOver')}
         </button>
+
       </div>
+
     </div>
   );
 }
