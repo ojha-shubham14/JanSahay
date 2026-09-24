@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   ArrowRight,
   ArrowLeft,
@@ -6,6 +7,7 @@ import {
   Briefcase,
   GraduationCap,
   MapPin,
+  LocateFixed,
   AlertCircle,
   User,
   Home,
@@ -126,10 +128,6 @@ export function GuidedWizard({
     'location',
   ];
 
-  /*
-   * If Business/Education was already selected
-   * from the Home page, don't ask again.
-   */
   const purposePreselected =
     Boolean(initialProfile.purpose);
 
@@ -239,9 +237,7 @@ export function GuidedWizard({
       step === 'course' &&
       !course.trim()
     ) {
-      setError(
-        'Please enter your course'
-      );
+      setError('Please enter your course');
       return;
     }
 
@@ -283,8 +279,6 @@ export function GuidedWizard({
   /*
    * Name + Enter:
    * ONLY move focus to Age.
-   *
-   * Do NOT advance the wizard.
    */
   const handleNameKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>
@@ -461,9 +455,8 @@ export function GuidedWizard({
             s === step;
 
           const isPast =
-            effectiveStepOrder.indexOf(
-              s
-            ) < getStepIndex();
+            effectiveStepOrder.indexOf(s) <
+            getStepIndex();
 
           return (
             <div
@@ -487,11 +480,11 @@ export function GuidedWizard({
       {step === 'details' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             {tr('personalDetails')}
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             {tr('personalDetailsHint')}
           </p>
 
@@ -500,12 +493,11 @@ export function GuidedWizard({
             {/* NAME */}
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-sm font-semibold text-slate-800 sm:text-slate-700 mb-1.5">
                 {tr('questionName')}
               </label>
 
               <div className="relative">
-
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
 
                 <input
@@ -513,9 +505,7 @@ export function GuidedWizard({
                   autoFocus
                   value={name}
                   onChange={(e) =>
-                    setName(
-                      e.target.value
-                    )
+                    setName(e.target.value)
                   }
                   onKeyDown={
                     handleNameKeyDown
@@ -525,14 +515,13 @@ export function GuidedWizard({
                   )}
                   className="input-field pl-10"
                 />
-
               </div>
             </div>
 
             {/* AGE */}
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-sm font-semibold text-slate-800 sm:text-slate-700 mb-1.5">
                 {tr('questionAge')}
               </label>
 
@@ -541,9 +530,7 @@ export function GuidedWizard({
                 type="number"
                 value={age}
                 onChange={(e) =>
-                  setAge(
-                    e.target.value
-                  )
+                  setAge(e.target.value)
                 }
                 onKeyDown={
                   handleAgeKeyDown
@@ -567,16 +554,15 @@ export function GuidedWizard({
       {step === 'income' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             {tr('questionIncome')}
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             {tr('incomeHint')}
           </p>
 
           <div className="relative">
-
             <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
 
             <input
@@ -584,22 +570,22 @@ export function GuidedWizard({
               autoFocus
               value={income}
               onChange={(e) =>
-                setIncome(
-                  e.target.value
-                )
+                setIncome(e.target.value)
               }
-              onKeyDown={(e) =>
-                e.key === 'Enter' &&
-                nextStep()
-              }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  nextStep();
+                }
+              }}
               placeholder={tr(
                 'incomePlaceholder'
               )}
               className="input-field pl-10"
               min="1"
             />
-
           </div>
+
         </div>
       )}
 
@@ -610,11 +596,13 @@ export function GuidedWizard({
       {step === 'purpose' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-5">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-5">
             {tr('questionPurpose')}
           </h2>
 
           <div className="space-y-3">
+
+            {/* BUSINESS */}
 
             <button
               type="button"
@@ -623,19 +611,18 @@ export function GuidedWizard({
                   'business_project'
                 )
               }
-              className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-200 ${
+              className={`w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 ${
                 purpose ===
                 'business_project'
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-slate-200 hover:border-slate-300'
+                  ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-sm'
+                  : 'border-slate-200 bg-white/80 hover:border-blue-300 hover:bg-blue-50/50 text-slate-700'
               }`}
             >
-
               <div
                 className={`flex items-center justify-center w-12 h-12 rounded-xl ${
                   purpose ===
                   'business_project'
-                    ? 'bg-accent-100'
+                    ? 'bg-blue-100'
                     : 'bg-slate-100'
                 }`}
               >
@@ -643,7 +630,7 @@ export function GuidedWizard({
                   className={`w-6 h-6 ${
                     purpose ===
                     'business_project'
-                      ? 'text-accent-600'
+                      ? 'text-blue-600'
                       : 'text-slate-400'
                   }`}
                 />
@@ -653,16 +640,17 @@ export function GuidedWizard({
                 className={`font-semibold text-base ${
                   purpose ===
                   'business_project'
-                    ? 'text-primary-900'
-                    : 'text-slate-600'
+                    ? 'text-blue-900'
+                    : 'text-slate-700 sm:text-slate-600'
                 }`}
               >
                 {tr(
                   'purposeBusiness'
                 )}
               </span>
-
             </button>
+
+            {/* EDUCATION */}
 
             <button
               type="button"
@@ -671,19 +659,18 @@ export function GuidedWizard({
                   'education'
                 )
               }
-              className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-200 ${
+              className={`w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 ${
                 purpose ===
                 'education'
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-slate-200 hover:border-slate-300'
+                  ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-sm'
+                  : 'border-slate-200 bg-white/80 hover:border-blue-300 hover:bg-blue-50/50 text-slate-700'
               }`}
             >
-
               <div
                 className={`flex items-center justify-center w-12 h-12 rounded-xl ${
                   purpose ===
                   'education'
-                    ? 'bg-success-100'
+                    ? 'bg-blue-100'
                     : 'bg-slate-100'
                 }`}
               >
@@ -691,7 +678,7 @@ export function GuidedWizard({
                   className={`w-6 h-6 ${
                     purpose ===
                     'education'
-                      ? 'text-success-600'
+                      ? 'text-blue-600'
                       : 'text-slate-400'
                   }`}
                 />
@@ -701,15 +688,14 @@ export function GuidedWizard({
                 className={`font-semibold text-base ${
                   purpose ===
                   'education'
-                    ? 'text-primary-900'
-                    : 'text-slate-600'
+                    ? 'text-blue-900'
+                    : 'text-slate-700 sm:text-slate-600'
                 }`}
               >
                 {tr(
                   'purposeEducation'
                 )}
               </span>
-
             </button>
 
           </div>
@@ -723,11 +709,11 @@ export function GuidedWizard({
       {step === 'cost' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             {tr('questionCost')}
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             {isEducationFlow
               ? tr(
                   'costEducationHint'
@@ -746,14 +732,14 @@ export function GuidedWizard({
               autoFocus
               value={cost}
               onChange={(e) =>
-                setCost(
-                  e.target.value
-                )
+                setCost(e.target.value)
               }
-              onKeyDown={(e) =>
-                e.key === 'Enter' &&
-                nextStep()
-              }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  nextStep();
+                }
+              }}
               placeholder={
                 isEducationFlow
                   ? 'e.g. 500000'
@@ -775,7 +761,7 @@ export function GuidedWizard({
         'education_status' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-5">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-5">
             {tr(
               'questionEducationStatus'
             )}
@@ -790,11 +776,11 @@ export function GuidedWizard({
                   'pursuing'
                 )
               }
-              className={`w-full p-5 rounded-xl border-2 text-left font-semibold text-base transition-all duration-200 ${
+              className={`w-full p-5 rounded-2xl border-2 text-left font-semibold text-base transition-all duration-200 ${
                 educationStatus ===
                 'pursuing'
-                  ? 'border-primary-500 bg-primary-50 text-primary-900'
-                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                  ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-sm'
+                  : 'border-slate-200 bg-white/80 hover:border-blue-300 hover:bg-blue-50/50 text-slate-700 sm:text-slate-600'
               }`}
             >
               {tr(
@@ -809,11 +795,11 @@ export function GuidedWizard({
                   'planning'
                 )
               }
-              className={`w-full p-5 rounded-xl border-2 text-left font-semibold text-base transition-all duration-200 ${
+              className={`w-full p-5 rounded-2xl border-2 text-left font-semibold text-base transition-all duration-200 ${
                 educationStatus ===
                 'planning'
-                  ? 'border-primary-500 bg-primary-50 text-primary-900'
-                  : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                  ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-sm'
+                  : 'border-slate-200 bg-white/80 hover:border-blue-300 hover:bg-blue-50/50 text-slate-700 sm:text-slate-600'
               }`}
             >
               {tr(
@@ -832,11 +818,11 @@ export function GuidedWizard({
       {step === 'course' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             What course are you studying?
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             Enter the name of your course or program.
           </p>
 
@@ -845,14 +831,14 @@ export function GuidedWizard({
             autoFocus
             value={course}
             onChange={(e) =>
-              setCourse(
-                e.target.value
-              )
+              setCourse(e.target.value)
             }
-            onKeyDown={(e) =>
-              e.key === 'Enter' &&
-              nextStep()
-            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+              }
+            }}
             placeholder="e.g. B.Tech, MBA, B.Sc Nursing"
             className="input-field"
           />
@@ -868,11 +854,11 @@ export function GuidedWizard({
         'institution' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             Which college or institution?
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             Enter the name of your college or educational institution.
           </p>
 
@@ -885,10 +871,12 @@ export function GuidedWizard({
                 e.target.value
               )
             }
-            onKeyDown={(e) =>
-              e.key === 'Enter' &&
-              nextStep()
-            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+              }
+            }}
             placeholder="e.g. Government Engineering College"
             className="input-field"
           />
@@ -903,104 +891,100 @@ export function GuidedWizard({
       {step ===
         'education_verification' &&
         educationVerification && (
-          <div className="animate-fade-in">
+        <div className="animate-fade-in">
 
-            <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-4">
 
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50">
-
-                <GraduationCap className="w-6 h-6 text-primary-600" />
-
-              </div>
-
-              <div>
-
-                <h2 className="text-xl font-bold text-slate-900">
-                  Education recognition check
-                </h2>
-
-                <p className="text-sm text-slate-500">
-                  We checked the course and institution information you provided.
-                </p>
-
-              </div>
-
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50">
+              <GraduationCap className="w-6 h-6 text-primary-600" />
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+            <div>
+              <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900">
+                Education recognition check
+              </h2>
 
-              <div>
-                <p className="text-xs text-slate-500">
-                  Course
-                </p>
-
-                <p className="font-semibold text-slate-900">
-                  {course}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-slate-500">
-                  Institution
-                </p>
-
-                <p className="font-semibold text-slate-900">
-                  {institution}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-slate-500">
-                  Recognition authority
-                </p>
-
-                <p className="font-semibold text-slate-900">
-                  {
-                    educationVerification.authority
-                  }
-                </p>
-              </div>
-
+              <p className="text-sm text-slate-600 sm:text-slate-500">
+                We checked the course and institution information you provided.
+              </p>
             </div>
 
-            <div
-              className={`mt-4 rounded-xl border p-4 ${
-                educationVerification.status ===
-                'verified'
-                  ? 'bg-success-50 border-success-200'
-                  : educationVerification.status ===
-                    'manual_review'
-                    ? 'bg-amber-50 border-amber-200'
-                    : 'bg-error-50 border-error-200'
-              }`}
-            >
+          </div>
 
-              <p className="font-semibold text-slate-900">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
 
-                {educationVerification.status ===
-                'verified'
-                  ? '✓ Recognition found'
-                  : educationVerification.status ===
-                    'manual_review'
-                    ? '⚠ Manual verification recommended'
-                    : '✕ Institution not found'}
-
+            <div>
+              <p className="text-xs text-slate-600 sm:text-slate-500">
+                Course
               </p>
 
-              <p className="text-sm text-slate-600 mt-1">
+              <p className="font-semibold text-slate-950 sm:text-slate-900">
+                {course}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-slate-600 sm:text-slate-500">
+                Institution
+              </p>
+
+              <p className="font-semibold text-slate-950 sm:text-slate-900">
+                {institution}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-slate-600 sm:text-slate-500">
+                Recognition authority
+              </p>
+
+              <p className="font-semibold text-slate-950 sm:text-slate-900">
                 {
-                  educationVerification.message
+                  educationVerification.authority
                 }
               </p>
-
             </div>
 
-            <p className="text-xs text-slate-400 mt-4">
-              This check is for guidance only. Final recognition and loan eligibility are determined by the relevant authority and authorized Channel Partner.
+          </div>
+
+          <div
+            className={`mt-4 rounded-xl border p-4 ${
+              educationVerification.status ===
+              'verified'
+                ? 'bg-success-50 border-success-200'
+                : educationVerification.status ===
+                    'manual_review'
+                  ? 'bg-amber-50 border-amber-200'
+                  : 'bg-error-50 border-error-200'
+            }`}
+          >
+
+            <p className="font-semibold text-slate-950 sm:text-slate-900">
+
+              {educationVerification.status ===
+              'verified'
+                ? '✓ Recognition found'
+                : educationVerification.status ===
+                    'manual_review'
+                  ? '⚠ Manual verification recommended'
+                  : '✕ Institution not found'}
+
+            </p>
+
+            <p className="text-sm text-slate-700 sm:text-slate-600 mt-1">
+              {
+                educationVerification.message
+              }
             </p>
 
           </div>
-        )}
+
+          <p className="text-xs text-slate-400 mt-4">
+            This check is for guidance only. Final recognition and loan eligibility are determined by the relevant authority and authorized Channel Partner.
+          </p>
+
+        </div>
+      )}
 
       {/* =====================================================
           PROJECT TYPE
@@ -1009,13 +993,13 @@ export function GuidedWizard({
       {step === 'project_type' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             {tr(
               'questionProjectType'
             )}
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             {tr(
               'projectTypeHint'
             )}
@@ -1030,10 +1014,12 @@ export function GuidedWizard({
                 e.target.value
               )
             }
-            onKeyDown={(e) =>
-              e.key === 'Enter' &&
-              nextStep()
-            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+              }
+            }}
             placeholder="tailoring, retail, transport..."
             className="input-field"
           />
@@ -1048,19 +1034,62 @@ export function GuidedWizard({
       {step === 'location' && (
         <div className="animate-fade-in">
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-slate-900 mb-2">
             {tr(
               'questionLocation'
             )}
           </h2>
 
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-slate-600 sm:text-slate-500 mb-5">
             {tr(
               'locationHint'
             )}
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {/* CURRENT LOCATION */}
+
+          <button
+            type="button"
+            onClick={
+              handleUseCurrentLocation
+            }
+            disabled={locationLoading}
+            className={`w-full mb-4 flex items-center gap-3 rounded-2xl border-2 px-4 py-4 text-left transition-all duration-200 shadow-sm ${
+              useCurrentLocation
+                ? 'border-blue-500 bg-blue-50 text-blue-950 shadow-md'
+                : 'border-blue-200 bg-blue-50/80 text-slate-800 hover:border-blue-400 hover:bg-blue-100/70 hover:shadow-md'
+            } disabled:cursor-wait disabled:opacity-70`}
+          >
+
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
+              <LocateFixed className="h-5 w-5" />
+            </span>
+
+            <span className="min-w-0 flex-1">
+
+              <span className="block text-sm font-bold text-blue-950 sm:text-base">
+                {locationLoading
+                  ? 'Finding your location…'
+                  : useCurrentLocation
+                    ? 'Current location selected'
+                    : 'Use my current location'}
+              </span>
+
+              <span className="mt-0.5 block text-xs text-blue-700 sm:text-sm">
+                {locationLoading
+                  ? 'Please allow location access in your browser.'
+                  : 'Find nearby authorized partners automatically'}
+              </span>
+
+            </span>
+
+            <ArrowRight className="h-5 w-5 shrink-0 text-blue-600" />
+
+          </button>
+
+          {/* CITY OPTIONS */}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 
             {Object.entries(
               cityCoordinates
@@ -1069,25 +1098,45 @@ export function GuidedWizard({
                 <button
                   type="button"
                   key={key}
-                  onClick={() =>
-                    setCity(key)
-                  }
-                  className={`flex items-center gap-2 p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
-                    city === key
-                      ? 'border-primary-500 bg-primary-50 text-primary-900'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                  onClick={() => {
+                    setCity(key);
+                    setUseCurrentLocation(
+                      false
+                    );
+                    setGpsLocation(null);
+                    setError('');
+                  }}
+                  className={`group flex min-h-[64px] items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left text-sm font-semibold transition-all duration-200 shadow-sm ${
+                    city === key &&
+                    !useCurrentLocation
+                      ? 'border-blue-500 bg-blue-50 text-blue-950 shadow-md'
+                      : 'border-slate-200 bg-white/75 text-slate-800 hover:border-blue-400 hover:bg-blue-50/70 hover:shadow-sm'
                   }`}
                 >
 
-                  <MapPin
-                    className={`w-4 h-4 ${
-                      city === key
-                        ? 'text-primary-600'
-                        : 'text-slate-400'
+                  <span
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+                      city === key &&
+                      !useCurrentLocation
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-blue-50 text-blue-600 group-hover:bg-blue-100 group-hover:text-blue-700'
+                    }`}
+                  >
+                    <MapPin className="h-5 w-5" />
+                  </span>
+
+                  <span className="flex-1">
+                    {cityData.label}
+                  </span>
+
+                  <ArrowRight
+                    className={`h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5 ${
+                      city === key &&
+                      !useCurrentLocation
+                        ? 'text-blue-700'
+                        : 'text-slate-400 group-hover:text-blue-600'
                     }`}
                   />
-
-                  {cityData.label}
 
                 </button>
               )
@@ -1137,15 +1186,15 @@ export function GuidedWizard({
               Not eligible
             </h3>
 
-            <p className="mt-3 text-sm leading-6 text-center text-slate-600 dark:text-slate-300">
+            <p className="mt-3 text-sm leading-6 text-center text-slate-700 sm:text-slate-600 dark:text-slate-300">
+
               Family income ₹
-              {Number(
-                income
-              ).toLocaleString(
+              {Number(income).toLocaleString(
                 'en-IN'
               )}{' '}
               exceeds the
               ₹5,00,000 SC eligibility limit.
+
             </p>
 
             <button
@@ -1154,16 +1203,34 @@ export function GuidedWizard({
                 setShowIncomeLimitPopup(
                   false
                 );
-
                 setIncome('');
               }}
-              className="mt-6 mx-auto flex items-center justify-center gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50 transition dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="
+                mt-6
+                mx-auto
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                border-2
+                border-red-600
+                bg-red-600
+                px-6
+                py-3
+                font-semibold
+                text-white
+                shadow-sm
+                hover:bg-red-700
+                transition
+                focus:outline-none
+                focus:ring-2
+                focus:ring-red-500
+                focus:ring-offset-2
+              "
             >
-
               <ArrowLeft className="w-4 h-4" />
-
               Try again
-
             </button>
 
           </div>
@@ -1173,50 +1240,64 @@ export function GuidedWizard({
 
       {/* =====================================================
           NAVIGATION
-          
-          IMPORTANT:
-          !flex !flex-row forces the icon and text to stay
-          horizontally together even if the global button
-          styles try to change the layout.
           ===================================================== */}
 
       <div className="flex items-center gap-3 mt-6">
 
-        {/* BACK */}
+        {/* BACK — RED */}
 
         <button
           type="button"
           onClick={prevStep}
           className="
-            btn-secondary
-            !flex
-            !flex-row
-            !items-center
-            !justify-center
-            !gap-2
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-red-600
+            px-5
+            py-3
+            font-semibold
+            text-white
+            shadow-sm
+            transition
+            hover:bg-red-700
+            focus:outline-none
+            focus:ring-2
+            focus:ring-red-500
+            focus:ring-offset-2
             whitespace-nowrap
           "
         >
-          <ArrowLeft className="w-5 h-5 shrink-0" />
-
-          <span>
-            {tr('back')}
-          </span>
+          <ArrowLeft className="w-5 h-5" />
+          {tr('back')}
         </button>
 
-        {/* NEXT */}
+        {/* NEXT — GREEN */}
 
         <button
           type="button"
           onClick={nextStep}
           className="
-            btn-primary
+            inline-flex
             flex-1
-            !flex
-            !flex-row
-            !items-center
-            !justify-center
-            !gap-2
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-green-600
+            px-5
+            py-3
+            font-semibold
+            text-white
+            shadow-sm
+            transition
+            hover:bg-green-700
+            focus:outline-none
+            focus:ring-2
+            focus:ring-green-500
+            focus:ring-offset-2
             whitespace-nowrap
           "
         >
@@ -1226,29 +1307,37 @@ export function GuidedWizard({
               : tr('next')}
           </span>
 
-          <ArrowRight className="w-5 h-5 shrink-0" />
+          <ArrowRight className="w-5 h-5" />
         </button>
 
-        {/* HOME */}
+        {/* HOME — BLUE */}
 
         <button
           type="button"
           onClick={onBack}
           className="
-            btn-ghost
-            !flex
-            !flex-row
-            !items-center
-            !justify-center
-            !gap-2
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-blue-600
+            px-5
+            py-3
+            font-semibold
+            text-white
+            shadow-sm
+            transition
+            hover:bg-blue-700
+            focus:outline-none
+            focus:ring-2
+            focus:ring-blue-500
+            focus:ring-offset-2
             whitespace-nowrap
           "
         >
-          <Home className="w-5 h-5 shrink-0" />
-
-          <span>
-            Home
-          </span>
+          <Home className="w-5 h-5" />
+          <span>Home</span>
         </button>
 
       </div>

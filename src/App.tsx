@@ -437,54 +437,62 @@ function App() {
             =================================================== */}
 
         {isFlowScreen && (
-          <div
-            className="
-              flex
-              items-center
-              justify-between
-              mb-4
-            "
-          >
+  <div className="flex items-center justify-between mb-4 gap-3">
+    <button
+      onClick={handlePrevious}
+      className="
+        inline-flex
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        bg-red-600
+        px-5
+        py-2.5
+        text-sm
+        font-semibold
+        text-white
+        shadow-sm
+        transition
+        hover:bg-red-700
+        focus:outline-none
+        focus:ring-2
+        focus:ring-red-500
+        focus:ring-offset-2
+      "
+    >
+      <ArrowLeft className="w-4 h-4" />
+      Back
+    </button>
 
-            <button
-              onClick={
-                handlePrevious
-              }
-              className="
-                btn-secondary
-              "
-            >
-              <ArrowLeft
-                className="
-                  w-4
-                  h-4
-                "
-              />
-
-              Back
-            </button>
-
-
-            <button
-              onClick={
-                handleReset
-              }
-              className="
-                btn-ghost
-              "
-            >
-              <Home
-                className="
-                  w-4
-                  h-4
-                "
-              />
-
-              Home
-            </button>
-
-          </div>
-        )}
+    <button
+      onClick={handleReset}
+      className="
+        inline-flex
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        bg-blue-600
+        px-5
+        py-2.5
+        text-sm
+        font-semibold
+        text-white
+        shadow-sm
+        transition
+        hover:bg-blue-700
+        focus:outline-none
+        focus:ring-2
+        focus:ring-blue-500
+        focus:ring-offset-2
+      "
+    >
+      <Home className="w-4 h-4" />
+      Home
+    </button>
+  </div>
+)}
 
 
         {/* ===================================================

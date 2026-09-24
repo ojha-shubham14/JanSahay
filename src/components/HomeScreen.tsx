@@ -51,10 +51,6 @@ export function HomeScreen({
     setSelectedLanguage,
   ] = useState<Language>(lang);
 
-  /* =========================================================
-     LANGUAGES
-     ========================================================= */
-
   const languages: {
     code: Language;
     native: string;
@@ -93,11 +89,6 @@ export function HomeScreen({
 
       {/* =====================================================
           LANGUAGE POPUP
-          
-          IMPORTANT:
-          The background is controlled globally by App.tsx.
-
-          This popup only sits above that background.
           ===================================================== */}
 
       {showLanguageModal && (
@@ -126,7 +117,7 @@ export function HomeScreen({
               w-full
               max-w-lg
 
-              rounded-xl
+              rounded-2xl
 
               bg-white
 
@@ -142,9 +133,7 @@ export function HomeScreen({
             "
           >
 
-            {/* =================================================
-                GLOBE
-                ================================================= */}
+            {/* Globe */}
 
             <div className="flex justify-center mb-4">
 
@@ -168,10 +157,7 @@ export function HomeScreen({
 
             </div>
 
-
-            {/* =================================================
-                HEADING
-                ================================================= */}
+            {/* Heading */}
 
             <h2
               className="
@@ -181,23 +167,21 @@ export function HomeScreen({
                 font-bold
                 text-center
 
-                text-slate-900
+                text-slate-950
               "
             >
               {tr('languagePrompt')}
             </h2>
 
-
-            {/* =================================================
-                SUBTITLE
-                ================================================= */}
+            {/* Subtitle */}
 
             <p
               className="
                 text-sm
                 text-center
 
-                text-slate-500
+                text-slate-600
+                sm:text-slate-500
 
                 mt-2
               "
@@ -205,10 +189,7 @@ export function HomeScreen({
               {tr('languagePromptSubtitle')}
             </p>
 
-
-            {/* =================================================
-                LANGUAGE OPTIONS
-                ================================================= */}
+            {/* Language options */}
 
             <div
               className="
@@ -238,30 +219,30 @@ export function HomeScreen({
                         )
                       }
                       className={`
-                        rounded-lg
+                        rounded-xl
                         border-2
 
                         px-3
                         py-3
 
-                        transition-colors
-                        duration-150
+                        transition-all
+                        duration-200
 
                         ${
                           selected
                             ? `
                               border-primary-500
                               bg-primary-50
-                              text-primary-700
+                              text-primary-800
                               shadow-sm
                             `
                             : `
                               border-slate-200
                               bg-white
-                              text-slate-700
+                              text-slate-800
 
                               hover:border-primary-300
-                              hover:bg-primary-50/50
+                              hover:bg-primary-50/60
                             `
                         }
                       `}
@@ -293,10 +274,7 @@ export function HomeScreen({
 
             </div>
 
-
-            {/* =================================================
-                CONTINUE
-                ================================================= */}
+            {/* Continue */}
 
             <button
               type="button"
@@ -311,7 +289,6 @@ export function HomeScreen({
               }}
               className="
                 w-full
-
                 mt-6
 
                 inline-flex
@@ -319,9 +296,10 @@ export function HomeScreen({
                 justify-center
                 gap-2
 
-                rounded-md
+                rounded-xl
 
-                bg-primary-600
+                bg-blue-600
+                hover:bg-blue-700
 
                 px-5
                 py-3.5
@@ -329,12 +307,15 @@ export function HomeScreen({
                 text-white
                 font-semibold
 
-                hover:bg-primary-700
-
-                transition-colors
-                duration-150
-
                 shadow-sm
+
+                transition-all
+                duration-200
+
+                focus:outline-none
+                focus:ring-2
+                focus:ring-blue-500
+                focus:ring-offset-2
               "
             >
 
@@ -351,18 +332,12 @@ export function HomeScreen({
         </div>
       )}
 
-
       {/* =====================================================
           MAIN JANSAHAY CONTENT
-          
-          IMPORTANT:
-          There is NO background image here.
-
-          App.tsx owns the single global background.
+          App.tsx owns the global background.
           ===================================================== */}
 
       <div className="relative z-10">
-
 
         {/* ===================================================
             HERO
@@ -387,35 +362,25 @@ export function HomeScreen({
 
             px-4
             sm:px-6
-
-            lg:px-0
-            lg:max-w-6xl
-            lg:mx-auto
           "
         >
 
-          <div className="w-full lg:max-w-6xl lg:mx-auto">
+          <div className="w-full">
 
-
-            {/* =================================================
-                HERO HEADING
-                ================================================= */}
+            {/* Hero heading */}
 
             <h2
               className="
                 text-3xl
                 sm:text-4xl
-                lg:text-5xl
-                xl:text-6xl
 
                 font-bold
 
-                text-slate-900
+                text-slate-950
+                sm:text-slate-900
 
                 max-w-2xl
                 mx-auto
-
-                lg:max-w-4xl
 
                 leading-tight
 
@@ -425,14 +390,12 @@ export function HomeScreen({
               {tr('heroTitle')}
             </h2>
 
-
-            {/* =================================================
-                HERO SUBTITLE
-                ================================================= */}
+            {/* Hero subtitle */}
 
             <p
               className="
-                text-slate-700
+                text-slate-800
+                sm:text-slate-700
 
                 mt-4
 
@@ -441,7 +404,6 @@ export function HomeScreen({
 
                 text-base
                 sm:text-lg
-                lg:text-xl
 
                 leading-relaxed
 
@@ -451,10 +413,7 @@ export function HomeScreen({
               {tr('heroSubtitle')}
             </p>
 
-
-            {/* =================================================
-                PRIMARY ACTION
-                ================================================= */}
+            {/* Main actions */}
 
             <div
               className="
@@ -464,13 +423,10 @@ export function HomeScreen({
 
                 max-w-xl
                 mx-auto
-
-                lg:max-w-4xl
               "
             >
-              {/* =================================================
-                  PURPOSE CHOICES
-                  ================================================= */}
+
+              {/* Business + Education */}
 
               <div
                 className="
@@ -478,14 +434,10 @@ export function HomeScreen({
                   grid-cols-2
 
                   gap-3
-                  lg:gap-5
                 "
               >
 
-
-                {/* =================================================
-                    BUSINESS
-                    ================================================= */}
+                {/* Business */}
 
                 <button
                   type="button"
@@ -503,24 +455,22 @@ export function HomeScreen({
                     p-4
                     sm:p-5
 
-                    lg:p-6
-                    lg:min-h-[120px]
-
-                    rounded-md
+                    rounded-2xl
 
                     bg-white/90
                     backdrop-blur-sm
 
-                    border
-                    border-slate-300
+                    border-2
+                    border-slate-200
 
                     shadow-sm
 
-                    hover:border-primary-400
+                    hover:border-blue-400
                     hover:bg-white
+                    hover:shadow-md
 
-                    transition-colors
-                    duration-150
+                    transition-all
+                    duration-200
 
                     text-left
                   "
@@ -533,17 +483,17 @@ export function HomeScreen({
 
                       sm:w-8
                       sm:h-8
-                      lg:w-10
-                      lg:h-10
 
-                      text-accent-600
+                      text-blue-600
 
                       flex-shrink-0
                     "
                   />
 
                   <div
-                    className="min-w-0"
+                    className="
+                      min-w-0
+                    "
                   >
 
                     <span
@@ -552,11 +502,10 @@ export function HomeScreen({
 
                         text-sm
                         sm:text-base
-                        lg:text-lg
 
                         font-semibold
 
-                        text-slate-800
+                        text-slate-900
                       "
                     >
                       {tr('businessLoan')}
@@ -568,9 +517,8 @@ export function HomeScreen({
                         sm:block
 
                         text-xs
-                        lg:text-sm
 
-                        text-slate-500
+                        text-slate-600
 
                         mt-1
                       "
@@ -583,10 +531,7 @@ export function HomeScreen({
 
                 </button>
 
-
-                {/* =================================================
-                    EDUCATION
-                    ================================================= */}
+                {/* Education */}
 
                 <button
                   type="button"
@@ -604,21 +549,22 @@ export function HomeScreen({
                     p-4
                     sm:p-5
 
-                    rounded-md
+                    rounded-2xl
 
                     bg-white/90
                     backdrop-blur-sm
 
-                    border
-                    border-slate-300
+                    border-2
+                    border-slate-200
 
                     shadow-sm
 
-                    hover:border-primary-400
+                    hover:border-blue-400
                     hover:bg-white
+                    hover:shadow-md
 
-                    transition-colors
-                    duration-150
+                    transition-all
+                    duration-200
 
                     text-left
                   "
@@ -632,14 +578,16 @@ export function HomeScreen({
                       sm:w-8
                       sm:h-8
 
-                      text-primary-600
+                      text-blue-600
 
                       flex-shrink-0
                     "
                   />
 
                   <div
-                    className="min-w-0"
+                    className="
+                      min-w-0
+                    "
                   >
 
                     <span
@@ -651,7 +599,7 @@ export function HomeScreen({
 
                         font-semibold
 
-                        text-slate-800
+                        text-slate-900
                       "
                     >
                       {tr('educationLoan')}
@@ -664,7 +612,7 @@ export function HomeScreen({
 
                         text-xs
 
-                        text-slate-500
+                        text-slate-600
 
                         mt-1
                       "
@@ -678,9 +626,7 @@ export function HomeScreen({
 
               </div>
 
-              {/* =================================================
-                  OR DIVIDER
-                  ================================================= */}
+              {/* OR */}
 
               <div
                 className="
@@ -696,8 +642,7 @@ export function HomeScreen({
                   className="
                     flex-1
                     h-px
-
-                    bg-slate-400
+                    bg-slate-500
                   "
                 />
 
@@ -706,7 +651,7 @@ export function HomeScreen({
                     text-xs
                     font-medium
 
-                    text-slate-600
+                    text-slate-700
 
                     uppercase
                     tracking-wide
@@ -719,12 +664,13 @@ export function HomeScreen({
                   className="
                     flex-1
                     h-px
-
-                    bg-slate-400
+                    bg-slate-500
                   "
                 />
 
               </div>
+
+              {/* Conversation */}
 
               <button
                 type="button"
@@ -743,23 +689,20 @@ export function HomeScreen({
                   p-4
                   sm:p-5
 
-                  lg:p-6
+                  rounded-2xl
 
-                  rounded-md
+                  bg-blue-600
+                  hover:bg-blue-700
 
-                  bg-primary-700
                   text-white
 
-                  hover:bg-primary-800
-
-                  transition-colors
-                  duration-150
+                  transition-all
+                  duration-200
 
                   shadow-md
+                  hover:shadow-lg
                 "
               >
-
-                {/* Microphone */}
 
                 <div
                   className="
@@ -770,20 +713,15 @@ export function HomeScreen({
                     w-10
                     h-10
 
-                    rounded-md
+                    rounded-xl
 
                     bg-white/15
 
                     flex-shrink-0
                   "
                 >
-                  <Mic
-                    className="w-5 h-5"
-                  />
+                  <Mic className="w-5 h-5" />
                 </div>
-
-
-                {/* Text */}
 
                 <div
                   className="
@@ -807,7 +745,7 @@ export function HomeScreen({
                       text-xs
                       sm:text-sm
 
-                      text-primary-100
+                      text-blue-100
 
                       mt-0.5
                     "
@@ -817,9 +755,6 @@ export function HomeScreen({
                   </p>
 
                 </div>
-
-
-                {/* Arrow */}
 
                 <ArrowRight
                   className="
@@ -831,12 +766,10 @@ export function HomeScreen({
                 />
 
               </button>
+
             </div>
 
-
-            {/* =================================================
-                SCROLL INDICATOR
-                ================================================= */}
+            {/* Scroll indicator */}
 
             <div
               className="
@@ -846,7 +779,7 @@ export function HomeScreen({
                 flex-col
                 items-center
 
-                text-slate-500
+                text-slate-700
               "
             >
 
@@ -879,7 +812,6 @@ export function HomeScreen({
 
         </section>
 
-
         {/* ===================================================
             BELOW THE FOLD
             =================================================== */}
@@ -887,30 +819,18 @@ export function HomeScreen({
         <section
           className="
             mt-4
-
             space-y-5
-
             pb-8
-
             px-4
             sm:px-6
-
-            lg:px-0
-            lg:max-w-6xl
-            lg:mx-auto
           "
         >
 
-
-          {/* =================================================
-              KEY BENEFITS
-              ================================================= */}
+          {/* Benefits */}
 
           <div
             className="
               portal-section
-
-              lg:p-8
 
               bg-white/80
               backdrop-blur-sm
@@ -927,9 +847,6 @@ export function HomeScreen({
               "
             >
 
-
-              {/* Simple */}
-
               <div className="text-center">
 
                 <div
@@ -945,7 +862,7 @@ export function HomeScreen({
                 <p
                   className="
                     font-semibold
-                    text-slate-800
+                    text-slate-900
                     text-sm
                   "
                 >
@@ -955,8 +872,7 @@ export function HomeScreen({
                 <p
                   className="
                     text-xs
-                    text-slate-500
-
+                    text-slate-600
                     mt-1
                   "
                 >
@@ -965,9 +881,6 @@ export function HomeScreen({
                 </p>
 
               </div>
-
-
-              {/* Languages */}
 
               <div className="text-center">
 
@@ -984,7 +897,7 @@ export function HomeScreen({
                 <p
                   className="
                     font-semibold
-                    text-slate-800
+                    text-slate-900
                     text-sm
                   "
                 >
@@ -994,8 +907,7 @@ export function HomeScreen({
                 <p
                   className="
                     text-xs
-                    text-slate-500
-
+                    text-slate-600
                     mt-1
                   "
                 >
@@ -1004,9 +916,6 @@ export function HomeScreen({
                 </p>
 
               </div>
-
-
-              {/* Clear Information */}
 
               <div className="text-center">
 
@@ -1023,7 +932,7 @@ export function HomeScreen({
                 <p
                   className="
                     font-semibold
-                    text-slate-800
+                    text-slate-900
                     text-sm
                   "
                 >
@@ -1033,8 +942,7 @@ export function HomeScreen({
                 <p
                   className="
                     text-xs
-                    text-slate-500
-
+                    text-slate-600
                     mt-1
                   "
                 >
@@ -1042,9 +950,6 @@ export function HomeScreen({
                 </p>
 
               </div>
-
-
-              {/* Citizen Friendly */}
 
               <div className="text-center">
 
@@ -1061,7 +966,7 @@ export function HomeScreen({
                 <p
                   className="
                     font-semibold
-                    text-slate-800
+                    text-slate-900
                     text-sm
                   "
                 >
@@ -1071,8 +976,7 @@ export function HomeScreen({
                 <p
                   className="
                     text-xs
-                    text-slate-500
-
+                    text-slate-600
                     mt-1
                   "
                 >
@@ -1085,16 +989,11 @@ export function HomeScreen({
 
           </div>
 
-
-          {/* =================================================
-              HOW JANSAHAY HELPS
-              ================================================= */}
+          {/* How JanSahay helps */}
 
           <div
             className="
               portal-section
-
-              lg:p-8
 
               bg-white/80
               backdrop-blur-sm
@@ -1109,7 +1008,6 @@ export function HomeScreen({
             >
               How JanSahay helps you
             </h3>
-
 
             <div
               className="
@@ -1148,7 +1046,6 @@ export function HomeScreen({
                 },
               ].map(
                 (item) => (
-
                   <div
                     key={item.number}
                     className="
@@ -1180,14 +1077,13 @@ export function HomeScreen({
                       {item.number}
                     </div>
 
-
                     <div>
 
                       <p
                         className="
                           font-semibold
 
-                          text-slate-800
+                          text-slate-900
                           text-sm
                         "
                       >
@@ -1198,7 +1094,7 @@ export function HomeScreen({
                         className="
                           text-xs
 
-                          text-slate-500
+                          text-slate-600
 
                           mt-1
 
@@ -1211,7 +1107,6 @@ export function HomeScreen({
                     </div>
 
                   </div>
-
                 )
               )}
 
@@ -1219,16 +1114,11 @@ export function HomeScreen({
 
           </div>
 
-
-          {/* =================================================
-              IMPORTANT INFORMATION
-              ================================================= */}
+          {/* Important information */}
 
           <div
             className="
               portal-notice
-
-              lg:p-6
 
               bg-white/85
               backdrop-blur-sm
@@ -1256,7 +1146,7 @@ export function HomeScreen({
                   className="
                     font-semibold
 
-                    text-slate-800
+                    text-slate-900
                     text-sm
                   "
                 >
@@ -1267,7 +1157,7 @@ export function HomeScreen({
                   className="
                     text-xs
 
-                    text-slate-600
+                    text-slate-700
 
                     mt-1
 
