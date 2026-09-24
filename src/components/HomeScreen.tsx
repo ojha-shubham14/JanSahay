@@ -41,11 +41,9 @@ export function HomeScreen({
     key: TranslationKey
   ) => t(lang, key);
 
-  /*
-   * ============================================================
-   * JANSAHAY SPLASH SCREEN
-   * ============================================================
-   */
+  /* ============================================================
+     JANSAHAY SPLASH
+     ============================================================ */
 
   const [
     showSplash,
@@ -68,11 +66,9 @@ export function HomeScreen({
     };
   }, []);
 
-  /*
-   * ============================================================
-   * LANGUAGE
-   * ============================================================
-   */
+  /* ============================================================
+     LANGUAGE
+     ============================================================ */
 
   const [
     selectedLanguage,
@@ -120,37 +116,397 @@ export function HomeScreen({
           ===================================================== */}
 
       {showSplash && (
-        <>
+        <div
+          className="
+            fixed
+            inset-0
+            z-[300]
+
+            overflow-hidden
+
+            bg-[#eef8ff]
+
+            animate-jansahay-splash
+          "
+        >
+
+          {/* =================================================
+              DESKTOP BACKGROUND
+              ================================================= */}
+
+          <div
+            className="
+              absolute
+              inset-0
+
+              hidden
+              sm:block
+
+              bg-cover
+              bg-center
+              bg-no-repeat
+            "
+            style={{
+              backgroundImage:
+                `url("${import.meta.env.BASE_URL}images/jansahay-splash-desktop.png")`,
+            }}
+          />
+
+          {/* =================================================
+              MOBILE BACKGROUND
+              ================================================= */}
+
+          <div
+            className="
+              absolute
+              inset-0
+
+              block
+              sm:hidden
+
+              bg-cover
+              bg-center
+              bg-no-repeat
+            "
+            style={{
+              backgroundImage:
+                `url("${import.meta.env.BASE_URL}images/jansahay-splash-mobile.png")`,
+            }}
+          />
+
+          {/* =================================================
+              SOFT OVERLAY
+              ================================================= */}
+
+          <div
+            className="
+              absolute
+              inset-0
+
+              bg-white/10
+
+              pointer-events-none
+            "
+          />
+
+          {/* =================================================
+              CENTER ANIMATION
+
+              IMPORTANT:
+              This container itself is exactly centered
+              in the entire viewport.
+
+              The logo and rings are both children of this
+              SAME center point.
+              ================================================= */}
+
+          <div
+            className="
+              absolute
+              inset-0
+
+              flex
+              items-center
+              justify-center
+
+              pointer-events-none
+            "
+          >
+
+            {/* =================================================
+                RINGS
+
+                They are centered using absolute positioning
+                relative to this exact center point.
+                ================================================= */}
+
+            <div
+              className="
+                absolute
+
+                w-0
+                h-0
+
+                flex
+                items-center
+                justify-center
+              "
+            >
+
+              <span
+                className="
+                  absolute
+
+                  w-[250px]
+                  h-[250px]
+
+                  sm:w-[300px]
+                  sm:h-[300px]
+
+                  rounded-full
+
+                  border-2
+                  border-blue-500/20
+
+                  animate-jansahay-ring-1
+                "
+              />
+
+              <span
+                className="
+                  absolute
+
+                  w-[350px]
+                  h-[350px]
+
+                  sm:w-[420px]
+                  sm:h-[420px]
+
+                  rounded-full
+
+                  border-2
+                  border-blue-500/15
+
+                  animate-jansahay-ring-2
+                "
+              />
+
+              <span
+                className="
+                  absolute
+
+                  w-[450px]
+                  h-[450px]
+
+                  sm:w-[540px]
+                  sm:h-[540px]
+
+                  rounded-full
+
+                  border-2
+                  border-blue-500/10
+
+                  animate-jansahay-ring-3
+                "
+              />
+
+              <span
+                className="
+                  absolute
+
+                  w-[550px]
+                  h-[550px]
+
+                  sm:w-[660px]
+                  sm:h-[660px]
+
+                  rounded-full
+
+                  border-2
+                  border-blue-500/10
+
+                  animate-jansahay-ring-4
+                "
+              />
+
+            </div>
+
+            {/* =================================================
+                JANSAHAY BRANDING
+
+                Same exact center as the rings.
+                ================================================= */}
+
+            <div
+              className="
+                relative
+                z-20
+
+                flex
+                flex-col
+                items-center
+                justify-center
+
+                text-center
+              "
+            >
+
+              {/* =================================================
+                  LOGO
+                  ================================================= */}
+
+              <div
+                className="
+                  animate-jansahay-logo
+                "
+              >
+
+                <div
+                  className="
+                    flex
+                    items-center
+                    justify-center
+
+                    w-24
+                    h-24
+
+                    sm:w-32
+                    sm:h-32
+
+                    rounded-[24px]
+                    sm:rounded-[30px]
+
+                    bg-blue-600
+
+                    border
+                    border-white/90
+
+                    shadow-2xl
+                  "
+                >
+
+                  <svg
+                    viewBox="0 0 100 100"
+                    className="
+                      w-14
+                      h-14
+
+                      sm:w-20
+                      sm:h-20
+
+                      text-white
+                    "
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+
+                    <path d="M18 38 L50 16 L82 38" />
+
+                    <path d="M25 38 H75" />
+
+                    <path d="M30 40 V70" />
+
+                    <path d="M43 40 V70" />
+
+                    <path d="M57 40 V70" />
+
+                    <path d="M70 40 V70" />
+
+                    <path d="M20 74 H80" />
+
+                    <path d="M15 82 H85" />
+
+                  </svg>
+
+                </div>
+
+              </div>
+
+              {/* =================================================
+                  JANSAHAY TEXT
+                  ================================================= */}
+
+              <h1
+                className="
+                  mt-5
+                  sm:mt-6
+
+                  text-4xl
+                  sm:text-6xl
+
+                  font-extrabold
+
+                  tracking-tight
+
+                  text-[#06245b]
+
+                  drop-shadow-sm
+
+                  animate-jansahay-text
+                "
+              >
+                JanSahay
+              </h1>
+
+              {/* =================================================
+                  TAGLINE
+                  ================================================= */}
+
+              <p
+                className="
+                  mt-2
+                  sm:mt-3
+
+                  max-w-[340px]
+                  sm:max-w-none
+
+                  text-base
+                  sm:text-xl
+
+                  font-medium
+
+                  leading-relaxed
+
+                  text-[#385477]
+
+                  drop-shadow-sm
+
+                  animate-jansahay-subtitle
+                "
+              >
+                Find the right government
+                loan scheme.
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* =================================================
+              SPLASH ANIMATION CSS
+              ================================================= */}
+
           <style>
             {`
-              /* =================================================
-                 SPLASH FADE
-                 ================================================= */
 
-              @keyframes splashFadeIn {
+              /* ===============================================
+                 WHOLE SPLASH
+                 =============================================== */
+
+              @keyframes jansahaySplash {
+
                 0% {
-                  opacity: 0;
-                }
-
-                10% {
                   opacity: 1;
                 }
 
-                82% {
+                88% {
                   opacity: 1;
                 }
 
                 100% {
                   opacity: 0;
                 }
+
+              }
+
+              .animate-jansahay-splash {
+                animation:
+                  jansahaySplash
+                  5s
+                  ease-in-out
+                  forwards;
               }
 
 
-              /* =================================================
-                 LOGO ENTRANCE
-                 ================================================= */
+              /* ===============================================
+                 LOGO
+                 =============================================== */
 
-              @keyframes splashLogoIn {
+              @keyframes jansahayLogo {
+
                 0% {
                   opacity: 0;
                   transform: scale(0.82);
@@ -165,30 +521,24 @@ export function HomeScreen({
                   opacity: 1;
                   transform: scale(1);
                 }
+
+              }
+
+              .animate-jansahay-logo {
+                animation:
+                  jansahayLogo
+                  1.2s
+                  ease-out
+                  both;
               }
 
 
-              /* =================================================
-                 LOGO SOFT PULSE
-                 ================================================= */
+              /* ===============================================
+                 JANSAHAY TEXT
+                 =============================================== */
 
-              @keyframes splashLogoPulse {
-                0%,
-                100% {
-                  transform: scale(1);
-                }
+              @keyframes jansahayText {
 
-                50% {
-                  transform: scale(1.045);
-                }
-              }
-
-
-              /* =================================================
-                 TEXT ENTRANCE
-                 ================================================= */
-
-              @keyframes splashTextIn {
                 0% {
                   opacity: 0;
                   transform: translateY(12px);
@@ -203,627 +553,164 @@ export function HomeScreen({
                   opacity: 1;
                   transform: translateY(0);
                 }
+
               }
 
-
-              /* =================================================
-                 RING ANIMATION
-                 ================================================= */
-
-              @keyframes splashRing {
-                0% {
-                  transform:
-                    translate(-50%, -50%)
-                    scale(0.55);
-
-                  opacity: 0.45;
-                }
-
-                12% {
-                  opacity: 0.55;
-                }
-
-                40% {
-                  opacity: 0.38;
-                }
-
-                70% {
-                  opacity: 0.18;
-                }
-
-                100% {
-                  transform:
-                    translate(-50%, -50%)
-                    scale(1.45);
-
-                  opacity: 0;
-                }
-              }
-
-
-              /* =================================================
-                 SECONDARY RING
-                 ================================================= */
-
-              @keyframes splashRingSoft {
-                0% {
-                  transform:
-                    translate(-50%, -50%)
-                    scale(0.60);
-
-                  opacity: 0.30;
-                }
-
-                15% {
-                  opacity: 0.38;
-                }
-
-                65% {
-                  opacity: 0.12;
-                }
-
-                100% {
-                  transform:
-                    translate(-50%, -50%)
-                    scale(1.55);
-
-                  opacity: 0;
-                }
-              }
-
-
-              /* =================================================
-                 SPLASH CONTAINER
-                 ================================================= */
-
-              .jansahay-splash {
+              .animate-jansahay-text {
                 animation:
-                  splashFadeIn
-                  5s
-                  ease-in-out
-                  forwards;
-              }
-
-
-              /* =================================================
-                 LOGO
-                 ================================================= */
-
-              .jansahay-splash-logo {
-                animation:
-                  splashLogoIn
-                  1.2s
-                  ease-out
-                  both;
-              }
-
-
-              .jansahay-splash-logo-inner {
-                animation:
-                  splashLogoPulse
-                  2.8s
-                  ease-in-out
-                  1.2s
-                  infinite;
-              }
-
-
-              /* =================================================
-                 TEXT
-                 ================================================= */
-
-              .jansahay-splash-text {
-                animation:
-                  splashTextIn
-                  1.2s
+                  jansahayText
+                  1.1s
                   ease-out
                   0.25s
                   both;
               }
 
 
-              .jansahay-splash-subtitle {
+              /* ===============================================
+                 TAGLINE
+                 =============================================== */
+
+              .animate-jansahay-subtitle {
                 animation:
-                  splashTextIn
-                  1.2s
+                  jansahayText
+                  1.1s
                   ease-out
                   0.45s
                   both;
               }
 
 
-              /* =================================================
-                 RINGS
-                 IMPORTANT:
-                 These are centered relative to the FULL SCREEN.
-                 ================================================= */
+              /* ===============================================
+                 RING ANIMATION
 
-              .jansahay-ring {
-                position: absolute;
+                 NOTICE:
+                 There is NO translate here.
 
-                left: 50%;
-                top: 50%;
+                 The rings are already sitting at the exact
+                 center point because their parent is:
 
-                border-radius: 9999px;
+                 inset-0
+                 flex
+                 items-center
+                 justify-center
 
-                border: 2px solid
-                  rgba(59, 130, 246, 0.20);
+                 So only scale changes.
+                 =============================================== */
 
-                transform:
-                  translate(-50%, -50%)
-                  scale(0.55);
+              @keyframes jansahayRing {
 
-                pointer-events: none;
+                0% {
+                  transform: scale(0.55);
+                  opacity: 0;
+                }
 
+                8% {
+                  opacity: 0.55;
+                }
+
+                35% {
+                  opacity: 0.42;
+                }
+
+                65% {
+                  opacity: 0.20;
+                }
+
+                100% {
+                  transform: scale(1.45);
+                  opacity: 0;
+                }
+
+              }
+
+
+              .animate-jansahay-ring-1 {
                 animation:
-                  splashRing
+                  jansahayRing
                   4.2s
                   ease-out
+                  0s
                   infinite;
               }
 
 
-              .jansahay-ring-1 {
-                width: 260px;
-                height: 260px;
-
-                animation-delay: 0s;
+              .animate-jansahay-ring-2 {
+                animation:
+                  jansahayRing
+                  4.2s
+                  ease-out
+                  0.65s
+                  infinite;
               }
 
 
-              .jansahay-ring-2 {
-                width: 360px;
-                height: 360px;
-
-                animation-delay: 0.65s;
+              .animate-jansahay-ring-3 {
+                animation:
+                  jansahayRing
+                  4.2s
+                  ease-out
+                  1.30s
+                  infinite;
               }
 
 
-              .jansahay-ring-3 {
-                width: 460px;
-                height: 460px;
-
-                animation-delay: 1.30s;
+              .animate-jansahay-ring-4 {
+                animation:
+                  jansahayRing
+                  4.2s
+                  ease-out
+                  1.95s
+                  infinite;
               }
 
 
-              .jansahay-ring-4 {
-                width: 560px;
-                height: 560px;
-
-                animation-delay: 1.95s;
-              }
-
-
-              /* =================================================
-                 MOBILE RINGS
-                 ================================================= */
-
-              @media (max-width: 640px) {
-
-                .jansahay-ring-1 {
-                  width: 190px;
-                  height: 190px;
-                }
-
-                .jansahay-ring-2 {
-                  width: 270px;
-                  height: 270px;
-                }
-
-                .jansahay-ring-3 {
-                  width: 350px;
-                  height: 350px;
-                }
-
-                .jansahay-ring-4 {
-                  width: 430px;
-                  height: 430px;
-                }
-
-              }
-
-
-              /* =================================================
-                 REDUCED MOTION ACCESSIBILITY
-                 ================================================= */
+              /* ===============================================
+                 ACCESSIBILITY
+                 =============================================== */
 
               @media (prefers-reduced-motion: reduce) {
 
-                .jansahay-splash {
+                .animate-jansahay-splash,
+                .animate-jansahay-logo,
+                .animate-jansahay-text,
+                .animate-jansahay-subtitle,
+                .animate-jansahay-ring-1,
+                .animate-jansahay-ring-2,
+                .animate-jansahay-ring-3,
+                .animate-jansahay-ring-4 {
                   animation: none;
                 }
 
-                .jansahay-splash-logo {
-                  animation: none;
+                .animate-jansahay-splash {
                   opacity: 1;
                 }
 
-                .jansahay-splash-logo-inner {
-                  animation: none;
-                }
-
-                .jansahay-splash-text {
-                  animation: none;
+                .animate-jansahay-logo,
+                .animate-jansahay-text,
+                .animate-jansahay-subtitle {
                   opacity: 1;
+                  transform: none;
                 }
 
-                .jansahay-splash-subtitle {
-                  animation: none;
-                  opacity: 1;
-                }
-
-                .jansahay-ring {
-                  animation: none;
-                  opacity: 0.18;
-
-                  transform:
-                    translate(-50%, -50%)
-                    scale(1);
+                .animate-jansahay-ring-1,
+                .animate-jansahay-ring-2,
+                .animate-jansahay-ring-3,
+                .animate-jansahay-ring-4 {
+                  opacity: 0.15;
+                  transform: scale(1);
                 }
 
               }
+
             `}
           </style>
 
-
-          {/* =================================================
-              FULL SCREEN SPLASH
-              ================================================= */}
-
-          <div
-            className="
-              fixed
-              inset-0
-
-              z-[300]
-
-              overflow-hidden
-
-              bg-[#eef8ff]
-
-              jansahay-splash
-            "
-          >
-
-            {/* =================================================
-                DESKTOP BACKGROUND
-                ================================================= */}
-
-            <div
-              className="
-                absolute
-                inset-0
-
-                hidden
-                sm:block
-
-                bg-cover
-                bg-center
-                bg-no-repeat
-              "
-              style={{
-                backgroundImage:
-                  `url("${import.meta.env.BASE_URL}images/jansahay-splash-desktop.png")`,
-              }}
-            />
-
-
-            {/* =================================================
-                MOBILE BACKGROUND
-                ================================================= */}
-
-            <div
-              className="
-                absolute
-                inset-0
-
-                block
-                sm:hidden
-
-                bg-cover
-                bg-center
-                bg-no-repeat
-              "
-              style={{
-                backgroundImage:
-                  `url("${import.meta.env.BASE_URL}images/jansahay-splash-mobile.png")`,
-              }}
-            />
-
-
-            {/* =================================================
-                VERY LIGHT OVERLAY
-                ================================================= */}
-
-            <div
-              className="
-                absolute
-                inset-0
-
-                bg-white/10
-
-                pointer-events-none
-              "
-            />
-
-
-            {/* =================================================
-                FULL-SCREEN RING LAYER
-                ================================================= */}
-
-            <div
-              className="
-                absolute
-                inset-0
-
-                pointer-events-none
-              "
-            >
-
-              {/* Ring 1 */}
-
-              <span
-                className="
-                  jansahay-ring
-                  jansahay-ring-1
-                "
-              />
-
-
-              {/* Ring 2 */}
-
-              <span
-                className="
-                  jansahay-ring
-                  jansahay-ring-2
-                "
-              />
-
-
-              {/* Ring 3 */}
-
-              <span
-                className="
-                  jansahay-ring
-                  jansahay-ring-3
-                "
-              />
-
-
-              {/* Ring 4 */}
-
-              <span
-                className="
-                  jansahay-ring
-                  jansahay-ring-4
-                "
-              />
-
-            </div>
-
-
-            {/* =================================================
-                CENTER JANSAHAY BRANDING
-                ================================================= */}
-
-            <div
-              className="
-                absolute
-                inset-0
-
-                flex
-                items-center
-                justify-center
-
-                px-5
-
-                pointer-events-none
-              "
-            >
-
-              <div
-                className="
-                  relative
-
-                  flex
-                  flex-col
-                  items-center
-                  justify-center
-
-                  text-center
-
-                  w-full
-                  max-w-xl
-                "
-              >
-
-                {/* =================================================
-                    LOGO
-                    ================================================= */}
-
-                <div
-                  className="
-                    relative
-                    z-20
-
-                    jansahay-splash-logo
-
-                    flex
-                    items-center
-                    justify-center
-                  "
-                >
-
-                  <div
-                    className="
-                      jansahay-splash-logo-inner
-
-                      flex
-                      items-center
-                      justify-center
-
-                      w-24
-                      h-24
-
-                      sm:w-32
-                      sm:h-32
-
-                      rounded-[24px]
-                      sm:rounded-[30px]
-
-                      bg-blue-600
-
-                      border
-                      border-white/80
-
-                      shadow-2xl
-                    "
-                  >
-
-                    {/* Government building logo */}
-
-                    <svg
-                      viewBox="0 0 100 100"
-                      className="
-                        w-14
-                        h-14
-
-                        sm:w-20
-                        sm:h-20
-
-                        text-white
-                      "
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-
-                      {/* Roof */}
-
-                      <path
-                        d="M18 38 L50 16 L82 38"
-                      />
-
-                      {/* Roof base */}
-
-                      <path
-                        d="M25 38 H75"
-                      />
-
-                      {/* Pillars */}
-
-                      <path
-                        d="M30 40 V70"
-                      />
-
-                      <path
-                        d="M43 40 V70"
-                      />
-
-                      <path
-                        d="M57 40 V70"
-                      />
-
-                      <path
-                        d="M70 40 V70"
-                      />
-
-                      {/* Bottom platform */}
-
-                      <path
-                        d="M20 74 H80"
-                      />
-
-                      <path
-                        d="M15 82 H85"
-                      />
-
-                    </svg>
-
-                  </div>
-
-                </div>
-
-
-                {/* =================================================
-                    JANSAHAY TEXT
-                    ================================================= */}
-
-                <h1
-                  className="
-                    relative
-                    z-20
-
-                    jansahay-splash-text
-
-                    mt-5
-                    sm:mt-6
-
-                    text-4xl
-                    sm:text-6xl
-
-                    font-extrabold
-
-                    tracking-tight
-
-                    text-[#06245b]
-
-                    drop-shadow-sm
-                  "
-                >
-                  JanSahay
-                </h1>
-
-
-                {/* =================================================
-                    TAGLINE
-                    ================================================= */}
-
-                <p
-                  className="
-                    relative
-                    z-20
-
-                    jansahay-splash-subtitle
-
-                    mt-2
-                    sm:mt-3
-
-                    max-w-[340px]
-                    sm:max-w-none
-
-                    text-base
-                    sm:text-xl
-
-                    font-medium
-
-                    leading-relaxed
-
-                    text-[#385477]
-
-                    drop-shadow-sm
-                  "
-                >
-                  Find the right government
-                  loan scheme.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </>
+        </div>
       )}
 
 
       {/* =====================================================
           LANGUAGE POPUP
-          Appears AFTER splash screen
           ===================================================== */}
 
       {showLanguageModal && (
@@ -868,9 +755,7 @@ export function HomeScreen({
             "
           >
 
-            {/* =================================================
-                GLOBE
-                ================================================= */}
+            {/* Globe */}
 
             <div className="flex justify-center mb-4">
 
@@ -889,17 +774,13 @@ export function HomeScreen({
                   text-primary-600
                 "
               >
-
                 <Globe2 className="w-7 h-7" />
-
               </div>
 
             </div>
 
 
-            {/* =================================================
-                HEADING
-                ================================================= */}
+            {/* Heading */}
 
             <h2
               className="
@@ -916,9 +797,7 @@ export function HomeScreen({
             </h2>
 
 
-            {/* =================================================
-                SUBTITLE
-                ================================================= */}
+            {/* Subtitle */}
 
             <p
               className="
@@ -935,9 +814,7 @@ export function HomeScreen({
             </p>
 
 
-            {/* =================================================
-                LANGUAGE OPTIONS
-                ================================================= */}
+            {/* Languages */}
 
             <div
               className="
@@ -1023,9 +900,7 @@ export function HomeScreen({
             </div>
 
 
-            {/* =================================================
-                CONTINUE
-                ================================================= */}
+            {/* Continue */}
 
             <button
               type="button"
@@ -1086,7 +961,6 @@ export function HomeScreen({
 
       {/* =====================================================
           MAIN JANSAHAY CONTENT
-          App.tsx owns the global background.
           ===================================================== */}
 
       <div className="relative z-10">
@@ -1119,9 +993,7 @@ export function HomeScreen({
 
           <div className="w-full">
 
-            {/* =================================================
-                HERO HEADING
-                ================================================= */}
+            {/* Hero heading */}
 
             <h2
               className="
@@ -1145,9 +1017,7 @@ export function HomeScreen({
             </h2>
 
 
-            {/* =================================================
-                HERO SUBTITLE
-                ================================================= */}
+            {/* Hero subtitle */}
 
             <p
               className="
@@ -1171,9 +1041,7 @@ export function HomeScreen({
             </p>
 
 
-            {/* =================================================
-                MAIN ACTIONS
-                ================================================= */}
+            {/* Main actions */}
 
             <div
               className="
@@ -1186,9 +1054,7 @@ export function HomeScreen({
               "
             >
 
-              {/* =================================================
-                  BUSINESS + EDUCATION
-                  ================================================= */}
+              {/* Business + Education */}
 
               <div
                 className="
@@ -1199,9 +1065,7 @@ export function HomeScreen({
                 "
               >
 
-                {/* =================================================
-                    BUSINESS
-                    ================================================= */}
+                {/* Business */}
 
                 <button
                   type="button"
@@ -1254,11 +1118,7 @@ export function HomeScreen({
                     "
                   />
 
-                  <div
-                    className="
-                      min-w-0
-                    "
-                  >
+                  <div className="min-w-0">
 
                     <span
                       className="
@@ -1296,9 +1156,7 @@ export function HomeScreen({
                 </button>
 
 
-                {/* =================================================
-                    EDUCATION
-                    ================================================= */}
+                {/* Education */}
 
                 <button
                   type="button"
@@ -1351,11 +1209,7 @@ export function HomeScreen({
                     "
                   />
 
-                  <div
-                    className="
-                      min-w-0
-                    "
-                  >
+                  <div className="min-w-0">
 
                     <span
                       className="
@@ -1394,9 +1248,7 @@ export function HomeScreen({
               </div>
 
 
-              {/* =================================================
-                  OR DIVIDER
-                  ================================================= */}
+              {/* OR */}
 
               <div
                 className="
@@ -1441,9 +1293,7 @@ export function HomeScreen({
               </div>
 
 
-              {/* =================================================
-                  CONVERSATION
-                  ================================================= */}
+              {/* Conversation */}
 
               <button
                 type="button"
@@ -1493,11 +1343,8 @@ export function HomeScreen({
                     flex-shrink-0
                   "
                 >
-
                   <Mic className="w-5 h-5" />
-
                 </div>
-
 
                 <div
                   className="
@@ -1532,7 +1379,6 @@ export function HomeScreen({
 
                 </div>
 
-
                 <ArrowRight
                   className="
                     w-5
@@ -1547,9 +1393,7 @@ export function HomeScreen({
             </div>
 
 
-            {/* =================================================
-                SCROLL INDICATOR
-                ================================================= */}
+            {/* Scroll */}
 
             <div
               className="
@@ -1607,9 +1451,7 @@ export function HomeScreen({
           "
         >
 
-          {/* =================================================
-              BENEFITS
-              ================================================= */}
+          {/* Benefits */}
 
           <div
             className="
@@ -1629,8 +1471,6 @@ export function HomeScreen({
                 gap-5
               "
             >
-
-              {/* Simple */}
 
               <div className="text-center">
 
@@ -1668,8 +1508,6 @@ export function HomeScreen({
               </div>
 
 
-              {/* Languages */}
-
               <div className="text-center">
 
                 <div
@@ -1706,8 +1544,6 @@ export function HomeScreen({
               </div>
 
 
-              {/* Information */}
-
               <div className="text-center">
 
                 <div
@@ -1742,8 +1578,6 @@ export function HomeScreen({
 
               </div>
 
-
-              {/* Citizen */}
 
               <div className="text-center">
 
@@ -1784,9 +1618,7 @@ export function HomeScreen({
           </div>
 
 
-          {/* =================================================
-              HOW JANSAHAY HELPS
-              ================================================= */}
+          {/* How JanSahay helps */}
 
           <div
             className="
@@ -1805,7 +1637,6 @@ export function HomeScreen({
             >
               How JanSahay helps you
             </h3>
-
 
             <div
               className="
@@ -1875,7 +1706,6 @@ export function HomeScreen({
                       {item.number}
                     </div>
 
-
                     <div>
 
                       <p
@@ -1888,7 +1718,6 @@ export function HomeScreen({
                       >
                         {item.title}
                       </p>
-
 
                       <p
                         className="
@@ -1915,9 +1744,7 @@ export function HomeScreen({
           </div>
 
 
-          {/* =================================================
-              IMPORTANT INFORMATION
-              ================================================= */}
+          {/* Important information */}
 
           <div
             className="
@@ -1943,7 +1770,6 @@ export function HomeScreen({
                 "
               />
 
-
               <div>
 
                 <h3
@@ -1956,7 +1782,6 @@ export function HomeScreen({
                 >
                   Important Information
                 </h3>
-
 
                 <p
                   className="
