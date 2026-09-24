@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
-  Mic,
   Store,
   GraduationCap,
   ArrowRight,
@@ -41,10 +40,38 @@ export function HomeScreen({
     key: TranslationKey
   ) => t(lang, key);
 
+  /*
+   * ============================================================
+   * JANSAHAY SPLASH SCREEN
+   * ============================================================
+   */
+
+  const [
+    showSplash,
+    setShowSplash,
+  ] = useState(true);
+
   const [
     showLanguageModal,
     setShowLanguageModal,
-  ] = useState(true);
+  ] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowSplash(false);
+      setShowLanguageModal(true);
+    }, 5000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  /*
+   * ============================================================
+   * LANGUAGE
+   * ============================================================
+   */
 
   const [
     selectedLanguage,
@@ -86,6 +113,487 @@ export function HomeScreen({
         animate-fade-in
       "
     >
+
+      {/* =====================================================
+          JANSAHAY SPLASH SCREEN
+          ===================================================== */}
+
+      {showSplash && (
+        <>
+          <style>
+            {`
+              @keyframes splashFadeIn {
+                0% {
+                  opacity: 0;
+                }
+
+                15% {
+                  opacity: 1;
+                }
+
+                82% {
+                  opacity: 1;
+                }
+
+                100% {
+                  opacity: 0;
+                }
+              }
+
+              @keyframes splashLogoIn {
+                0% {
+                  opacity: 0;
+                  transform: scale(0.82);
+                }
+
+                18% {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+
+                100% {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+              }
+
+              @keyframes splashTextIn {
+                0% {
+                  opacity: 0;
+                  transform: translateY(12px);
+                }
+
+                20% {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+
+                100% {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+
+              @keyframes splashRing {
+                0% {
+                  transform: translate(-50%, -50%) scale(0.55);
+                  opacity: 0;
+                }
+
+                15% {
+                  opacity: 0.55;
+                }
+
+                70% {
+                  opacity: 0.22;
+                }
+
+                100% {
+                  transform: translate(-50%, -50%) scale(1.45);
+                  opacity: 0;
+                }
+              }
+
+              @keyframes splashRing2 {
+                0% {
+                  transform: translate(-50%, -50%) scale(0.65);
+                  opacity: 0;
+                }
+
+                20% {
+                  opacity: 0.35;
+                }
+
+                75% {
+                  opacity: 0.15;
+                }
+
+                100% {
+                  transform: translate(-50%, -50%) scale(1.65);
+                  opacity: 0;
+                }
+              }
+
+              @keyframes splashGlow {
+                0%,
+                100% {
+                  transform: scale(1);
+                  opacity: 0.85;
+                }
+
+                50% {
+                  transform: scale(1.06);
+                  opacity: 1;
+                }
+              }
+
+              .jansahay-splash {
+                animation:
+                  splashFadeIn 5s ease-in-out forwards;
+              }
+
+              .jansahay-splash-logo {
+                animation:
+                  splashLogoIn 1.3s ease-out both,
+                  splashGlow 2.8s ease-in-out 1.2s infinite;
+              }
+
+              .jansahay-splash-text {
+                animation:
+                  splashTextIn 1.2s ease-out 0.25s both;
+              }
+
+              .jansahay-splash-subtitle {
+                animation:
+                  splashTextIn 1.2s ease-out 0.45s both;
+              }
+
+              .jansahay-ring {
+                position: absolute;
+
+                left: 50%;
+                top: 50%;
+
+                border-radius: 9999px;
+
+                border: 2px solid
+                  rgba(59, 130, 246, 0.20);
+
+                animation:
+                  splashRing 4.2s
+                  ease-out infinite;
+              }
+
+              .jansahay-ring-1 {
+                width: 260px;
+                height: 260px;
+
+                animation-delay: 0s;
+              }
+
+              .jansahay-ring-2 {
+                width: 360px;
+                height: 360px;
+
+                animation-delay: 0.7s;
+              }
+
+              .jansahay-ring-3 {
+                width: 460px;
+                height: 460px;
+
+                animation-delay: 1.4s;
+              }
+
+              .jansahay-ring-4 {
+                width: 560px;
+                height: 560px;
+
+                animation-delay: 2.1s;
+              }
+
+              @media (max-width: 640px) {
+                .jansahay-ring-1 {
+                  width: 190px;
+                  height: 190px;
+                }
+
+                .jansahay-ring-2 {
+                  width: 270px;
+                  height: 270px;
+                }
+
+                .jansahay-ring-3 {
+                  width: 350px;
+                  height: 350px;
+                }
+
+                .jansahay-ring-4 {
+                  width: 430px;
+                  height: 430px;
+                }
+              }
+            `}
+          </style>
+
+          <div
+            className="
+              fixed
+              inset-0
+              z-[300]
+
+              overflow-hidden
+
+              bg-[#eef8ff]
+
+              jansahay-splash
+            "
+          >
+
+            {/* =================================================
+                DESKTOP BACKGROUND
+                ================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-0
+
+                hidden
+                sm:block
+
+                bg-cover
+                bg-center
+                bg-no-repeat
+              "
+              style={{
+                backgroundImage:
+                  `url("${import.meta.env.BASE_URL}images/jansahay-splash-desktop.png")`,
+              }}
+            />
+
+            {/* =================================================
+                MOBILE BACKGROUND
+                ================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-0
+
+                block
+                sm:hidden
+
+                bg-cover
+                bg-center
+                bg-no-repeat
+              "
+              style={{
+                backgroundImage:
+                  `url("${import.meta.env.BASE_URL}images/jansahay-splash-mobile.png")`,
+              }}
+            />
+
+            {/* =================================================
+                SOFT OVERLAY
+                ================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-0
+
+                bg-white/10
+              "
+            />
+
+            {/* =================================================
+                CENTER BRANDING
+                ================================================= */}
+
+            <div
+              className="
+                absolute
+                inset-0
+
+                flex
+                items-center
+                justify-center
+
+                px-5
+              "
+            >
+
+              <div
+                className="
+                  relative
+
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+
+                  text-center
+
+                  w-full
+                  max-w-xl
+                "
+              >
+
+                {/* =================================================
+                    RIPPLE RINGS
+                    ================================================= */}
+
+                <span
+                  className="
+                    jansahay-ring
+                    jansahay-ring-1
+                  "
+                />
+
+                <span
+                  className="
+                    jansahay-ring
+                    jansahay-ring-2
+                  "
+                />
+
+                <span
+                  className="
+                    jansahay-ring
+                    jansahay-ring-3
+                  "
+                />
+
+                <span
+                  className="
+                    jansahay-ring
+                    jansahay-ring-4
+                  "
+                />
+
+                {/* =================================================
+                    LOGO
+                    ================================================= */}
+
+                <div
+                  className="
+                    relative
+                    z-10
+
+                    jansahay-splash-logo
+
+                    flex
+                    items-center
+                    justify-center
+
+                    w-24
+                    h-24
+
+                    sm:w-32
+                    sm:h-32
+
+                    rounded-[24px]
+                    sm:rounded-[30px]
+
+                    bg-blue-600
+
+                    shadow-2xl
+
+                    border
+                    border-white/80
+                  "
+                >
+
+                  {/* Government building icon */}
+
+                  <svg
+                    viewBox="0 0 100 100"
+                    className="
+                      w-14
+                      h-14
+
+                      sm:w-20
+                      sm:h-20
+
+                      text-white
+                    "
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+
+                    <path d="M18 38 L50 16 L82 38" />
+
+                    <path d="M25 38 H75" />
+
+                    <path d="M30 40 V70" />
+
+                    <path d="M43 40 V70" />
+
+                    <path d="M57 40 V70" />
+
+                    <path d="M70 40 V70" />
+
+                    <path d="M20 74 H80" />
+
+                    <path d="M15 82 H85" />
+
+                  </svg>
+
+                </div>
+
+                {/* =================================================
+                    JANSAHAY
+                    ================================================= */}
+
+                <h1
+                  className="
+                    relative
+                    z-10
+
+                    jansahay-splash-text
+
+                    mt-5
+                    sm:mt-6
+
+                    text-4xl
+                    sm:text-6xl
+
+                    font-extrabold
+
+                    tracking-tight
+
+                    text-[#06245b]
+
+                    drop-shadow-sm
+                  "
+                >
+                  JanSahay
+                </h1>
+
+                {/* =================================================
+                    TAGLINE
+                    ================================================= */}
+
+                <p
+                  className="
+                    relative
+                    z-10
+
+                    jansahay-splash-subtitle
+
+                    mt-2
+                    sm:mt-3
+
+                    max-w-[340px]
+                    sm:max-w-none
+
+                    text-base
+                    sm:text-xl
+
+                    font-medium
+
+                    leading-relaxed
+
+                    text-[#385477]
+
+                    drop-shadow-sm
+                  "
+                >
+                  Find the right government
+                  loan scheme.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+        </>
+      )}
 
       {/* =====================================================
           LANGUAGE POPUP
@@ -133,8 +641,6 @@ export function HomeScreen({
             "
           >
 
-            {/* Globe */}
-
             <div className="flex justify-center mb-4">
 
               <div
@@ -157,8 +663,6 @@ export function HomeScreen({
 
             </div>
 
-            {/* Heading */}
-
             <h2
               className="
                 text-xl
@@ -173,8 +677,6 @@ export function HomeScreen({
               {tr('languagePrompt')}
             </h2>
 
-            {/* Subtitle */}
-
             <p
               className="
                 text-sm
@@ -188,8 +690,6 @@ export function HomeScreen({
             >
               {tr('languagePromptSubtitle')}
             </p>
-
-            {/* Language options */}
 
             <div
               className="
@@ -274,8 +774,6 @@ export function HomeScreen({
 
             </div>
 
-            {/* Continue */}
-
             <button
               type="button"
               onClick={() => {
@@ -283,9 +781,7 @@ export function HomeScreen({
                   selectedLanguage
                 );
 
-                setShowLanguageModal(
-                  false
-                );
+                setShowLanguageModal(false);
               }}
               className="
                 w-full
@@ -311,20 +807,11 @@ export function HomeScreen({
 
                 transition-all
                 duration-200
-
-                focus:outline-none
-                focus:ring-2
-                focus:ring-blue-500
-                focus:ring-offset-2
               "
             >
-
               {tr('continueLanguage')}
 
-              <ArrowRight
-                className="w-4 h-4"
-              />
-
+              <ArrowRight className="w-4 h-4" />
             </button>
 
           </div>
@@ -333,15 +820,12 @@ export function HomeScreen({
       )}
 
       {/* =====================================================
-          MAIN JANSAHAY CONTENT
-          App.tsx owns the global background.
+          EXISTING JANSAHAY HOMEPAGE
           ===================================================== */}
 
       <div className="relative z-10">
 
-        {/* ===================================================
-            HERO
-            =================================================== */}
+        {/* HERO */}
 
         <section
           className="
@@ -367,8 +851,6 @@ export function HomeScreen({
 
           <div className="w-full">
 
-            {/* Hero heading */}
-
             <h2
               className="
                 text-3xl
@@ -389,8 +871,6 @@ export function HomeScreen({
             >
               {tr('heroTitle')}
             </h2>
-
-            {/* Hero subtitle */}
 
             <p
               className="
@@ -413,8 +893,6 @@ export function HomeScreen({
               {tr('heroSubtitle')}
             </p>
 
-            {/* Main actions */}
-
             <div
               className="
                 mt-8
@@ -426,8 +904,6 @@ export function HomeScreen({
               "
             >
 
-              {/* Business + Education */}
-
               <div
                 className="
                   grid
@@ -437,7 +913,7 @@ export function HomeScreen({
                 "
               >
 
-                {/* Business */}
+                {/* BUSINESS */}
 
                 <button
                   type="button"
@@ -490,11 +966,7 @@ export function HomeScreen({
                     "
                   />
 
-                  <div
-                    className="
-                      min-w-0
-                    "
-                  >
+                  <div className="min-w-0">
 
                     <span
                       className="
@@ -531,7 +1003,7 @@ export function HomeScreen({
 
                 </button>
 
-                {/* Education */}
+                {/* EDUCATION */}
 
                 <button
                   type="button"
@@ -584,11 +1056,7 @@ export function HomeScreen({
                     "
                   />
 
-                  <div
-                    className="
-                      min-w-0
-                    "
-                  >
+                  <div className="min-w-0">
 
                     <span
                       className="
@@ -670,7 +1138,7 @@ export function HomeScreen({
 
               </div>
 
-              {/* Conversation */}
+              {/* CONVERSATION */}
 
               <button
                 type="button"
@@ -720,7 +1188,17 @@ export function HomeScreen({
                     flex-shrink-0
                   "
                 >
-                  <Mic className="w-5 h-5" />
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M12 2v20" />
+                    <path d="M8 6v12" />
+                    <path d="M16 6v12" />
+                  </svg>
                 </div>
 
                 <div
@@ -769,7 +1247,7 @@ export function HomeScreen({
 
             </div>
 
-            {/* Scroll indicator */}
+            {/* SCROLL */}
 
             <div
               className="
@@ -825,8 +1303,6 @@ export function HomeScreen({
             sm:px-6
           "
         >
-
-          {/* Benefits */}
 
           <div
             className="
@@ -989,8 +1465,6 @@ export function HomeScreen({
 
           </div>
 
-          {/* How JanSahay helps */}
-
           <div
             className="
               portal-section
@@ -1113,8 +1587,6 @@ export function HomeScreen({
             </div>
 
           </div>
-
-          {/* Important information */}
 
           <div
             className="
